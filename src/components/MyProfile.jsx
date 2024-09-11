@@ -68,9 +68,9 @@ const MyProfile = () => {
     // }
 
     return (
-        <div className="centered-container">
-            <div className="centered-content">
-                <h1>Your DiscreteMentor Account,</h1>
+        <div className="myAccount">
+            <div className="myAccount-content">
+                <h5 className="myAccount-title">Your DiscreteMentor Account,</h5>
                 <h2>{user ? user.email : 'Sign up or Login'}</h2>
                 {user ? (
                     <>
@@ -80,8 +80,8 @@ const MyProfile = () => {
                     </>
                 ) : (
                     <>
-                        <p>Don't have an Account?<Link to="/signup"> Sign Up</Link></p>
-                        <p>Have an Account?<Link to="/login"> Login</Link></p>
+                        <p className="link-to-login-signup">Don't have an Account?<Link to="/signup"> Sign Up</Link></p>
+                        <p className="link-to-login-signup">Have an Account?<Link to="/login"> Login</Link></p>
                     </>
                 )}
             </div>

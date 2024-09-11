@@ -28,13 +28,11 @@ const NavBar = () => {
                             <img className="home-icon" alt="home button" src='/home-icon.png'/>
                         </div>
                     </Link>
-                    <Link className="header-home-button" to="/">Discrete Mentor</Link>
-                    <Link to="/login">
-                        <div className="header-login">
-                            Log In
-                        </div>
-
-                    </Link>
+                    <Link className="header-title" to="/">Discrete Mentor</Link>
+                    <div className="header-right">
+                        <Link className="header-account" to="/myProfile">My Account |</Link>
+                        <Link className="header-login" to="/login">Log In</Link>
+                    </div>
                 </nav>
             </header>
         </div>

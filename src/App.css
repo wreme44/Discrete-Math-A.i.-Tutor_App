@@ -114,13 +114,13 @@
     width: 400px;
     height: 300px;
     text-align: center;
-    background-color: rgba(18, 14, 55, 0.579);
+    background-color: rgba(48, 122, 183, 0.551);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     /* max-width: 400px; */
 }
 
 .login-title {
-    color: rgb(254, 252, 252);
+    color: rgb(1, 1, 1);
     font-size: 30px;
     /* padding-bottom: 50px; */
     margin-bottom: 50px;
@@ -166,6 +166,41 @@
 } */
 
 /* ---------------------------------------------------------------- */
+
+.myAccount{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.myAccount-content{
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(156, 154, 154, 0.1);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    width: 400px;
+    height: 300px;
+    text-align: center;
+    background-color: rgba(48, 122, 183, 0.551);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* max-width: 400px; */
+}
+
+.myAccount-title{
+    color: rgb(1, 1, 1);
+    font-size: 30px;
+    /* padding-bottom: 50px; */
+    margin-bottom: 50px;
+}
+
+/* ---------------------------------------------------------------- */
 /* header nav bar */
 .header-bar {
     position: fixed;
@@ -182,7 +217,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0px 50px; 
+    padding: 5px 30px; 
 }
 
 .header-nav button {
@@ -193,8 +228,8 @@
 }
 
 .header-home-button {
-    margin-top: 5px;
-    padding: 0px 0px 0px 3px;
+    /* margin-bottom: 5px; */
+    /* padding: 0px 0px 0px 0px; */
     font-size: larger;
     color: #2f9ad0;
 }
@@ -202,58 +237,32 @@
 .home-icon {
     width: 30px;
     height: 30px;
+    margin-top: 5px;
 }
 
-/* .burger-menu {
-    width: 25px; 
-    height: 25px; 
-    border: none;
-    background-color: #fbfcfd;
-}
-
-.burger-menu:hover {
-    background-color: rgba(155, 208, 216, 0.581);
-}
-
-.burger-menu:focus {
-    outline-color: #00f;
-} */
-
-.visually-hidden {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0,0,0,0);
-    border: 0;
-}
-
-.search-bar {
+.header-title {
     flex-grow: 1;
     text-align: center;
-    padding: 12px 0px 0px 0px;
+    color: #2f9ad0;
+    font-size: 21px;
 }
 
-.header-login {
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.header-login, .header-account {
+    margin-right: 5px;
+    color: #2f9ad0;
+    text-decoration: none;
+}
+
+/* .header-login {
     align-items: center;
     padding: 12px 0px 0px 0px;
     color: #2f9ad0;
-}
-
-/* side bar left */
-.side-nav {
-    display: block;
-    position: fixed;
-    top: 50px;
-    left: 0;
-    bottom: 0;
-    width: 150px;
-    border-right: 1px solid;
-    padding: 30px 0;
-    background-color: #fbfcfd;
-}
+} */
 
 .header-nav button {
     display: none;
@@ -285,6 +294,51 @@
     width: 100px;
     height: 100px;
 }
+
+/* side bar left
+.side-nav {
+    display: block;
+    position: fixed;
+    top: 50px;
+    left: 0;
+    bottom: 0;
+    width: 150px;
+    border-right: 1px solid;
+    padding: 30px 0;
+    background-color: #fbfcfd;
+} */
+
+/* .burger-menu {
+    width: 25px; 
+    height: 25px; 
+    border: none;
+    background-color: #fbfcfd;
+}
+
+.burger-menu:hover {
+    background-color: rgba(155, 208, 216, 0.581);
+}
+
+.burger-menu:focus {
+    outline-color: #00f;
+} */
+
+/* .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0,0,0,0);
+    border: 0;
+}
+
+.search-bar {
+    flex-grow: 1;
+    text-align: center;
+    padding: 12px 0px 0px 0px;
+} */
 
 /* ----------------------------------------------------- */
 /* Not found page */
