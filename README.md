@@ -28,10 +28,10 @@ This web app:
   
 ## Tech Stack
 
-**Frontend**: React, Tailwind CSS
-**Backend**: Node.js, Express.js, Axios
-**API**: OpenAI ChatGPT API, Supabase API,
-**Other**: Skill database, LaTeX parser for problem input
+**Frontend**: React, Tailwind CSS  
+**Backend**: Node.js, Express.js, Axios  
+**API**: OpenAI ChatGPT API, Supabase API,  
+**Other**: Skill database, LaTeX parser for problem input  
 
 ## Video Walkthrough
 
