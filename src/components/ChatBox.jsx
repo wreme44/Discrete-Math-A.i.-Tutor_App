@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
 const ChatBox = () => {
 
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
+  const textareaRef = useRef(null);
 
   const handleSend = async () => {
 
@@ -26,6 +27,18 @@ const ChatBox = () => {
     }
   };
 
+  const adjustTextareaHeight = () => {
+
+    const textarea = textareaRef.current;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  }
+
+  useEffect(() => {
+
+    adjustTextareaHeight();
+  }, [input])
+
   return (
     <div className='flex flex-col h-full p-4 bg-gray-300'>
       <div className='flex-1 overflow-y-auto mb-4'>
@@ -38,15 +51,19 @@ const ChatBox = () => {
         ))}
       </div>
       <div className='flex-none'>
-        <div className='flex'>
-            <input
-            type="text"
-            className="flex-1 p-2 border rounded"
+        <div className='flex items-end'>
+            <textarea
+            ref={textareaRef}
+            className="flex-1 p-2 border rounded resize-none"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyUp={(e) => e.key === 'Enter' && handleSend()}
+            rows={1}
+            style={{overflow: 'hidden'}}
             />
-            <button className="ml-2 p-2 bg-blue-500 text-white rounded" onClick={handleSend}>Send</button>
+            <button className="ml-2 p-2 bg-white rounded flex-shrink-0" style={{ width: '50px', height: '40px' }} onClick={handleSend}>
+                <img src="/send-button.png" alt="Send" style={{ width: '100%', height: '100%' }}/>
+            </button>
         </div>
       </div>
     </div>

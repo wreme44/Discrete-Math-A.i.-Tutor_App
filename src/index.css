@@ -91,10 +91,12 @@ so all regular CSS is in App.css, Tailwind CSS in index.css*/
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 4px;
-    height: 95vh;
-    /* width: 75vw;  */
-    /* padding: 0;
-    margin: 0; */
+    height: calc(100vh - 60px); /* Adjust height to account for the navbar */
+    margin-top: 50px; /* Offset the navbar height */
+    margin-left: 10px;
+    width: 98vw;
+    max-width: none;
+    /* margin: 0 auto; */
     
 }
 /* when window is below 300px middle column becomes 2fr larger than other columns */
@@ -104,6 +106,7 @@ so all regular CSS is in App.css, Tailwind CSS in index.css*/
     }
 }
 
-/* .custom-3-columns{
-
-} */
+.custom-3-columns {
+    /* Ensure columns take up full available width */
+    width: 100%;
+}

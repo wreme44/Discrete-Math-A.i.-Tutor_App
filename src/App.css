@@ -1,9 +1,16 @@
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+    width: 100vw; /* Ensure the root element takes up the full viewport width */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Ensure padding and border do not affect width */
 }
+
+/* body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+} */
 
 .logo {
   height: 6em;
@@ -42,13 +49,6 @@
 }
 
 /* -------------------------------------------------------------------- */
-
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
 
 .logo {
   height: 6em;
@@ -167,6 +167,7 @@
 
 /* ---------------------------------------------------------------- */
 
+/* Account Page */
 .myAccount{
     display: flex;
     justify-content: center;
@@ -245,6 +246,7 @@
     text-align: center;
     color: #2f9ad0;
     font-size: 21px;
+    margin-left: 80px;
 }
 
 .header-right {
