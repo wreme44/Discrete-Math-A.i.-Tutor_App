@@ -110,3 +110,17 @@ so all regular CSS is in App.css, Tailwind CSS in index.css*/
     /* Ensure columns take up full available width */
     width: 100%;
 }
+
+/* making scroll bar invisible */
+::-webkit-scrollbar {
+    width: 8px;
+}
+  
+::-webkit-scrollbar-thumb {
+    background-color: #4b5563; /* gray-700 */
+    border-radius: 4px;
+}
+
+body {
+    @apply bg-gray-900 text-white;
+  }

@@ -92,6 +92,15 @@
 /* Contains Regular CSS styling (no tailwind) */
 
 
+/* .App{
+
+}
+
+
+.main-layout{
+
+} */
+
 /* Login / sign up container */
 .login-page {
     display: flex;
@@ -120,8 +129,9 @@
 }
 
 .login-title {
-    color: rgb(1, 1, 1);
+    color: rgb(222, 209, 209);
     font-size: 30px;
+    font-weight: bold;
     /* padding-bottom: 50px; */
     margin-bottom: 50px;
 }
@@ -144,12 +154,12 @@
     font-weight: 500;
     font-family: inherit;
     background-color: rgb(4, 12, 12);
-    color:white;
+    color:rgb(250, 250, 250);
     cursor: pointer;
     transition: border-color 0.25s;
 }
 .login-button:hover {
-    border-color: rgb(255, 255, 255);
+    border-color: rgb(182, 182, 182);
 }
 
 .link-to-login-signup {
@@ -195,8 +205,9 @@
 }
 
 .myAccount-title{
-    color: rgb(1, 1, 1);
+    color: rgb(222, 209, 209);
     font-size: 30px;
+    font-weight: bold;
     /* padding-bottom: 50px; */
     margin-bottom: 50px;
 }
@@ -210,7 +221,7 @@
     right: 0;
     height: 50px;
     border-bottom: 1px solid #000;
-    background-color: #fbfcfd;
+    background-color: #466685;
     z-index: 1000;
 }
 
@@ -232,19 +243,37 @@
     /* margin-bottom: 5px; */
     /* padding: 0px 0px 0px 0px; */
     font-size: larger;
-    color: #2f9ad0;
+    color: #184c6a;
+    transition: color 0.3s, transform 0.4s;
+}
+
+.header-home-button:hover {
+    color: #0e3a4d;
+}
+.header-home-button:active {
+    transform: scale(0.95);
 }
 
 .home-icon {
     width: 30px;
     height: 30px;
     margin-top: 5px;
+    color: #b92121;
+    transition: color 0.3s, transform 0.1s;
+}
+
+.home-icon:hover {
+    color: #8b1616;
+}
+
+.home-icon:active {
+    transform: scale(0.91);
 }
 
 .header-title {
     flex-grow: 1;
     text-align: center;
-    color: #2f9ad0;
+    color: #ffffff;
     font-size: 21px;
     margin-left: 80px;
 }
@@ -256,8 +285,9 @@
 
 .header-login, .header-account {
     margin-right: 5px;
-    color: #2f9ad0;
+    color: #ffffff;
     text-decoration: none;
+    transition: color 0.3s, transform 0.1s;
 }
 
 /* .header-login {
@@ -265,6 +295,14 @@
     padding: 12px 0px 0px 0px;
     color: #2f9ad0;
 } */
+
+
+.header-login:hover, .header-account:hover, .header-title:hover {
+    color: #bdd6f4;
+}
+.header-login:active, .header-account:active, .header-title:active {
+    transform: scale(0.91);
+}
 
 .header-nav button {
     display: none;
@@ -274,7 +312,15 @@
     left: 10px;
     background-color: #efebebbf;
     color: #0e0e0e;
+    transition: background-color 0.3s, transform 0.1s;
   }
+
+.header-nav button:hover {
+    background-color: #ce2c2c;
+}
+.header-nav button:active {
+    transform: scale(0.90);
+}
 
   @media (max-width: 700px) {
     .side-nav {

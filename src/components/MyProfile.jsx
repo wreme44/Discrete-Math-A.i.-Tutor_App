@@ -6,28 +6,28 @@ const MyProfile = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
-    const [uploading, setUploading] = useState(false);
-    const [avatarUrl, setAvatarUrl] = useState(null);
+    // const [uploading, setUploading] = useState(false);
+    // const [avatarUrl, setAvatarUrl] = useState(null);
     const navigate = useNavigate();
     // fetching logged in users authentication details
-    useEffect(() => {
-        const fetchUser = async () => {
-            const {data: {user}} = await supabase.auth.getUser();
-            setUser(user);
-            setIsLoading(false);
-        }
-        fetchUser();
-    }, [])
+    // useEffect(() => {
+    //     const fetchUser = async () => {
+    //         const {data: {user}} = await supabase.auth.getUser();
+    //         setUser(user);
+    //         setIsLoading(false);
+    //     }
+    //     fetchUser();
+    // }, [])
 
-    if (isLoading) {
-        return <div><img src='/loading.gif'/></div>
-    }
+    // if (isLoading) {
+    //     return <div><img src='/loading.gif'/></div>
+    // }
 
     const handleSignOut = async () => {
 
-        const {error} = await supabase.auth.signOut();
-        if (error) console.error(error);
-        navigate('/login');
+        // const {error} = await supabase.auth.signOut();
+        // if (error) console.error(error);
+        // navigate('/login');
     }
     // user option to upload profile pic
     // const handleFileUpload = async (event) => {

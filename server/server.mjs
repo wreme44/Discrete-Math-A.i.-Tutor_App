@@ -13,13 +13,14 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/api/chat', async (req, res) => {
-  const { messages } = req.body;
 
+  const { messages } = req.body;
   try {
+
     const response = await axios.post('https://api.openai.com/v1/chat/completions', {
       model: 'gpt-4',
       messages: [
-        { role: 'system', content: 'You are a Discrete Math tutor assistant who guides students to a correct understanding of Discrete Math.' },
+        {role: 'system', content: 'You are a Discrete Math tutor assistant who guides students to a correct understanding of Discrete Math.'},
         ...messages,
       ],
     }, {
@@ -31,6 +32,7 @@ app.post('/api/chat', async (req, res) => {
 
     res.json({ message: response.data.choices[0].message });
   } catch (error) {
+    
     console.error('Error fetching API:', error);
     res.status(500).json({ error: 'Error fetching API' });
   }
