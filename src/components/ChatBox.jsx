@@ -17,7 +17,7 @@ const ChatBox = () => {
       setUserInput('');
 
       try {
-        const response = await axios.post('api/chat', {
+        const response = await axios.post('http://localhost:5000/api/chat', {
           messages: newMessages,
         });
         setMessages(prevMessages => [...prevMessages, {role: 'assistant', content: response.data.message.content}]);
@@ -54,7 +54,7 @@ const ChatBox = () => {
         ))}
       </div>
       <div className='flex'>
-        <div className='flex items-end'>
+        <div className='flex items-end flex-grow'>
             <textarea
             ref={textareaRef}
             className="flex-1 p-2 rounded-l bg-gray-700 resize-none"

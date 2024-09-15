@@ -116,15 +116,15 @@
     justify-content: center;
     align-items: center; */
     backdrop-filter: blur(5px);
-    border: 1px solid rgba(156, 154, 154, 0.1);
+    border: 2px solid rgba(48, 122, 183, 0.768);
     border-radius: 20px;
     padding: 20px;
     margin-bottom: 25px;
     width: 400px;
     height: 300px;
     text-align: center;
-    background-color: rgba(48, 122, 183, 0.551);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: rgba(48, 122, 183, 0.768);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.226);
     /* max-width: 400px; */
 }
 
@@ -142,6 +142,15 @@
 
 .password{
     margin-top: 5px;
+}
+
+.email input, .password input {
+    width: 100%;
+    padding: 10px;
+    color:#000000;
+    border-radius: 10px;
+    border: 1px solid #ffffff;
+    transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 .login-button {
@@ -162,8 +171,17 @@
     border-color: rgb(182, 182, 182);
 }
 
+.login-button:active {
+    transform: scale(0.95);
+}
+
 .link-to-login-signup {
     color: rgb(255, 255, 255);
+}
+
+.link-to-login-signup:hover {
+    color:#b2bbd4;
+    /* border-color: rgb(182, 182, 182); */
 }
 
 /* .moreButton {

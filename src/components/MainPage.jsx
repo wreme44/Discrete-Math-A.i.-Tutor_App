@@ -24,7 +24,8 @@ const MainPage = () => {
             <div className="col-span-1 bg-gray-800 p-4 rounded">
             <h5 className="text-xl font">Lessons Instructions etc</h5>
             </div>
-            <div className="col-span-1 bg-gray-800 p-4 rounded">Center Column</div>
+            <div className="col-span-1 bg-gray-800 p-4 rounded">
+                <h5 className="text-xl font">LaTeX Image Input</h5></div>
             <div className="col-span-1">
               <ChatBox />
             </div>

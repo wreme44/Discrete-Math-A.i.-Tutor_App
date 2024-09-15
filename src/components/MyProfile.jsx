@@ -80,8 +80,8 @@ const MyProfile = () => {
                     </>
                 ) : (
                     <>
-                        <p className="link-to-login-signup">Don't have an Account?<Link to="/signup"> Sign Up</Link></p>
-                        <p className="link-to-login-signup">Have an Account?<Link to="/login"> Login</Link></p>
+                        <p>Don't have an Account?<Link className="link-to-login-signup" to="/signup"> Sign Up</Link></p>
+                        <p >Have an Account?<Link className="link-to-login-signup" to="/login"> Login</Link></p>
                     </>
                 )}
             </div>
