@@ -10,9 +10,16 @@ import 'highlight.js/styles/atom-one-dark.css';
 const ChatBox = () => {
     // work on storing messages for each session
     // so messages in chat don't vanish when switching pages
-  const [messages, setMessages] = useState([]);
+//   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState('');
+  const [messages, setMessages] = useState(() => {
+
+    const savedHistory = sessionStorage.getItem('messages');
+    return savedHistory ? JSON.parse(savedHistory) : [];
+  })
+
   const textareaRef = useRef(null);
+//   const messagesEndRef = useRef(null);
 
   const handleSend = async () => {
 
@@ -20,18 +27,28 @@ const ChatBox = () => {
 
       const newMessages = [...messages, {role: 'user', content: userInput}];
       setMessages(newMessages);
-      setUserInput('');
+      setUserInput(''); // clearing input after user sends message
+
+    //   const updateChatHistory = [...chatHistory, {role: 'user', content: userInput}];
+    //   setChatHistory(updateChatHistory); // triggering useeffect saving session storage
 
       try {
         const response = await axios.post('http://localhost:5000/api/chat', {
           messages: newMessages,
         });
-        setMessages(prevMessages => [...prevMessages, {role: 'assistant', content: response.data.message.content}]);
+
+        const assistantReply = {role: 'assistant', content: response.data.message.content};
+        setMessages(prevMessages => [...prevMessages, assistantReply]);
+
+        // const updateWithChatAssistant = [...newMessages, assistantReply];
+        // setMessages(newMessages);
 
       } catch (error) {
 
         console.error('Error fetching API:', error);
-        setMessages(prevMessages => [...prevMessages, {role: 'assistant', content: 'Error: Unable to fetch response from tutor agent.'}]);
+
+        const errorMessage = {role: 'assistant', content: 'Error: Unable to fetch response from tutor agent.'};
+        setMessages(prevMessages => [...prevMessages, errorMessage]);
       }
     }
   };
@@ -43,10 +60,38 @@ const ChatBox = () => {
     textarea.style.height = `${textarea.scrollHeight}px`;
   }
 
+  // update message history when state of [messages] changes 
+  useEffect(() => {
+
+    sessionStorage.setItem('messages', JSON.stringify(messages))
+  }, [messages])
+
+  // remove message history in case tab / browser closes or reloads  
+  useEffect(() => {
+
+    const handleBeforeUnload = () => {
+        sessionStorage.removeItem('messages');
+    }
+    // adding event listener for when tab or browser is closed
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    // removing listener once unmounted
+    return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+    }
+  }, [])
+
+  // adjust text area box when state of [useInput] changes 
   useEffect(() => {
 
     adjustTextareaHeight();
   }, [userInput])
+
+//   useEffect(() => {
+
+//     if (messagesEndRef.current) {
+//         messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
+//     }
+//   }, [messages]);
 
   return (
     <div className='bg-gray-800 p-4 rounded h-full flex flex-col'>
@@ -58,6 +103,7 @@ const ChatBox = () => {
             </span>
           </div>
         ))}
+        {/* <div ref={messagesEndRef}/> */}
       </div>
       <div className='flex'>
         <div className='flex items-end flex-grow'>
@@ -79,7 +125,7 @@ const ChatBox = () => {
   );
 };
 
-
+export default ChatBox;
 
 
 // // return (
@@ -110,6 +156,3 @@ const ChatBox = () => {
 
 
 // }
-
-
-export default ChatBox;

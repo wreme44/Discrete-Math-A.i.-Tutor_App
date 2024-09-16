@@ -87,38 +87,37 @@ so all regular CSS is in App.css, Tailwind CSS in index.css*/
 
 /* main page 3 column grid */
 
-.custom-3-grid{
+/* .custom-3-grid{
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 4px;
-    height: calc(100vh - 60px); /* Adjust height to account for the navbar */
-    margin-top: 50px; /* Offset the navbar height */
+    height: calc(100vh - 60px);
+    margin-top: 50px;
     margin-left: 10px;
     width: 98vw;
-    max-width: none;
-    /* margin: 0 auto; */
-    
-}
+    max-width: none; 
+} */
+
+/* .custom-3-columns {
+    width: 100%;
+} */
+
 /* when window is below 300px middle column becomes 2fr larger than other columns */
 @media (min-width: 300px) {
     .custom-3-grid {
-        grid-template-columns: 1fr 2fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 }
 
-.custom-3-columns {
-    /* Ensure columns take up full available width */
-    width: 100%;
-}
-
-/* making scroll bar invisible */
+/* making scroll bar 'invisible' */
 ::-webkit-scrollbar {
-    width: 8px;
+    width: 6px;
+    height: 8px;
 }
   
 ::-webkit-scrollbar-thumb {
-    background-color: #4b5563; /* gray-700 */
-    border-radius: 4px;
+    background-color: #020405d1; /* gray-700 */
+    border-radius: 10px;
 }
 
 body {

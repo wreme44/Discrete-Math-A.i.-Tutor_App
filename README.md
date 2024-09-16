@@ -35,7 +35,7 @@ This web app:
 
 ## Video Walkthrough
 
-![Video Walkthrough](./public/)
+![Video Walkthrough](./public/demo.gif)
 
 ## License
 
