@@ -1,5 +1,11 @@
 import React, {useState, useRef, useEffect} from 'react';
 import axios from 'axios';
+import ReactMarkdown from 'react-markdown';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/atom-one-dark.css';
 
 const ChatBox = () => {
     // work on storing messages for each session
