@@ -69,6 +69,9 @@ const MyProfile = () => {
 
     return (
         <div className="myAccount">
+            {/* <div className="logo-account">
+                <img className="logo-profile" src="./logo.png"/>
+            </div> */}
             <div className="myAccount-content">
                 <h5 className="myAccount-title">Your DiscreteMentor Account,</h5>
                 <h2>{user ? user.email : 'Sign up or Login'}</h2>

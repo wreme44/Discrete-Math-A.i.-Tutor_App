@@ -8,121 +8,119 @@ import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 
 const ChatBox = () => {
-    // work on storing messages for each session
-    // so messages in chat don't vanish when switching pages
-//   const [messages, setMessages] = useState([]);
-  const [userInput, setUserInput] = useState('');
-  const [messages, setMessages] = useState(() => {
 
-    const savedHistory = sessionStorage.getItem('messages');
-    return savedHistory ? JSON.parse(savedHistory) : [];
-  })
+    const [userInput, setUserInput] = useState('');
+    const [messages, setMessages] = useState(() => {
+        // storing / redisplaying message history current session
+        const savedHistory = sessionStorage.getItem('messages');
+        return savedHistory ? JSON.parse(savedHistory) : [];
+    })
 
-  const textareaRef = useRef(null);
-//   const messagesEndRef = useRef(null);
+    // const messagesEndRef = useRef(null);
+    const textareaRef = useRef(null);
 
-  const handleSend = async () => {
+    const handleSend = async () => {
 
-    if (userInput.trim()) {
+        if (userInput.trim()) {
 
-      const newMessages = [...messages, {role: 'user', content: userInput}];
-      setMessages(newMessages);
-      setUserInput(''); // clearing input after user sends message
+            const newMessages = [...messages, { role: 'user', content: userInput }];
+            setMessages(newMessages);
+            setUserInput(''); // clearing input field after user sends message
 
-    //   const updateChatHistory = [...chatHistory, {role: 'user', content: userInput}];
-    //   setChatHistory(updateChatHistory); // triggering useeffect saving session storage
+            try {
+                const response = await axios.post('http://localhost:5000/api/chat', {
+                    messages: newMessages,
+                });
 
-      try {
-        const response = await axios.post('http://localhost:5000/api/chat', {
-          messages: newMessages,
-        });
+                const assistantReply = { role: 'assistant', content: response.data.message.content };
+                setMessages(prevMessages => [...prevMessages, assistantReply]);
 
-        const assistantReply = {role: 'assistant', content: response.data.message.content};
-        setMessages(prevMessages => [...prevMessages, assistantReply]);
+            } catch (error) {
 
-        // const updateWithChatAssistant = [...newMessages, assistantReply];
-        // setMessages(newMessages);
+                console.error('Error fetching API:', error);
+                const errorMessage = { role: 'assistant', content: 'Error: Unable to fetch response from tutor agent.' };
+                setMessages(prevMessages => [...prevMessages, errorMessage]);
+            }
+        }
+    };
+    
+    const adjustTextareaHeight = () => {
 
-      } catch (error) {
-
-        console.error('Error fetching API:', error);
-
-        const errorMessage = {role: 'assistant', content: 'Error: Unable to fetch response from tutor agent.'};
-        setMessages(prevMessages => [...prevMessages, errorMessage]);
-      }
+        const textarea = textareaRef.current;
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
     }
-  };
 
-  const adjustTextareaHeight = () => {
+    // update message history when state of [messages] changes 
+    useEffect(() => {
 
-    const textarea = textareaRef.current;
-    textarea.style.height = 'auto';
-    textarea.style.height = `${textarea.scrollHeight}px`;
-  }
+        sessionStorage.setItem('messages', JSON.stringify(messages))
+    }, [messages])
 
-  // update message history when state of [messages] changes 
-  useEffect(() => {
+    // remove message history in case tab / browser closes or reloads  
+    useEffect(() => {
 
-    sessionStorage.setItem('messages', JSON.stringify(messages))
-  }, [messages])
+        const handleBeforeUnload = () => {
+            sessionStorage.removeItem('messages');
+        }
+        // adding event listener for when tab or browser is closed
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        // removing listener once unmounted
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        }
+    }, [])
 
-  // remove message history in case tab / browser closes or reloads  
-  useEffect(() => {
+    // adjust text area box when state of [useInput] changes 
+    useEffect(() => {
 
-    const handleBeforeUnload = () => {
-        sessionStorage.removeItem('messages');
-    }
-    // adding event listener for when tab or browser is closed
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    // removing listener once unmounted
-    return () => {
-        window.removeEventListener('beforeunload', handleBeforeUnload);
-    }
-  }, [])
+        adjustTextareaHeight();
+    }, [userInput])
 
-  // adjust text area box when state of [useInput] changes 
-  useEffect(() => {
+    //   useEffect(() => {
 
-    adjustTextareaHeight();
-  }, [userInput])
+    //     if (messagesEndRef.current) {
+    //         messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
+    //     }
+    //   }, [messages]);
 
-//   useEffect(() => {
-
-//     if (messagesEndRef.current) {
-//         messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
-//     }
-//   }, [messages]);
-
-  return (
-    <div className='bg-gray-800 p-4 rounded h-full flex flex-col'>
-      <div className='flex-1 overflow-y-auto mb-4'>
-        {messages.map((msg, index) => (
-          <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-            <span className={`inline-block p-2 rounded ${msg.role === 'user' ? 'bg-blue-900 text-white' : 'bg-gray-800'}`}>
-              {msg.content}
-            </span>
-          </div>
-        ))}
-        {/* <div ref={messagesEndRef}/> */}
-      </div>
-      <div className='flex'>
-        <div className='flex items-end flex-grow'>
-            <textarea
-            ref={textareaRef}
-            className="flex-1 p-2 rounded-l bg-gray-700 resize-none"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            onKeyUp={(e) => e.key === 'Enter' && handleSend()}
-            rows={1}
-            style={{overflow: 'hidden'}}
-            />
-            <button className="ml-2 p-2 bg-blue-400 rounded flex-shrink-0" style={{ width: '50px', height: '40px' }} onClick={handleSend}>
-                <img src="/send-button.png" alt="Send" style={{ width: '100%', height: '100%' }}/>
-            </button>
+    return (
+        <div className='bg-gray-800 p-4 rounded h-full flex flex-col'>
+            <div className='flex-1 overflow-y-auto mb-4'>
+                {messages.length > 0 ? (messages.map((msg, index) => (
+                    <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
+                        <span className={`inline-block p-2 rounded ${msg.role === 'user' ? 'bg-blue-900 text-white' : 'bg-gray-800'}`}>
+                            {msg.content}
+                        </span>
+                    </div>
+                ))) : (
+                    <div className='d-mentor-box'>
+                        <h3>DiscreteMentor</h3>
+                        {/* <img className="d-mentor" src='/D.Mentor.png'/> */}
+                        <img className="d-mentor" src='/D.Mentor2.png'/>
+                    </div>
+                )}
+                {/* <div ref={messagesEndRef}/> */}
+            </div>
+            <div className='flex'>
+                <div className='flex items-end flex-grow'>
+                    <textarea
+                        placeholder='Message Tutor'
+                        ref={textareaRef}
+                        className="flex-1 p-2 rounded-2xl bg-gray-700 resize-none"
+                        value={userInput}
+                        onChange={(e) => setUserInput(e.target.value)}
+                        onKeyUp={(e) => e.key === 'Enter' && handleSend()}
+                        rows={1}
+                        style={{ overflow: 'hidden' }}
+                    />
+                    <button className="ml-2 p-2 bg-blue-400 rounded-2xl flex-shrink-0" style={{width: '50px', height: '40px'}} onClick={handleSend}>
+                        <img src="/send-button.png" alt="Send" style={{width: '100%', height: '100%'}} />
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default ChatBox;
