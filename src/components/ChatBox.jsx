@@ -3,9 +3,12 @@ import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import {BlockMath, InlineMath} from 'react-katex';
 import 'katex/dist/katex.min.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
+
+import remarkGfm from 'remark-gfm'
 
 const ChatBox = () => {
 
@@ -15,32 +18,115 @@ const ChatBox = () => {
         const savedHistory = sessionStorage.getItem('messages');
         return savedHistory ? JSON.parse(savedHistory) : [];
     })
+    const [isTyping, setIsTyping] = useState(false);
 
-    // const messagesEndRef = useRef(null);
+    //use references to dom elements
+    const assistantMessageRef = useRef(''); // accumulate streaming data
+    const messagesEndRef = useRef(null);
     const textareaRef = useRef(null);
 
     const handleSend = async () => {
 
         if (userInput.trim()) {
 
-            const newMessages = [...messages, { role: 'user', content: userInput }];
+            const newMessages = [...messages, {role: 'user', content: userInput}];
             setMessages(newMessages);
             setUserInput(''); // clearing input field after user sends message
+            setIsTyping(true);
+            assistantMessageRef.current = ''; // resetting assistant message buffer
 
-            try {
-                const response = await axios.post('http://localhost:5000/api/chat', {
-                    messages: newMessages,
-                });
+            fetch('http://localhost:5000/api/chat', {
 
-                const assistantReply = { role: 'assistant', content: response.data.message.content };
-                setMessages(prevMessages => [...prevMessages, assistantReply]);
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({messages: newMessages}),
+            })
+                .then((response) => {
 
-            } catch (error) {
+                    if (!response.ok) {
+                        throw new Error('network response was not ok');
+                    }
 
-                console.error('Error fetching API:', error);
-                const errorMessage = { role: 'assistant', content: 'Error: Unable to fetch response from tutor agent.' };
-                setMessages(prevMessages => [...prevMessages, errorMessage]);
-            }
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder('utf-8');
+                    // let done = false;
+
+                    const readStream = () => {
+
+                        reader.read().then(({done, value}) => {
+                            
+                            if (done) {
+                                
+                                setIsTyping(false);
+                                return;
+                            }
+                            const chunk = decoder.decode(value, {stream: true});
+                            const lines = chunk.split('\n').filter((line) => line.trim() !== '');
+
+                            for (const line of lines) {
+
+                                if(line.startsWith('data: ')) {
+                                    
+                                    const data = line.replace('data: ', '');
+                                    if (data === '[DONE]') {
+
+                                        setIsTyping(false);
+                                        return;
+                                    }
+                                    try {
+                                        const parsed = JSON.parse(data);
+                                        let text = parsed.content || '';
+                                        // replace double with single backslashes for latex rendering
+                                        // text = text.replace(/\\\\/g, '\\');
+                                        assistantMessageRef.current += text;
+                                        setMessages((prevMessages) => {
+                                            
+                                            const updateMessages = [...prevMessages];
+                                            // checking if last message is from assistant
+                                            if (
+                                                updateMessages.length > 0 && 
+                                                updateMessages[updateMessages.length - 1].role === 'assistant' 
+                                            ) {
+                                                // updating last assistant message
+                                                updateMessages[updateMessages.length -1].content = assistantMessageRef.current;
+                                            } else {
+                                                // adding updated message from tutor assistant
+                                                updateMessages.push({
+                                                    role: 'assistant',
+                                                    content: assistantMessageRef.current,
+                                                })
+                                            }
+                                            return updateMessages;
+                                        })
+                                    } catch (error) {
+                                        console.error('error parsing streaming data: ', error);
+                                    }
+                                }
+                            }
+                            readStream(); // continue reading stream
+                        }).catch((error) => {
+                            console.error('Error reading stream:', error);
+                            setMessages((prevMessages) => [
+                              ...prevMessages,
+                              {role: 'assistant', content: 'Error: Unable to fetch response from tutor agent.'},
+                            ]);
+                            setIsTyping(false);
+                        });
+                    }
+                    readStream();
+                })
+                .catch((error) => {
+
+                    console.error('error with fetching stream: ', error);
+                    setMessages((prevMessages) => [
+                        ...prevMessages, 
+                        {role: 'assistant', 
+                        content: 'Error: Unable to fetch response from tutor agent.'},
+                    ])
+                    setIsTyping(false);
+                })
         }
     };
     
@@ -77,12 +163,174 @@ const ChatBox = () => {
         adjustTextareaHeight();
     }, [userInput])
 
-    //   useEffect(() => {
+      useEffect(() => {
 
-    //     if (messagesEndRef.current) {
-    //         messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
-    //     }
-    //   }, [messages]);
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
+        }
+      }, [messages]);
+      
+    
+
+
+
+
+
+
+
+
+    // using react-katex BlockMath instead of rehype-katex
+    // const renderers = {
+
+    //     code({ node, inline, className, children, ...props }) {
+
+    //         const match = /language-(\w+)/.exec(className || '');
+    //         const codeContent = children[0] || '';
+
+    //         // Detect LaTeX code blocks
+    //         if (!inline && match && (match[1] === 'latex' || match[1] === 'math')) {
+    //             return (
+    //                 <BlockMath math={codeContent.trim()} />
+    //             );
+    //         }
+
+    //         // Regular code blocks with syntax highlighting
+    //         if (!inline && match) {
+    //             return (
+    //                 <pre className='my-2'>
+    //                     <code
+    //                         className={`language-${match[1]} hljs`}
+    //                         dangerouslySetInnerHTML={{
+    //                             __html: hljs.highlight(codeContent, { language: match[1] }).value,
+    //                         }}
+    //                     />
+    //                 </pre>
+    //             );
+    //         }
+
+    //         // Inline code
+    //         return (
+    //             <code className="bg-gray-700 p-1 rounded" {...props}>
+    //                 {children}
+    //             </code>
+    //         );
+    //     },
+    // };
+
+
+
+
+
+    // renderer for code blocks: latex, syntax highlighting
+    const renderers = {
+
+        code({ node, inline, className, children, ...props }) {
+
+            // if (!Array.isArray(children) || children.length === 0){
+            //     return <code className='bg-gray-700 p-1 rounded' {...props}></code>;
+            // }
+
+            if (!children || children.length === 0 || typeof children[0] !== 'string'){
+                return <code className="bg-gray-700 p-1 rounded" {...props}></code>
+            }
+
+            const match = /language-(\w+)/.exec(className || '');
+            const codeContent = children[0];
+
+            // to detect latex code blocks and render properly
+
+            // if (!inline && (codeContent.startsWith('\\[') || codeContent.startsWith('\\('))) {
+
+            //     const math = codeContent.replace(/\\\\/g, '\\').trim();
+
+            //     if (math.startsWith('\\[') && math.endsWith('\\]')) {
+            //         return <BlockMath math={math.replace(/\\[|\\]/g, '')}/>;
+            //     } else {
+            //         return <InlineMath math={math.replace(/\\\(|\\\)/g, '')}/>
+            //     }
+            // }
+            
+            // to detect latex code blocks and render properly
+            if (!inline && (codeContent.startsWith('\\[') || codeContent.startsWith('\\('))) {
+                // remove extra backslashes for correct latex parsing
+                const math = codeContent.replace(/\\\\/g, '\\').trim();
+                return (
+                    <ReactMarkdown
+                        children={math}
+                        remarkPlugins={[remarkMath, remarkGfm]}
+                        rehypePlugins={[rehypeKatex]}
+                    />
+                );
+            }
+            // apply wrapping + syntax highlighting to regular code block
+            return !inline && match ? (
+                <pre className='my-2 whitespace-pre-wrap break-words'>
+                    <code
+                        className={`language-${match[1]} hljs`}
+                        dangerouslySetInnerHTML={{
+                            __html: hljs.highlight(codeContent, { language: match[1] }).value,
+                        }}
+                        style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}
+                    />
+                </pre>
+            ) : (
+                <code 
+                    className="bg-gray-700 p-1 rounded whitespace-pre-wrap break-words" 
+                    {...props}
+                    style={{whiteSpace: 'pre-wrap', wordWrap: 'break-word'}}
+                >
+                    {children}
+                </code>
+            );
+        },
+    };
+
+
+
+
+
+
+
+
+    // renders for code responses with syntax highlighting, inline for latex expr, math equations etc.
+    // const renderers = {
+
+    //     code({node, inline, className, children, ...props}) {
+
+    //         console.log('Rendering code block:', {node, inline, className, children, ...props});
+
+    //         if (!Array.isArray(children) || children.length === 0){
+    //             return <code className='bg-gray-700 p-1 rounded' {...props}></code>;
+    //         }
+
+    //         const codeContent = children[0];
+    //         // extrat lang from classname if avail and validating
+    //         const match = /language-(\w+)/.exec(className || '');
+    //         const language = match ? match[1] : '';
+
+    //         if (!inline && language) {
+
+    //             try {
+    //                 const highlighted = hljs.highlight(codeContent, {language}).value;
+    //                 return (
+    //                     <pre className='my-2'>
+    //                         <code
+    //                             className={`language-${language} hljs`}
+    //                             dangerouslySetInnerHTML={{__html: highlighted}}
+    //                         />
+    //                     </pre>
+    //                 )
+    //             } catch (err){
+    //                 console.error(`error highlighting language "${language}":`, err);
+    //             }
+    //         }
+    //         return (
+    //             <code className="bg-gray-700 p-1 rounded" {...props}>
+    //                 {codeContent}
+    //             </code>
+    //         )
+    //     },
+    // }
 
     return (
         <div className='bg-gray-800 p-4 rounded h-full flex flex-col'>
@@ -90,17 +338,32 @@ const ChatBox = () => {
                 {messages.length > 0 ? (messages.map((msg, index) => (
                     <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                         <span className={`inline-block p-2 rounded ${msg.role === 'user' ? 'bg-blue-900 text-white' : 'bg-gray-800'}`}>
-                            {msg.content}
+                            {msg.role === 'assistant' ? (
+                                <ReactMarkdown
+                                    children={msg.content}
+                                    remarkPlugins={[remarkMath, remarkGfm]}
+                                    rehypePlugins={[rehypeKatex]}
+                                    components={renderers}
+                                />
+                            ) : (
+                                msg.content
+                            )}
                         </span>
                     </div>
                 ))) : (
                     <div className='d-mentor-box'>
                         <h3>DiscreteMentor</h3>
-                        {/* <img className="d-mentor" src='/D.Mentor.png'/> */}
                         <img className="d-mentor" src='/D.Mentor2.png'/>
                     </div>
                 )}
-                {/* <div ref={messagesEndRef}/> */}
+                <div ref={messagesEndRef}/>
+                {isTyping && (
+                    <div className='mb-2 text-left'>
+                        <span className='inline-block p-2 rounded bg-gray-800 text-white'>
+                            <em>...</em>
+                        </span>
+                    </div>
+                )}
             </div>
             <div className='flex'>
                 <div className='flex items-end flex-grow'>
@@ -110,11 +373,21 @@ const ChatBox = () => {
                         className="flex-1 p-2 rounded-2xl bg-gray-700 resize-none"
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
-                        onKeyUp={(e) => e.key === 'Enter' && handleSend()}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter' && !e.shiftKey) {
+                                e.preventDefault();
+                                handleSend();
+                            }
+                        }}
                         rows={1}
                         style={{ overflow: 'hidden' }}
                     />
-                    <button className="ml-2 p-2 bg-blue-400 rounded-2xl flex-shrink-0" style={{width: '50px', height: '40px'}} onClick={handleSend}>
+                    <button 
+                        className="ml-2 p-2 bg-blue-400 rounded-2xl flex-shrink-0" 
+                        style={{width: '50px', height: '40px'}} 
+                        onClick={handleSend}
+                        disabled={isTyping}
+                    >
                         <img src="/send-button.png" alt="Send" style={{width: '100%', height: '100%'}} />
                     </button>
                 </div>

@@ -35,7 +35,7 @@ This web app:
 
 ## Video Walkthrough
 
-![Video Walkthrough](./public/demo.gif)
+![Video Walkthrough](./public/demo-gpt-latex-formatting.gif)
 
 ## License
 

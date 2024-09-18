@@ -86,26 +86,10 @@
   color: #888;
 }
 
-.d-mentor-box{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: 110px;
-    /* height: 100%; */
-}
-
-.d-mentor-box h3{
-    font-size: larger;
-}
-.d-mentor{
-    width: 333px;
-    height: 333px;
-    opacity: 0.3;
-}
 
 
 /*----------------------------------------------------------------*/
+
 /* Contains Regular CSS styling (no tailwind) */
 
 
@@ -472,3 +456,53 @@
 }
 
 /* ---------------------------------------------------------------- */
+
+
+/* ChatBox.jsx gpt tutor interface */
+
+/* latex + highlight formatting gpt texts */
+code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+pre {
+    white-space: pre-wrap; /* Preserve formatting while allowing wrapping */
+    word-wrap: break-word; /* Break long words in code blocks */
+    overflow-x: auto;      /* Enable horizontal scrolling if necessary */
+    max-width: 100%;       /* Ensure the code block doesn't overflow the container */
+}
+
+.katex {
+    max-width: 100%;       /* Ensure LaTeX expressions don't overflow */
+    word-wrap: break-word; /* Break long LaTeX expressions if necessary */
+    white-space: pre-wrap; /* Allow wrapping for long LaTeX content */
+}
+
+.math {
+    display: inline-block; /* Keep math expressions inline */
+    max-width: 100%;       /* Ensure inline math expressions wrap */
+    white-space: pre-wrap; /* Allow wrapping for inline LaTeX content */
+    overflow-x: auto;      /* Handle long inline math expressions */
+}
+
+/* for fun logo display */
+.d-mentor-box{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 110px;
+    /* height: 100%; */
+}
+
+.d-mentor-box h3{
+    font-size: larger;
+}
+.d-mentor{
+    width: 333px;
+    height: 333px;
+    opacity: 0.3;
+}
+
+/* ---------------------------------------------------------------------- */

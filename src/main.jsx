@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
 import './App.css'
+
+import 'katex/dist/katex.min.css';
+import 'highlight.js/styles/atom-one-dark.css';
+
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import Layout from '../routes/Layout.jsx';
 import NotFound from '../routes/NotFound.jsx';
