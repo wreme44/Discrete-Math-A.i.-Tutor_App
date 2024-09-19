@@ -163,20 +163,46 @@ const ChatBox = () => {
         adjustTextareaHeight();
     }, [userInput])
 
-      useEffect(() => {
+    useEffect(() => {
 
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
         }
-      }, [messages]);
-      
+    }, [messages]);
     
+    // cleaning latex, removing markdown notation for proper displaying
+    const cleanLatexResponse = (content) => {
+
+        let cleanedContent = content.replace(/```markdown([\s\S]*?)```/g, '$1');;
 
 
 
+        // removes triple backticks around markdown sections
+        cleanedContent = cleanedContent.replace(/```([\s\S]*?)```/g, (match, latexContent) => {
 
+            if (!latexContent.includes('$')) {
+                return `$$${latexContent.trim()}$$`;
+            }
+            return latexContent;
+        })
+        
+        
+        cleanedContent = content.replace(/```markdown([\s\S]*?)```/g, '$1');
 
+        // removes single backticks
+        cleanedContent = cleanedContent.replace(/`?/g, '');
 
+        // ensures math expressions enclosed in `$$` are on their own lines for block-level math
+        cleanedContent = cleanedContent.replace(/\$\$([^$]+)\$\$/g, '\n$$$1$$\n');
+
+        // removes any unnecessary newlines in between lines inside math blocks to prevent raw output
+        cleanedContent = cleanedContent.replace(/\$\$\s*\n/g, '$$\n').replace(/\n\s*\$\$/g, '\n$$');
+
+        // replaces any extra backslashes
+        cleanedContent = cleanedContent.replace(/\\\\/g, '\\');
+
+        return cleanedContent.trim();
+    };
 
 
     // using react-katex BlockMath instead of rehype-katex
@@ -223,6 +249,18 @@ const ChatBox = () => {
 
     // renderer for code blocks: latex, syntax highlighting
     const renderers = {
+        // solving issue where it detects p / div tags within p tags
+        paragraph: ({node, children}) => {
+
+            const hasBlockChild = children.some(child => 
+                typeof child === 'object' &&
+                (child.type === 'code' || child.type === 'div')
+            )
+            if (hasBlockChild) {
+                return <div>{children}</div>
+            }
+            return <div>{children}</div>
+        },
 
         code({ node, inline, className, children, ...props }) {
 
@@ -237,6 +275,8 @@ const ChatBox = () => {
             const match = /language-(\w+)/.exec(className || '');
             const codeContent = children[0];
 
+            // codeContent = cleanLatexResponse(codeContent);
+
             // to detect latex code blocks and render properly
 
             // if (!inline && (codeContent.startsWith('\\[') || codeContent.startsWith('\\('))) {
@@ -250,16 +290,19 @@ const ChatBox = () => {
             //     }
             // }
             
-            // to detect latex code blocks and render properly
-            if (!inline && (codeContent.startsWith('\\[') || codeContent.startsWith('\\('))) {
+            // process latex content and render properly, using react markdown remarkmath rehypkatex
+            if (!inline && (codeContent.startsWith('\\[') || codeContent.startsWith('\\(') || codeContent.startsWith('$$') || codeContent.startsWith('$'))) {
                 // remove extra backslashes for correct latex parsing
-                const math = codeContent.replace(/\\\\/g, '\\').trim();
+                const math = codeContent.trim();
                 return (
-                    <ReactMarkdown
-                        children={math}
-                        remarkPlugins={[remarkMath, remarkGfm]}
-                        rehypePlugins={[rehypeKatex]}
-                    />
+                    <div>
+                        <ReactMarkdown
+                            children={math}
+                            remarkPlugins={[remarkMath, remarkGfm]}
+                            rehypePlugins={[rehypeKatex]}
+                        />
+                    </div>
+                    
                 );
             }
             // apply wrapping + syntax highlighting to regular code block
@@ -287,7 +330,32 @@ const ChatBox = () => {
 
 
 
-
+    // const renderers = {
+    //     code({ node, inline, className, children, ...props }) {
+    //         const codeContent = children[0] || '';
+    
+    //         // Handle block LaTeX (e.g., $$...$$ or \[...\])
+    //         if (!inline && (codeContent.startsWith('$$') || codeContent.startsWith('\\['))) {
+    //             const math = codeContent.replace(/\$\$/g, '').replace(/\\\[|\\\]/g, '').trim();
+    //             return math ? <BlockMath math={math} /> : <code>{codeContent}</code>;
+    //         }
+    
+    //         // Handle inline LaTeX (e.g., $...$ or \(...\))
+    //         if (inline && (codeContent.startsWith('$') || codeContent.startsWith('\\('))) {
+    //             const math = codeContent.replace(/\$/g, '').replace(/\\\(|\\\)/g, '').trim();
+    //             return math ? <InlineMath math={math} /> : <code>{codeContent}</code>;
+    //         }
+    
+    //         // Handle other code blocks (non-LaTeX)
+    //         return (
+    //             <pre className='my-2 whitespace-pre-wrap break-words'>
+    //                 <code className={`language-${className} hljs`} {...props}>
+    //                     {children}
+    //                 </code>
+    //             </pre>
+    //         );
+    //     }
+    // };
 
 
 
@@ -332,6 +400,12 @@ const ChatBox = () => {
     //     },
     // }
 
+    // removing markdown notation for proper displaying
+    // const cleanMessageContent = (message) => {
+
+    //     return message.replace(/```markdown\n?/g, '').replace(/```/g, '');
+    // }
+
     return (
         <div className='bg-gray-800 p-4 rounded h-full flex flex-col'>
             <div className='flex-1 overflow-y-auto mb-4'>
@@ -339,12 +413,15 @@ const ChatBox = () => {
                     <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                         <span className={`inline-block p-2 rounded ${msg.role === 'user' ? 'bg-blue-900 text-white' : 'bg-gray-800'}`}>
                             {msg.role === 'assistant' ? (
+                                <>{console.log(msg.content)}
+                                {console.log(cleanLatexResponse(msg.content))}
                                 <ReactMarkdown
-                                    children={msg.content}
+                                    children={cleanLatexResponse(msg.content)}
                                     remarkPlugins={[remarkMath, remarkGfm]}
                                     rehypePlugins={[rehypeKatex]}
                                     components={renderers}
                                 />
+                                </>
                             ) : (
                                 msg.content
                             )}
@@ -356,7 +433,7 @@ const ChatBox = () => {
                         <img className="d-mentor" src='/D.Mentor2.png'/>
                     </div>
                 )}
-                <div ref={messagesEndRef}/>
+                {/* <div ref={messagesEndRef}/> */}
                 {isTyping && (
                     <div className='mb-2 text-left'>
                         <span className='inline-block p-2 rounded bg-gray-800 text-white'>

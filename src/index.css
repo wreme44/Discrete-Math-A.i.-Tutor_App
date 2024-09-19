@@ -103,11 +103,11 @@ so all regular CSS is in App.css, Tailwind CSS in index.css*/
 } */
 
 /* when window is below 300px middle column becomes 2fr larger than other columns */
-@media (min-width: 300px) {
+/* @media (min-width: 300px) {
     .custom-3-grid {
         grid-template-columns: 1fr 1fr 1fr;
     }
-}
+} */
 
 /* making scroll bar 'invisible' */
 ::-webkit-scrollbar {

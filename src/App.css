@@ -366,20 +366,23 @@
     transform: scale(0.90);
 }
 
-  @media (max-width: 700px) {
+/* @media (max-width: 700px) {
     .side-nav {
-      display: none;
+        display: none;
     }
+
     .header-nav button {
         display: block;
     }
+
     .view-post {
-      left: 10px !important; 
+        left: 10px !important;
     }
+
     .display-posts {
         left: 10px !important;
     }
-  }
+} */
 
 
 .loading-gif {
