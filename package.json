@@ -1,5 +1,5 @@
 {
-  "name": "notus-react",
+  "name": "discrete-mentor",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -16,16 +16,18 @@
     "axios": "^1.7.7",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
-    "express": "^4.20.0",
+    "express": "^4.21.0",
     "highlight.js": "^11.10.0",
     "openai": "^4.58.2",
     "re-resizable": "^6.9.18",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-katex": "^3.0.1",
     "react-markdown": "^9.0.1",
     "react-resizable": "^3.0.5",
     "react-router-dom": "^6.26.2",
     "rehype-katex": "^7.0.1",
+    "remark-gfm": "^4.0.0",
     "remark-math": "^6.0.0"
   },
   "devDependencies": {

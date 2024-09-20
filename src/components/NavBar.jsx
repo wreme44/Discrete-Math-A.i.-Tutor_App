@@ -25,10 +25,14 @@ const NavBar = () => {
                 <nav className="header-nav">
                     <Link to="/">
                         <div className="header-home-button">
-                            <img className="home-icon" alt="home button" src='/home-icon.png'/>
+                            <img className="home-icon" alt="home button" src='/logo.png'/>
                         </div>
                     </Link>
-                    <Link className="header-title" to="/">Discrete Mentor</Link>
+                    <Link to="/">
+                        <div className="header-title">
+                            Discrete Mentor
+                        </div>
+                    </Link>
                     <div className="header-right">
                         <Link className="header-account" to="/myProfile">My Account |</Link>
                         <Link className="header-login" to="/login">Log In</Link>

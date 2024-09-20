@@ -6,9 +6,9 @@ const MainPage = () => {
     return (
         <div className="grid grid-cols-3 gap-4 p-4 h-screen pt-16">
             <div className="col-span-1 bg-gray-800 p-4 rounded overflow-y-auto max-h-full">
-                <h5 className="text-xl font">Lessons Instructions etc</h5><br/><br/>
+                <h5 className="text-xl font-bold">Lessons Instructions etc</h5><br/><br/>
                 {/* text lessons just example testing scrolling effect */}
-                <p>
+                <p className='mt-4'>
                     Discrete Math Overview for College Beginner Level: <br/><br/>
                     Discrete mathematics is a branch of mathematics that deals with distinct and separate values, 
                     often focusing on countable sets, such as integers or logical statements. <br/>
@@ -86,7 +86,7 @@ const MainPage = () => {
                 </p>
             </div>
             <div className="col-span-1 bg-gray-800 p-4 rounded overflow-y-auto max-h-full">
-                <h5 className="text-xl font">LaTeX Image Input</h5><br/><br/>
+                <h5 className="text-xl font-bold">LaTeX Image Input</h5><br/><br/>
                 {/* latex parser just example testing scrolling effect */}
                 <p>
                     A LaTeX parser is a software tool or component that interprets and processes LaTeX code, 
