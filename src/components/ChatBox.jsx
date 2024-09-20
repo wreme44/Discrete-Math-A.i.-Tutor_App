@@ -7,7 +7,6 @@ import {BlockMath, InlineMath} from 'react-katex';
 import 'katex/dist/katex.min.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
-
 import remarkGfm from 'remark-gfm'
 
 const ChatBox = () => {
@@ -19,6 +18,7 @@ const ChatBox = () => {
         return savedHistory ? JSON.parse(savedHistory) : [];
     })
     const [isTyping, setIsTyping] = useState(false);
+    // const [isUserScrolling, setIsUserScrolling] = useState(false);
 
     //use references to dom elements
     const assistantMessageRef = useRef(''); // accumulate streaming data
@@ -163,19 +163,18 @@ const ChatBox = () => {
         adjustTextareaHeight();
     }, [userInput])
 
+    // scroll to newest incoming message
     useEffect(() => {
 
         if (messagesEndRef.current) {
             messagesEndRef.current.scrollIntoView({behavior: 'smooth'});
         }
-    }, [messages]);
+    }, [messages]); 
     
     // cleaning latex, removing markdown notation for proper displaying
     const cleanLatexResponse = (content) => {
 
-        let cleanedContent = content.replace(/```markdown([\s\S]*?)```/g, '$1');;
-
-
+        let cleanedContent = content;
 
         // removes triple backticks around markdown sections
         cleanedContent = cleanedContent.replace(/```([\s\S]*?)```/g, (match, latexContent) => {
@@ -186,8 +185,9 @@ const ChatBox = () => {
             return latexContent;
         })
         
-        
         cleanedContent = content.replace(/```markdown([\s\S]*?)```/g, '$1');
+
+        cleanedContent = cleanedContent.replace(/\[([\s\S]*?)\]/g, '$1$$')
 
         // removes single backticks
         cleanedContent = cleanedContent.replace(/`?/g, '');
@@ -203,6 +203,26 @@ const ChatBox = () => {
 
         return cleanedContent.trim();
     };
+
+
+    //     ```latex
+//     \[ \neg (P \land Q) \equiv (\neg P) \lor (\neg Q) \]
+    
+//     \[ \neg (P \lor Q) \equiv (\neg P) \land (\neg Q) \]
+//     ```
+
+//     \[ \neg (P \land Q) \equiv (\neg P) \lor (\neg Q) \]
+    
+//     \[ \neg (P \lor Q) \equiv (\neg P) \land (\neg Q) \]
+
+
+//     `$$ (\neg (P \land Q)) \equiv ((\neg P) \lor (\neg Q)) $$` and 
+//     `$$ (\neg (P \lor Q)) \equiv ((\neg P) \land (\neg Q)) $$`
+
+
+//     $ (\neg (P \land Q)) \equiv ((\neg P) \lor (\neg Q)) $
+//   
+//     $ (\neg (P \lor Q)) \equiv ((\neg P) \land (\neg Q)) $
 
 
     // using react-katex BlockMath instead of rehype-katex
@@ -406,6 +426,8 @@ const ChatBox = () => {
     //     return message.replace(/```markdown\n?/g, '').replace(/```/g, '');
     // }
 
+
+
     return (
         <div className='bg-gray-800 p-4 rounded h-full flex flex-col'>
             <div className='flex-1 overflow-y-auto mb-4'>
@@ -413,8 +435,9 @@ const ChatBox = () => {
                     <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                         <span className={`inline-block p-2 rounded ${msg.role === 'user' ? 'bg-blue-900 text-white' : 'bg-gray-800'}`}>
                             {msg.role === 'assistant' ? (
-                                <>{console.log(msg.content)}
-                                {console.log(cleanLatexResponse(msg.content))}
+                                <>
+                                {/* {console.log(msg.content)}
+                                {console.log(cleanLatexResponse(msg.content))} */}
                                 <ReactMarkdown
                                     children={cleanLatexResponse(msg.content)}
                                     remarkPlugins={[remarkMath, remarkGfm]}
