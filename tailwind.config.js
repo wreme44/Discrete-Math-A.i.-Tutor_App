@@ -1,12 +1,3 @@
-// /** @type {import('tailwindcss').Config} */
-// export default {
-//   content: [],
-//   theme: {
-//     extend: {},
-//   },
-//   plugins: [],
-// }
-
 /** @type {import('tailwindcss').Config} */
 module.exports = {
     content: [
@@ -14,7 +5,53 @@ module.exports = {
       "./src/**/*.{js,ts,jsx,tsx}",
     ],
     theme: {
-      extend: {},
+      extend: {
+        typography: (theme) => ({
+          DEFAULT: {
+            css: {
+              color: theme('colors.white'),
+              a: {
+                color: theme('colors.blue.400'),
+                '&:hover': {
+                  color: theme('colors.blue.600'),
+                },
+              },
+              h1: { color: theme('colors.white') },
+              h2: { color: theme('colors.white') },
+              h3: { color: theme('colors.white') },
+              h4: { color: theme('colors.white') },
+              h5: { color: theme('colors.white') },
+              h6: { color: theme('colors.white') },
+              strong: { color: theme('colors.white') },
+              code: { color: theme('colors.white') },
+              figcaption: { color: theme('colors.gray.400') },
+            },
+          },
+          dark: {
+            css: {
+              color: theme('colors.white'),
+              a: {
+                color: theme('colors.blue.400'),
+                '&:hover': {
+                  color: theme('colors.blue.600'),
+                },
+              },
+              h1: { color: theme('colors.white') },
+              h2: { color: theme('colors.white') },
+              h3: { color: theme('colors.white') },
+              h4: { color: theme('colors.white') },
+              h5: { color: theme('colors.white') },
+              h6: { color: theme('colors.white') },
+              strong: { color: theme('colors.white') },
+              code: { color: theme('colors.white') },
+              figcaption: { color: theme('colors.gray.400') },
+            },
+          },
+        }),
+      },
     },
-    plugins: [],
+    plugins: [
+      require('@tailwindcss/typography'),
+    ],
+    darkMode: 'class',
   }

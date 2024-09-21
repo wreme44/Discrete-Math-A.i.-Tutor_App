@@ -87,28 +87,6 @@ so all regular CSS is in App.css, Tailwind CSS in index.css*/
 
 /* main page 3 column grid */
 
-/* .custom-3-grid{
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 4px;
-    height: calc(100vh - 60px);
-    margin-top: 50px;
-    margin-left: 10px;
-    width: 98vw;
-    max-width: none; 
-} */
-
-/* .custom-3-columns {
-    width: 100%;
-} */
-
-/* when window is below 300px middle column becomes 2fr larger than other columns */
-/* @media (min-width: 300px) {
-    .custom-3-grid {
-        grid-template-columns: 1fr 1fr 1fr;
-    }
-} */
-
 /* making scroll bar 'invisible' */
 ::-webkit-scrollbar {
     width: 6px;
@@ -130,4 +108,30 @@ body {
     word-wrap: break-word; /* Allow long words to wrap */
     max-width: 100%;       /* Prevent overflow */
     overflow-x: auto;      /* Allow scrolling for really long content */
+}
+
+
+
+/* -------------------------------------------------------------- */
+
+/* gpt message formatting output */
+
+.math-block {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+pre {
+  white-space: pre-wrap; 
+  word-wrap: break-word; 
+}
+
+.math-block, pre {
+    max-width: 100%;
+    word-wrap: break-word;
+}
+
+code {
+  max-width: 100%;
+  word-break: break-word;
 }
