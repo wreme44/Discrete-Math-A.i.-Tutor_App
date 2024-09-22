@@ -20,7 +20,7 @@ const ChatBox = () => {
 
     //use references to dom elements
     const assistantMessageRef = useRef(''); // accumulate streaming data
-    const messagesEndRef = useRef(null);
+    // const messagesEndRef = useRef(null);
     const textareaRef = useRef(null);
 
     // sends user message and handles the streaming response from backend
@@ -127,12 +127,12 @@ const ChatBox = () => {
     }, [userInput, adjustTextareaHeight])
 
     // scroll to newest incoming message
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-        }
-    }, [messages]); 
+    //     if (messagesEndRef.current) {
+    //         messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    //     }
+    // }, [messages]); 
 
     // updating message history when state of [messages] changes 
     useEffect(() => {
@@ -327,12 +327,13 @@ const ChatBox = () => {
                     <div className='d-mentor-box'>
                         <h3>DiscreteMentor</h3>
                         <img className="d-mentor" src='/D.Mentor2.png'/>
+                        {/* <img className='typing-gif' alt='... ...' src='/loading.gif'/> */}
                     </div>
                 )}
                 {isTyping && (
                     <div className='mb-2 text-left'>
                         <span className='inline-block p-2 rounded bg-gray-800 text-white'>
-                            <em>...</em>
+                            <em><img className='typing-gif' alt='... ...' src='/loading.gif'/></em>
                         </span>
                     </div>
                 )}

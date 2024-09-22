@@ -12,6 +12,16 @@ const port = process.env.PORT || 5000;
 // middlewares
 app.use(cors());
 app.use(express.json());
+// making sure each chunk is a complete json object
+const isValidJSON = (str) => {
+
+    try {
+        JSON.parse(str);
+        return true;
+    } catch (e) {
+        return false;
+    }
+}
 
 // SSE server sent events
 // handles streaming responses from Gpt Api, forwards them to client
@@ -23,6 +33,8 @@ app.post('/api/chat', async (req, res) => {
     res.setHeader('Cache-Control', 'no-cache'); // disabling caching
     res.setHeader('Connection', 'keep-alive'); // continuous streaming
     res.flushHeaders(); // flushing headers establishing sse with client frontend
+    // buffer to accumulate the chunks, to make sure each chunk is complete json before sending to frontend
+    let buffer = ''; 
 
     try {
 
@@ -81,9 +93,9 @@ app.post('/api/chat', async (req, res) => {
         response.data.on('data', (chunk) => {
 
             // console.log('Received chunk from OpenAI:', chunk.toString());
+            buffer += chunk.toString();
 
-            const lines = chunk
-                .toString()
+            const lines = buffer
                 .split('\n')
                 .filter(line => line.trim() !== '');
             
@@ -100,23 +112,25 @@ app.post('/api/chat', async (req, res) => {
                         return;
                     }
                     try {
-                        const parsed = JSON.parse(data);
-                        const content = parsed.choices?.[0]?.delta?.content || '';
-                        if (content) {
+                        if (isValidJSON(data)){
+
+                            const parsed = JSON.parse(data);
+                            const content = parsed.choices?.[0]?.delta?.content || '';
+                            if (content) {
                             res.write(`data: ${JSON.stringify({content})}\n\n`);
-                            res.write('\n');
+                            // res.write('\n');
+                            }
                         }
+                        buffer = ''; // clearing buffer after parsing, for next chunk
                     } catch (error) {
                         console.error('Error parsing sse data:', error);
                     }
                 }
             }
         })
-
         response.data.on('end', () => {
             res.end();
         })
-
         response.data.on('error', (error) => {
 
             console.error('stream error:', error);

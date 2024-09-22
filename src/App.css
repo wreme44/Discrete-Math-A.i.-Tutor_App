@@ -497,4 +497,10 @@ pre {
     opacity: 0.3;
 }
 
+.typing-gif {
+    width: 15px;
+    height: 15px;
+    /* background-color: transparent; */
+}
+
 /* ---------------------------------------------------------------------- */
