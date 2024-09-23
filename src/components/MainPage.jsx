@@ -10,9 +10,9 @@ const MainPage = () => {
                 <LessonsColumn />
             </div>
             <div className="col-span-1 bg-gray-800 p-4 rounded overflow-y-auto max-h-full">
-                <h5 className="text-xl font">LaTeX Image Input</h5><br/><br/>
+            <h5 className="text-xl font-bold">LaTeX Image Input</h5><br/><br/>
                 {/* latex parser just example testing scrolling effect */}
-                <p>
+                <p className="break-words">
                     A LaTeX parser is a software tool or component that interprets and processes LaTeX code, 
                     which is a typesetting system widely used for creating mathematical and scientific documents. 
                     The parser reads LaTeX code and converts it into a structured format, such as a formatted document 
