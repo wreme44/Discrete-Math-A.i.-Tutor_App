@@ -12,7 +12,9 @@ const MyProfile = () => {
 
     // fetching logged in users authentication details
     useEffect(() => {
+
         const fetchUser = async () => {
+
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
             setIsLoading(false);
@@ -78,8 +80,8 @@ const MyProfile = () => {
                 <h2>{user ? user.email : 'Sign up or Login'}</h2>
                 {user ? (
                     <>
-                        <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploading} />
-                        {avatarUrl && <img src={avatarUrl} alt="Avatar" />}
+                        {/* <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploading} /> */}
+                        {/* {avatarUrl && <img src={avatarUrl} alt="Avatar" />} */}
                         <button onClick={handleSignOut}>Sign Out</button>
                     </>
                 ) : (

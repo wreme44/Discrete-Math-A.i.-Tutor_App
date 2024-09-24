@@ -315,6 +315,9 @@
     align-items: center;
     padding-bottom: 10px;
 }
+.header-login {
+    margin-left: 5px;
+}
 
 .header-login, .header-account {
     margin-right: 5px;
