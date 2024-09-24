@@ -34,7 +34,8 @@ const NavBar = () => {
                         </div>
                     </Link>
                     <div className="header-right">
-                        <Link className="header-account" to="/myProfile">My Account |</Link>
+                        <Link className="header-account" to="/myProfile">My Account</Link>
+                        <p>|</p>
                         <Link className="header-login" to="/login">Log In</Link>
                     </div>
                 </nav>
