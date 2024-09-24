@@ -15,9 +15,9 @@
 }
 
 #root {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 a {
@@ -25,6 +25,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -54,9 +55,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -67,9 +70,11 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
@@ -89,25 +94,32 @@ so all regular CSS is in App.css, Tailwind CSS in index.css*/
 
 /* making scroll bar 'invisible' */
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 8px;
+  width: 6px;
+  height: 8px;
 }
-  
+
 ::-webkit-scrollbar-thumb {
-    background-color: #020405d1; /* gray-700 */
-    border-radius: 10px;
+  background-color: #020405d1;
+  /* gray-700 */
+  border-radius: 10px;
 }
 
 body {
-    @apply bg-gray-900 text-white;
+  @apply bg-gray-900 text-white;
 }
 
 /* Ensure all elements wrap correctly inside the chat box */
-.chat-container code, .chat-container pre, .chat-container .katex {
-    white-space: pre-wrap; /* Ensure code and LaTeX elements wrap */
-    word-wrap: break-word; /* Allow long words to wrap */
-    max-width: 100%;       /* Prevent overflow */
-    overflow-x: auto;      /* Allow scrolling for really long content */
+.chat-container code,
+.chat-container pre,
+.chat-container .katex {
+  white-space: pre-wrap;
+  /* Ensure code and LaTeX elements wrap */
+  word-wrap: break-word;
+  /* Allow long words to wrap */
+  max-width: 100%;
+  /* Prevent overflow */
+  overflow-x: auto;
+  /* Allow scrolling for really long content */
 }
 
 
@@ -122,13 +134,14 @@ body {
 }
 
 pre {
-  white-space: pre-wrap; 
-  word-wrap: break-word; 
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
-.math-block, pre {
-    max-width: 100%;
-    word-wrap: break-word;
+.math-block,
+pre {
+  max-width: 100%;
+  word-wrap: break-word;
 }
 
 code {
