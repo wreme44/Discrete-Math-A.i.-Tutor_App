@@ -35,7 +35,7 @@ const Assessment = () => {
   // Fetching the assessment questions from Supabase
   useEffect(() => {
     const fetchQuestions = async () => {
-      const { data, error } = await supabase.from('AssessmentQuestions').select('*');
+      const { data, error } = await supabase.from('assessmentquestions').select('*');
       if (error) {
         setErrorMsg('Failed to load questions. Please try again.');
       } else {
