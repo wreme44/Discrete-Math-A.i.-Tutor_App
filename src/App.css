@@ -89,6 +89,24 @@
     align-items: center;
     height: 100vh;
     background-color: rgba(255, 255, 255, 0);
+
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 14.png');
+    background-repeat: no-repeat;
+    background-size: 122% 95%;
+    background-position: center;
+}
+
+.signup-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0);
+
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 14.png');
+    background-repeat: no-repeat;
+    background-size: 122% 95%;
+    background-position: center;
 }
 
 .login-container {
@@ -106,6 +124,26 @@
     text-align: center;
     background-color: rgba(48, 122, 183, 0.768);
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.226);
+    /* opacity: 0.9; */
+    /* max-width: 400px; */
+}
+
+.signup-container {
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center; */
+    backdrop-filter: blur(5px);
+    border: 2px solid rgba(48, 122, 183, 0.768);
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 25px;
+    width: 400px;
+    height: 300px;
+    text-align: center;
+    background-color: rgba(48, 122, 183, 0.768);
+    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.226);
+    /* opacity: 0.9; */
     /* max-width: 400px; */
 }
 
@@ -114,7 +152,19 @@
     font-size: 30px;
     font-weight: bold;
     /* padding-bottom: 50px; */
-    margin-bottom: 50px;
+    margin-bottom: 20px;
+}
+
+.signup-title {
+    color: rgb(222, 209, 209);
+    font-size: 30px;
+    font-weight: bold;
+    /* padding-bottom: 50px; */
+    margin-bottom: 20px;
+}
+
+.name {
+    margin-bottom: 5px;
 }
 
 .email{
@@ -125,7 +175,7 @@
     margin-top: 5px;
 }
 
-.email input, .password input {
+.email input, .password input, .name input{
     width: 100%;
     padding: 10px;
     color:#000000;
@@ -138,8 +188,8 @@
     border-radius: 10px;
     border: 1px solid transparent;
     padding: 0.6em 1.2em;
-    margin-top: 40px;
-    margin-bottom: 10px;
+    margin-top: 70px;
+    margin-bottom: 5px;
     font-size: 15px;
     font-weight: 500;
     font-family: inherit;
@@ -149,11 +199,26 @@
     transition: border-color 0.25s;
 }
 
-.login-button:hover {
+.signup-button {
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: rgb(4, 12, 12);
+    color:rgb(250, 250, 250);
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+.login-button:hover, .signup-button:hover {
     border-color: rgb(182, 182, 182);
 }
 
-.login-button:active {
+.login-button:active, .signup-button:avtive {
     transform: scale(0.95);
 }
 
@@ -164,6 +229,21 @@
 .link-to-login-signup:hover {
     color:#b2bbd4;
     /* border-color: rgb(182, 182, 182); */
+}
+
+.notification{
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    margin-top: 25px;
+    /* margin-bottom: 5px; */
+    font-size: 17px;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: rgba(255, 1, 1, 0.409);
+    color:rgb(250, 250, 250);
+    /* opacity: 0.5; */
+    /* transition: border-color 0.25s; */
 }
 
 /* .moreButton {
@@ -184,6 +264,13 @@
     align-items: center;
     height: 100vh;
     background-color: rgba(255, 255, 255, 0);
+
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 12.png');
+    background-repeat: no-repeat;
+    background-size: 105% 95%;
+    background-position: center;
+    margin: 0;
+    opacity: 0.15; */
 }
 
 /* .logo-account{
@@ -224,7 +311,28 @@
     font-size: 30px;
     font-weight: bold;
     /* padding-bottom: 50px; */
-    margin-bottom: 50px;
+    margin-bottom: 30px;
+}
+
+.username {
+    color: rgb(0, 0, 0);
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.signout-button {
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    margin-top: 60px;
+    /* margin-bottom: 10px; */
+    font-size: 15px;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: rgb(4, 12, 12);
+    color:rgb(250, 250, 250);
+    cursor: pointer;
+    transition: border-color 0.25s;
 }
 
 .myAccount-login-signup {

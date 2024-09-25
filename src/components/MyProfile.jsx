@@ -6,6 +6,7 @@ const MyProfile = () => {
 
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
+    const [name, setName] = useState('');
     const [uploading, setUploading] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState(null);
     const navigate = useNavigate();
@@ -18,6 +19,20 @@ const MyProfile = () => {
             const { data: { user } } = await supabase.auth.getUser();
             setUser(user);
             setIsLoading(false);
+
+            if (user) {
+                const {data, error} = await supabase
+                    .from('users')
+                    .select('name')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (error) {
+                    console.error(error);
+                } else {
+                    setName(data.name);
+                }
+            }
         }
         fetchUser();
     }, [])
@@ -77,12 +92,12 @@ const MyProfile = () => {
             </div>
             <div className="myAccount-content">
                 <h5 className="myAccount-title">Your DiscreteMentor Account,</h5>
-                <h2>{user ? user.email : 'Sign up or Login'}</h2>
+                <h2 className="username">{user ? name : 'Sign up or Login below'}</h2>
                 {user ? (
                     <>
                         {/* <input type="file" accept="image/*" onChange={handleFileUpload} disabled={uploading} /> */}
                         {/* {avatarUrl && <img src={avatarUrl} alt="Avatar" />} */}
-                        <button onClick={handleSignOut}>Sign Out</button>
+                        <button className="signout-button" onClick={handleSignOut}>Sign Out</button>
                     </>
                 ) : (
                     <>
