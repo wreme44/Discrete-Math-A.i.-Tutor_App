@@ -16,12 +16,14 @@ const ChatBox = () => {
         return savedHistory ? JSON.parse(savedHistory) : [];
     })
     const [isTyping, setIsTyping] = useState(false);
+    const [hasNewMessages, setHasNewMessages] = useState(false); // tracking new messages
     // const [isUserScrolling, setIsUserScrolling] = useState(false);
 
     //use references to dom elements
     const assistantMessageRef = useRef(''); // accumulate streaming data
-    // const messagesEndRef = useRef(null);
+    const messagesEndRef = useRef(null);
     const textareaRef = useRef(null);
+    const isComponentMounted = useRef(false); // ref to track if component just mounted
 
     // sends user message and handles the streaming response from backend
     const handleSend = useCallback(async () => {
@@ -56,10 +58,10 @@ const ChatBox = () => {
             // continuously reading from stream unti done
             while (true) {
                 // reading next chunk of data
-                const { done, value } = await reader.read();
+                const {done, value} = await reader.read();
                 if (done) break; // exiting loop when no more data
                 // decoding chunk of data from bytes to string
-                const chunk = decoder.decode(value, { stream: true });
+                const chunk = decoder.decode(value, {stream: true});
                 const lines = chunk.split('\n').filter(line => line.trim() !== ''); // splitting chunk into lines, filtering out empty lines
                 // going through each line of chunk
                 for (const line of lines) {
@@ -82,6 +84,7 @@ const ChatBox = () => {
                             setMessages(prevMessages => {
 
                                 const lastMessage = prevMessages[prevMessages.length - 1];
+                                setHasNewMessages(true); // indicate that new messages incoming
                                 if (lastMessage && lastMessage.role === 'assistant') {
                                     return [
                                         ...prevMessages.slice(0, -1),
@@ -113,6 +116,7 @@ const ChatBox = () => {
 
     // user text input box height adjustment in case of larger prompts 
     const adjustTextareaHeight = useCallback(() => {
+
         const textarea = textareaRef.current;
         if (textarea) {
           textarea.style.height = 'auto';
@@ -126,13 +130,20 @@ const ChatBox = () => {
         adjustTextareaHeight();
     }, [userInput, adjustTextareaHeight])
 
-    // scroll to newest incoming message
-    // useEffect(() => {
+    // scroll to newest incoming message if new messages incoming + its not page navigation
+    useEffect(() => {
 
-    //     if (messagesEndRef.current) {
-    //         messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-    //     }
-    // }, [messages]); 
+        if (isComponentMounted.current && hasNewMessages && messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+        } else {
+            setHasNewMessages(false); // reset after page load or remount
+        }
+    }, [messages, hasNewMessages]);
+
+    // set component as mounted after initial load
+    useEffect(() => {
+        isComponentMounted.current = true;
+    }, []);
 
     // updating message history when state of [messages] changes 
     useEffect(() => {
@@ -337,7 +348,7 @@ const ChatBox = () => {
                         </span>
                     </div>
                 )}
-                {/* <div ref={messagesEndRef}/> */}
+                <div ref={messagesEndRef}/>
             </div>
             <div className='flex'>
                 <div className='flex items-end flex-grow'>
