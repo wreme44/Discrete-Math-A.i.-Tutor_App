@@ -6,7 +6,7 @@ const MainPage = () => {
     
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-16 min-h-screen md:h-screen">
-            <div className="col-span-1 bg-gray-800 p-4 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
+            <div className="col-span-1 bg-gray-800 pl-3 pt-3 pb-2 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
                 <LessonsColumn />
             </div>
             <div className="col-span-1 bg-gray-800 p-4 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">

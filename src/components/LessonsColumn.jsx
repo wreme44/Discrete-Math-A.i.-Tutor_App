@@ -66,7 +66,7 @@ const LessonsColumn = () => {
             {currentLesson && (
                 <h2 className="text-xl font-bold mb-1">{currentLesson.title}</h2>
             )}
-            <div className="flex-1 overflow-y-auto p-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white">
+            <div className="flex-1 overflow-y-auto p-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentLesson && (
                     <>
                         <div
@@ -103,7 +103,7 @@ const LessonsColumn = () => {
                 <button
                     onClick={handleNext}
                     disabled={currentLessonIndex === lessonsData.length - 1}
-                    className={`px-4 py-1 rounded ${currentLessonIndex === lessonsData.length - 1
+                    className={`mr-2 px-4 py-1 rounded ${currentLessonIndex === lessonsData.length - 1
                         ? "bg-blue-900 cursor-not-allowed"
                         : "bg-blue-700 hover:bg-blue-800"
                         } text-white`}

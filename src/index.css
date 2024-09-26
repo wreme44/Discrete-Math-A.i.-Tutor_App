@@ -148,3 +148,12 @@ code {
   max-width: 100%;
   word-break: break-word;
 }
+
+/* -------------------------------------------------------------- */
+
+/* Lessons column */
+
+/* ensuring lessons container takes full width */
+.override-max-width {
+  max-width: 97% !important; 
+}
