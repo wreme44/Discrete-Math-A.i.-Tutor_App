@@ -23,7 +23,8 @@ const LessonsColumn = () => {
         const fetchLessons = async () => {
             const { data, error } = await supabase
                 .from('lessons') // Ensure the table name matches exactly
-                .select('*');
+                .select('*')
+                .order('lesson_id', { ascending: true }); // Order by 'id' column in ascending order
 
             if (error) {
                 console.error('Error fetching lessons:', error.message);
