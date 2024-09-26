@@ -5,11 +5,11 @@ import LessonsColumn from './LessonsColumn';
 const MainPage = () => {
     
     return (
-        <div className="grid grid-cols-3 gap-4 p-4 h-screen pt-16">
-            <div className="col-span-1 bg-gray-800 p-4 rounded overflow-y-auto max-h-full">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-16 min-h-screen md:h-screen">
+            <div className="col-span-1 bg-gray-800 p-4 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
                 <LessonsColumn />
             </div>
-            <div className="col-span-1 bg-gray-800 p-4 rounded overflow-y-auto max-h-full">
+            <div className="col-span-1 bg-gray-800 p-4 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
             <h5 className="text-xl font-bold">LaTeX Image Input</h5><br/><br/>
                 {/* latex parser just example testing scrolling effect */}
                 <p className="break-words">
@@ -30,7 +30,7 @@ const MainPage = () => {
                     that are critical in presenting formal mathematical work.<br/>
                 </p>
             </div>
-            <div className="col-span-1 rounded overflow-y-auto max-h-full">
+            <div className="chatbox-container col-span-1 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
               <ChatBox />
             </div>
           </div>

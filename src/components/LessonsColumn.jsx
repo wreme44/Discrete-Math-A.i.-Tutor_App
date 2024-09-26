@@ -8,6 +8,7 @@ const LessonsColumn = () => {
     const [lessonsData, setLessonsData] = useState([]);
     // State to keep track of current lesson index
     const [currentLessonIndex, setCurrentLessonIndex] = useState(() => {
+
         const savedIndex = sessionStorage.getItem("currentLessonIndex");
         return savedIndex ? parseInt(savedIndex, 10) : 0;
     });
@@ -18,6 +19,7 @@ const LessonsColumn = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
+
         const fetchLessons = async () => {
             const { data, error } = await supabase
                 .from('lessons') // Ensure the table name matches exactly
@@ -39,12 +41,14 @@ const LessonsColumn = () => {
         const newIndex = currentLessonIndex - 1;
         setCurrentLessonIndex(newIndex);
         sessionStorage.setItem("currentLessonIndex", newIndex);
+        setShowHint(false);
     };
 
     const handleNext = () => {
         const newIndex = currentLessonIndex + 1;
         setCurrentLessonIndex(newIndex);
         sessionStorage.setItem("currentLessonIndex", newIndex);
+        setShowHint(false);
     };
 
     const toggleHint = () => {
@@ -57,20 +61,22 @@ const LessonsColumn = () => {
     const currentLesson = lessonsData[currentLessonIndex];
 
     return (
-        <div className="lessons-column">
-            <div className="lesson-content">
+        <div className="flex flex-col h-full">
+            {currentLesson && (
+                <h2 className="text-xl font-bold mb-1">{currentLesson.title}</h2>
+            )}
+            <div className="flex-1 overflow-y-auto p-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white">
                 {currentLesson && (
                     <>
-                        <h2>{currentLesson.title}</h2>
                         <div
                             dangerouslySetInnerHTML={{
-                                __html: DOMPurify.sanitize(marked(currentLesson.content)),
+                                __html: DOMPurify.sanitize(marked(currentLesson.content))
                             }}
                         />
                         {showHint && (
-                            <div className="hint">
-                                <h3>Hint</h3>
-                                <p>{currentLesson.hint}</p>
+                            <div className="mt-4 pb-1 pt-0 px-2 bg-gray-600 rounded">
+                                <h3 className="text-md font-semibold mb-1">Hint:</h3>
+                                <p className="text-sm">{currentLesson.hint}</p>
                             </div>
                         )}
                     </>

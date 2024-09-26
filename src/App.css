@@ -1,5 +1,5 @@
 #root {
-    width: 100vw; /* Ensure the root element takes up the full viewport width */
+    width: 100%; /* Ensure the root element takes up the full viewport width */
     margin: 0;
     padding: 0;
     box-sizing: border-box; /* Ensure padding and border do not affect width */
@@ -563,6 +563,23 @@
 
 /* ChatBox.jsx gpt tutor interface */
 
+.chatbox-container {
+    position: relative;
+    max-height: 100%;
+    overflow-y: auto; /* ChatBox can scroll */
+}
+
+.chatbox-content {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+.latex-container {
+    position: relative;
+    max-width: 100%;
+    overflow-x: hidden; /* Make sure LaTeX content stays inside */
+}
+
 /* latex + highlight formatting gpt texts */
 code {
     white-space: pre-wrap;
@@ -578,6 +595,7 @@ pre {
 
 .katex {
     max-width: 100%;       /* Ensure LaTeX expressions don't overflow */
+    overflow: hidden; /* Ensure it doesn’t overflow */
     word-wrap: break-word; /* Break long LaTeX expressions if necessary */
     white-space: pre-wrap; /* Allow wrapping for long LaTeX content */
 }
@@ -589,7 +607,7 @@ pre {
     overflow-x: auto;      /* Handle long inline math expressions */
 }
 
-/* for fun logo display */
+/* logo display */
 .d-mentor-box{
     display: flex;
     flex-direction: column;
