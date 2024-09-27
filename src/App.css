@@ -565,7 +565,8 @@
 
 .chatbox-container {
     position: relative;
-    max-height: 100%;
+    max-height: 89%;
+    margin-top: 65px;
     overflow-y: auto; /* ChatBox can scroll */
 }
 

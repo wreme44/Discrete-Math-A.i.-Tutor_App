@@ -1,40 +1,58 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ChatBox from './ChatBox'
 import LessonsColumn from './LessonsColumn';
 
 const MainPage = () => {
-    
+
+    const [isChatVisible, setIsChatVisible] = useState(false);
+    const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+    const toggleChatBox = () => {
+        setIsChatVisible(!isChatVisible)
+    }
+
+    useEffect(() => {
+
+        const handleResize = () => {
+
+            if (window.innerWidth < 768) {
+                setIsChatVisible(false)
+                setIsSmallScreen(true)
+            }
+            else {
+                setIsSmallScreen(false)
+            }
+        }
+        handleResize()
+        window.addEventListener('resize', handleResize)
+        return () => window.removeEventListener('resize', handleResize)
+    }, [])
+
     return (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-16 min-h-screen md:h-screen">
+        <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-16 min-h-screen md:h-screen">
             <div className="col-span-1 bg-gray-800 pl-3 pt-3 pb-2 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
                 <LessonsColumn />
             </div>
-            <div className="col-span-1 bg-gray-800 p-4 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
-            <h5 className="text-xl font-bold">LaTeX Image Input</h5><br/><br/>
+            <div className="md:col-span-2 bg-gray-800 p-4 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
+            <button className='bg-blue-600 text-white px-2 py-1 rounded md:inline hidden' onClick={toggleChatBox}>
+                    {isChatVisible ? "Hide Tutor" : "Message Tutor"}
+                </button>
+                <h5 className="text-xl font-bold">LaTeX Image Input</h5><br /><br />
                 {/* latex parser just example testing scrolling effect */}
-                <p className="break-words">
-                    A LaTeX parser is a software tool or component that interprets and processes LaTeX code, 
-                    which is a typesetting system widely used for creating mathematical and scientific documents. 
-                    The parser reads LaTeX code and converts it into a structured format, such as a formatted document 
-                    or a digital display, like a PDF or HTML.<br/><br/>
-
-                    Use in Discrete Math:<br/><br/>
-                    In discrete mathematics, LaTeX is often used to write complex mathematical symbols, equations, 
-                    proofs, and logical statements in a clear and professional manner. <br/>A LaTeX parser ensures that these 
-                    mathematical expressions are correctly formatted and displayed, which is especially helpful for:<br/><br/>
-
-                    -Writing proofs (induction, direct, etc.)<br/>
-                    -Displaying set notation, logic expressions, and graph theory visuals<br/>
-                    -Creating formal documentation for assignments and papers<br/>
-                    -In essence, a LaTeX parser is used to turn LaTeX code into readable and well-structured documents 
-                    that are critical in presenting formal mathematical work.<br/>
-                </p>
             </div>
-            <div className="chatbox-container col-span-1 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
-              <ChatBox />
+            {isChatVisible && !isSmallScreen && (
+                // <div className="chatbox-container col-span-1 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
+                //     <ChatBox />
+                // </div>
+                <div className="chatbox-container absolute right-1 md:col-span-1 w-full md:w-1/3 h-[500px] md:h-full rounded overflow-y-auto z-10 border-4 border-black">
+                    <ChatBox />
+                </div>
+            )}
+            <div className="chatbox-container md:hidden col-span-1 rounded overflow-y-auto max-h-full h-[500px]">
+                <ChatBox />
             </div>
-          </div>
-      );
+        </div>
+    );
 }
 
 export default MainPage;
