@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient"; // Ensure supabaseClient is properly configured
+import LatexRenderer from "./LatexRenderer";
 
 const LessonsColumn = () => {
     // State to hold lessons data fetched from the database
@@ -61,6 +62,28 @@ const LessonsColumn = () => {
 
     const currentLesson = lessonsData[currentLessonIndex];
 
+    const renderContent = (content) => {
+        // Regex to detect LaTeX code between $...$ or $$...$$
+        const latexRegex = /\$\$(.*?)\$\$|\$(.*?)\$/g;
+
+        // Check if content contains LaTeX
+        const hasLatex = latexRegex.test(content);
+
+        if (hasLatex) {
+            // If LaTeX is detected, use LatexRenderer for LaTeX content
+            return <LatexRenderer content={content} />;
+        } else {
+            // Render non-LaTeX content as plain HTML
+            return (
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(marked(content)),
+                    }}
+                />
+            );
+        }
+    };
+
     return (
         <div className="flex flex-col h-full">
             {currentLesson && (
@@ -69,11 +92,7 @@ const LessonsColumn = () => {
             <div className="flex-1 overflow-y-auto p-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentLesson && (
                     <>
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: DOMPurify.sanitize(marked(currentLesson.content))
-                            }}
-                        />
+                        {renderContent(currentLesson.content)}
                         {showHint && (
                             <div className="mt-4 pb-1 pt-0 px-2 bg-gray-600 rounded">
                                 <h3 className="text-md font-semibold mb-1">Hint:</h3>
