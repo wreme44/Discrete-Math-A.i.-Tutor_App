@@ -157,3 +157,14 @@ code {
 .override-max-width {
   max-width: 97% !important; 
 }
+
+/* --------------------------------------------------------------- */
+
+/* gpt tutor */
+
+/* .chatbox-container {
+    position: relative;
+    max-height: 89%;
+    margin-top: 65px;
+    overflow-y: auto;
+} */

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-import { supabase } from "../supabaseClient"; // Ensure supabaseClient is properly configured
+import { supabase } from "../supabaseClient";
 import LatexRenderer from "./LatexRenderer";
 
 const LessonsColumn = () => {
@@ -13,8 +13,6 @@ const LessonsColumn = () => {
         const savedIndex = sessionStorage.getItem("currentLessonIndex");
         return savedIndex ? parseInt(savedIndex, 10) : 0;
     });
-    // Toggle hint
-    const [showHint, setShowHint] = useState(false);
     // Loading and error states
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -53,10 +51,6 @@ const LessonsColumn = () => {
         setShowHint(false);
     };
 
-    const toggleHint = () => {
-        setShowHint(!showHint);
-    };
-
     if (loading) return <p>Loading lessons...</p>;
     if (error) return <p>{error}</p>;
 
@@ -93,12 +87,6 @@ const LessonsColumn = () => {
                 {currentLesson && (
                     <>
                         {renderContent(currentLesson.content)}
-                        {showHint && (
-                            <div className="mt-4 pb-1 pt-0 px-2 bg-gray-600 rounded">
-                                <h3 className="text-md font-semibold mb-1">Hint:</h3>
-                                <p className="text-sm">{currentLesson.hint}</p>
-                            </div>
-                        )}
                     </>
                 )}
             </div>
@@ -112,12 +100,6 @@ const LessonsColumn = () => {
                         } text-white`}
                 >
                     Previous
-                </button>
-                <button
-                    onClick={toggleHint}
-                    className="px-2 py-1 bg-gray-500 hover:bg-gray-600 rounded text-white"
-                >
-                    {showHint ? "Hide Hint" : "Show Hint"}
                 </button>
                 <button
                     onClick={handleNext}

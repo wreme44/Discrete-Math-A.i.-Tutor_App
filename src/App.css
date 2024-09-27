@@ -563,12 +563,12 @@
 
 /* ChatBox.jsx gpt tutor interface */
 
-.chatbox-container {
+/* .chatbox-container {
     position: relative;
     max-height: 89%;
     margin-top: 65px;
-    overflow-y: auto; /* ChatBox can scroll */
-}
+    overflow-y: auto;
+} */
 
 .chatbox-content {
     max-height: 100%;

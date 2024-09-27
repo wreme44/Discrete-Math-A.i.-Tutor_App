@@ -34,26 +34,25 @@ const MainPage = () => {
             <div className="col-span-1 bg-gray-800 pl-3 pt-3 pb-2 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
                 <LessonsColumn />
             </div>
-            <div className="md:col-span-2 bg-gray-800 p-4 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
-                <button className='absolute bg-blue-600 text-white px-2 py-1 rounded md:inline hidden' onClick={toggleChatBox}>
+            <div className="md:col-span-2 bg-gray-800 pl-3 pt-3 pb-2 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
+                <button className='absolute hidden md:block bg-blue-800 text-white px-2 py-1 rounded' onClick={toggleChatBox}>
                     {isChatVisible ? "Hide Tutor" : "Message Tutor"}
                 </button>
-                <h5 className="text-xl font-bold">LaTeX Image Input</h5><br /><br />
                 <ExercisesPage />
-                {/* latex parser just example testing scrolling effect */}
             </div>
-            {isChatVisible && !isSmallScreen && (
-                // <div className="chatbox-container col-span-1 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
-                //     <ChatBox />
-                // </div>
-
-                <div className="chatbox-container absolute right-1 md:col-span-1 w-full md:w-1/3 h-[500px] md:h-full rounded overflow-y-auto z-10 border-4 border-black">
+            {isChatVisible && !isSmallScreen ? (
+                <div className={`md:absolute right-1 md:col-span-1 md:w-1/3 w-full rounded overflow-y-auto z-10 border-4 border-black 
+                    ${isChatVisible && !isSmallScreen ? 'opacity-100' : 'opacity-0'}
+                    transition-all duration-700 ease-in-out`}
+                    style={{ height: '89%', marginTop: '65px', pointerEvents: isChatVisible ? 'auto' : 'none' }}
+                >
+                    <ChatBox />
+                </div>
+            ) : (
+                <div className="md:hidden col-span-1 rounded overflow-y-auto max-h-full h-[500px]">
                     <ChatBox />
                 </div>
             )}
-            <div className="chatbox-container md:hidden col-span-1 rounded overflow-y-auto max-h-full h-[500px]">
-                <ChatBox />
-            </div>
         </div>
     );
 }
