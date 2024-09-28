@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import {ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import ChatBox from './ChatBox'
 import LessonsColumn from './LessonsColumn';
 import ExercisesPage from './ExercisesPage';
@@ -35,9 +36,20 @@ const MainPage = () => {
                 <LessonsColumn />
             </div>
             <div className="md:col-span-2 bg-gray-800 pl-3 pt-3 pb-2 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
-                <button className='absolute hidden md:block top-16 right-5 bg-blue-800 text-white px-2 py-1 rounded' onClick={toggleChatBox}>
-                    {isChatVisible ? "Hide Tutor" : "Message Tutor"}
+                <button className={`fixed hidden md:inline-flex top-16 right-5 items-center bg-gradient-to-r
+                                 from-yellow-900 to-yellow-700 text-white px-1 py-0 rounded-full 
+                                 shadow-lg hover:from-yellow-800 hover:to-yellow-600 focus:outline-none 
+                                 focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out`}
+                                onClick={toggleChatBox}
+                                aria-label={isChatVisible ? "Hide Tutor Chat" : "Message Tutor"}
+                >
+                    {isChatVisible ? (<><XMarkIcon className="w-4 h-4 mr-1"/>Hide Tutor</>
+                        ) : (<><ChevronDownIcon className="w-4 h-4 mr-1"/>Message Tutor</>
+                    )}
                 </button>
+                {/* <button className='absolute hidden md:block top-16 right-5 bg-blue-800 text-white px-2 py-1 rounded' onClick={toggleChatBox}>
+                    {isChatVisible ? "Hide Tutor" : "Message Tutor"}
+                </button> */}
                 <ExercisesPage />
             </div>
             <div className={`rounded overflow-y-auto ${isSmallScreen
@@ -45,7 +57,7 @@ const MainPage = () => {
                 : `md:absolute right-1 md:col-span-1 md:w-1/3 w-full z-10 border-4 border-black transition-all duration-1000 ease-in-out 
                 ${isChatVisible ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'}`}`}
                 {...(!isSmallScreen && {
-                    style: { height: '85%', marginTop: '100px', pointerEvents: isChatVisible ? 'auto' : 'none' }
+                    style: { height: '86%', marginTop: '90px', pointerEvents: isChatVisible ? 'auto' : 'none' }
                 })}
             >
                 <ChatBox />
