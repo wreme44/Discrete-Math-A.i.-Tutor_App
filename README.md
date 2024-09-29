@@ -35,7 +35,11 @@ This web app:
 
 ## Video Walkthrough
 
-![Video Walkthrough](./public/demo-lesson-pages.gif)
+![Video Walkthrough](./public/demo5.gif)  
+![Video Walkthrough](./public/demo4.gif)  
+![Video Walkthrough](./public/demo3.gif)  
+![Video Walkthrough](./public/demo2.gif)  
+![Video Walkthrough](./public/demo1.gif)  
 
 ## License
 

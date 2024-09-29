@@ -83,7 +83,7 @@ const LessonsColumn = () => {
             {currentLesson && (
                 <h2 className="text-xl font-bold mb-1">{currentLesson.title}</h2>
             )}
-            <div className="flex-1 overflow-y-auto p-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+            <div className="flex-1 overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentLesson && (
                     <>
                         {renderContent(currentLesson.content)}
