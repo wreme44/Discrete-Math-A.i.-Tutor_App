@@ -44,7 +44,7 @@ const ExercisesPage = () => {
     });
     // Toggle hint
     const [showHint, setShowHint] = useState(false);
-    // Loading and error states
+    // loading and error states
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
@@ -57,9 +57,9 @@ const ExercisesPage = () => {
 
         const fetchExercises = async () => {
             const { data, error } = await supabase
-                .from('exercises') // Ensure the table name matches exactly
+                .from('exercises') // ensure table name matches exactly
                 .select('*')
-                .order('exercise_id', { ascending: true }); // Order by 'id' column in ascending order
+                .order('exercise_id', { ascending: true }); // order by 'id' column in ascending order
 
             if (error) {
                 console.error('Error fetching exercises:', error.message);
@@ -102,16 +102,16 @@ const ExercisesPage = () => {
         setShowHint(!showHint);
     };
 
-    // Get all unique lesson IDs
+    // get all unique lesson Ids
     const lessonIds = Object.keys(groupedExercises);
 
-    // Get the exercises for the current lesson ID based on currentExerciseIndex
+    // get exercises for current lesson id based on currentExerciseIndex
     const currentLessonId = lessonIds[currentExerciseIndex];
     const currentExercises = groupedExercises[currentLessonId] || [];
 
     const handleSubmitSolution = (exerciseId, userSolution, exerciseQuestion) => {
 
-        // Ensure userSolution is not empty or undefined before making the API call
+        // ensure userSolution is not empty or undefined before making API call
         if (!userSolution || userSolution.trim() === "") {
             alert("Please enter a solution before submitting.");
             return;
@@ -182,72 +182,77 @@ const ExercisesPage = () => {
 
     return (
         <div className="flex flex-col h-full">
-            <h2 className="text-xl font-bold mb-1">Lesson {currentLessonId}</h2>
-            {currentExercises.map((exercise) => (
-                <div key={exercise.exercise_id} className="mb-6">
-                    <div className="flex-1 overflow-y-auto pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
-                        {renderContent(exercise.question)} 
-                    </div>
-                    {showHint && (
-                        <div className="mt-4 pb-1 pt-0 px-2 bg-gray-600 rounded">
-                            <h3 className="text-md font-semibold mb-1">Hint:</h3>
-                            <p className="text-sm">{renderContent(exercise.hint)}</p>
+            {currentLessonId && (
+                <h2 className="text-xl font-bold mb-1">Lesson {currentLessonId}</h2>
+            )}
+            <div className="flex-1 overflow-y-auto pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+                {currentExercises.map((exercise) => (
+                    <div key={exercise.exercise_id} className="mb-64 flex-1 overflow-y-auto pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+                        {renderContent(exercise.question)}                         
+                        {/* MathLiveInput for the exercise */}
+                        <div className="mt-4">
+                            {/* <h3 className="text-lg font-semibold mb-2">Your Solution:</h3> */}
+                            <MathLiveInput
+                                value={submittedSolutions[exercise.exercise_id] || ""}
+                                onChange={(value) => setSubmittedSolutions({
+                                    ...submittedSolutions,
+                                    [exercise.exercise_id]: value
+                                })}
+                            />
+                            <button
+                                onClick={() => handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question)}
+                                className=" px-1 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-full"
+                            >
+                                Submit Solution
+                            </button>
                         </div>
-                    )}
-                    {/* MathLiveInput for the exercise */}
-                    <div className="mt-4">
-                        {/* <h3 className="text-lg font-semibold mb-2">Your Solution:</h3> */}
-                        <MathLiveInput
-                            value={submittedSolutions[exercise.exercise_id] || ""}
-                            onChange={(value) => setSubmittedSolutions({
-                                ...submittedSolutions,
-                                [exercise.exercise_id]: value
-                            })}
-                        />
+                        {/* Show user's submitted solution */}
+                        {submittedSolutions[exercise.exercise_id] && (
+                            <div className="mt-4">
+                                <h4 className="text-md font-semibold">Your Solution:</h4>
+                                <p>{submittedSolutions[exercise.exercise_id]}</p>
+                            </div>
+                        )}
+                        {/* Display Wolfram API Results */}
+                        {wolframResults[exercise.exercise_id] && (
+                            <div className="mt-4">
+                                <h4 className="text-md font-semibold">Wolfram Alpha Result:</h4>
+                                {wolframResults[exercise.exercise_id]}
+                            </div>
+                        )}
                         <button
-                            onClick={() => handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question)}
-                            className=" px-1 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-full"
+                            onClick={toggleHint}
+                            className="mt-1 px-2 py-1 bg-gray-600 hover:bg-gray-500 rounded-full text-white"
                         >
-                            Submit Solution
+                            {showHint ? "Hide Hint" : "Show Hint"}
                         </button>
+                        {showHint && (
+                            <div className=" pb-1 pt-0 px-2 bg-gray-600 rounded">
+                                <h3 className="text-md font-semibold mb-1">Hint:</h3>
+                                <p className="text-sm">{renderContent(exercise.hint)}</p>
+                            </div>
+                        )}
                     </div>
-                    {/* Show user's submitted solution */}
-                    {submittedSolutions[exercise.exercise_id] && (
-                        <div className="mt-4">
-                            <h4 className="text-md font-semibold">Your Solution:</h4>
-                            <p>{submittedSolutions[exercise.exercise_id]}</p>
-                        </div>
-                    )}
-                    {/* Display Wolfram API Results */}
-                    {wolframResults[exercise.exercise_id] && (
-                        <div className="mt-4">
-                            <h4 className="text-md font-semibold">Wolfram Alpha Result:</h4>
-                            {wolframResults[exercise.exercise_id]}
-                        </div>
-                    )}
-                    <button
-                        onClick={toggleHint}
-                        className="mt-1 mb-11 px-2 py-1 bg-gray-600 hover:bg-gray-500 rounded-full text-white"
-                    >
-                        {showHint ? "Hide Hint" : "Show Hint"}
-                    </button>
-                </div>
-            ))}
-            <div className="mt-4 flex justify-between">
+                ))}
+            </div>
+            <div className="mt-1 flex justify-between">
                 <button
                     onClick={handlePrevious}
                     disabled={currentExerciseIndex === 0}
-                    className={`px-2 py-1 rounded ${currentExerciseIndex === 0
+                    className={`px-2 py-0 rounded-full ${currentExerciseIndex === 0
                         ? "bg-blue-900 cursor-not-allowed"
                         : "bg-blue-700 hover:bg-blue-800"
                         } text-white`}
                 >
                     Previous
                 </button>
+                <p className="text-sm text-gray-400">
+                    Exercise {currentExerciseIndex + 1} of {exercisesData.length}
+                </p>
                 <button
                     onClick={handleNext}
                     disabled={currentExerciseIndex === exercisesData.length - 1}
-                    className={`mr-2 px-4 py-1 rounded ${currentExerciseIndex === exercisesData.length - 1
+                    className={`mr-4 px-4 py-0 rounded-full ${currentExerciseIndex === exercisesData.length - 1
                         ? "bg-blue-900 cursor-not-allowed"
                         : "bg-blue-700 hover:bg-blue-800"
                         } text-white`}
@@ -255,11 +260,96 @@ const ExercisesPage = () => {
                     Next
                 </button>
             </div>
-            <p className="mt-2 text-sm text-gray-400">
-                Exercise {currentExerciseIndex + 1} of {exercisesData.length}
-            </p>
         </div>
     );
 };
 
 export default ExercisesPage
+
+
+
+
+
+// return (
+//     <div className="flex flex-col h-full">
+//         {currentLessonId && (
+//             <h2 className="text-xl font-bold mb-1">Lesson {currentLessonId}</h2>
+//         )}
+        
+//         {currentExercises.map((exercise) => (
+//             <div key={exercise.exercise_id} className="mb-6">
+//                 <div className="flex-1 overflow-y-auto pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+//                     {renderContent(exercise.question)} 
+//                 </div>
+//                 {showHint && (
+//                     <div className="mt-4 pb-1 pt-0 px-2 bg-gray-600 rounded">
+//                         <h3 className="text-md font-semibold mb-1">Hint:</h3>
+//                         <p className="text-sm">{renderContent(exercise.hint)}</p>
+//                     </div>
+//                 )}
+//                 {/* MathLiveInput for the exercise */}
+//                 <div className="mt-4">
+//                     {/* <h3 className="text-lg font-semibold mb-2">Your Solution:</h3> */}
+//                     <MathLiveInput
+//                         value={submittedSolutions[exercise.exercise_id] || ""}
+//                         onChange={(value) => setSubmittedSolutions({
+//                             ...submittedSolutions,
+//                             [exercise.exercise_id]: value
+//                         })}
+//                     />
+//                     <button
+//                         onClick={() => handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question)}
+//                         className=" px-1 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-full"
+//                     >
+//                         Submit Solution
+//                     </button>
+//                 </div>
+//                 {/* Show user's submitted solution */}
+//                 {submittedSolutions[exercise.exercise_id] && (
+//                     <div className="mt-4">
+//                         <h4 className="text-md font-semibold">Your Solution:</h4>
+//                         <p>{submittedSolutions[exercise.exercise_id]}</p>
+//                     </div>
+//                 )}
+//                 {/* Display Wolfram API Results */}
+//                 {wolframResults[exercise.exercise_id] && (
+//                     <div className="mt-4">
+//                         <h4 className="text-md font-semibold">Wolfram Alpha Result:</h4>
+//                         {wolframResults[exercise.exercise_id]}
+//                     </div>
+//                 )}
+//                 <button
+//                     onClick={toggleHint}
+//                     className="mt-1 mb-11 px-2 py-1 bg-gray-600 hover:bg-gray-500 rounded-full text-white"
+//                 >
+//                     {showHint ? "Hide Hint" : "Show Hint"}
+//                 </button>
+//             </div>
+//         ))}
+//         <div className="mt-4 flex justify-between">
+//             <button
+//                 onClick={handlePrevious}
+//                 disabled={currentExerciseIndex === 0}
+//                 className={`px-2 py-1 rounded ${currentExerciseIndex === 0
+//                     ? "bg-blue-900 cursor-not-allowed"
+//                     : "bg-blue-700 hover:bg-blue-800"
+//                     } text-white`}
+//             >
+//                 Previous
+//             </button>
+//             <button
+//                 onClick={handleNext}
+//                 disabled={currentExerciseIndex === exercisesData.length - 1}
+//                 className={`mr-2 px-4 py-1 rounded ${currentExerciseIndex === exercisesData.length - 1
+//                     ? "bg-blue-900 cursor-not-allowed"
+//                     : "bg-blue-700 hover:bg-blue-800"
+//                     } text-white`}
+//             >
+//                 Next
+//             </button>
+//         </div>
+//         <p className="mt-2 text-sm text-gray-400">
+//             Exercise {currentExerciseIndex + 1} of {exercisesData.length}
+//         </p>
+//     </div>
+// );

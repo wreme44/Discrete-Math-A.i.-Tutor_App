@@ -647,3 +647,7 @@ math-field {
     border-radius: 18px;
     border: 3px solid #090909;
 }
+
+math-field:hover {
+    cursor: pointer;
+}

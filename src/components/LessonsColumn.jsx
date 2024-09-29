@@ -90,21 +90,24 @@ const LessonsColumn = () => {
                     </>
                 )}
             </div>
-            <div className="mt-4 flex justify-between">
+            <div className="mt-1 flex justify-between">
                 <button
                     onClick={handlePrevious}
                     disabled={currentLessonIndex === 0}
-                    className={`px-2 py-1 rounded ${currentLessonIndex === 0
+                    className={`px-2 py-0 rounded-full ${currentLessonIndex === 0
                         ? "bg-blue-900 cursor-not-allowed"
                         : "bg-blue-700 hover:bg-blue-800"
                         } text-white`}
                 >
                     Previous
                 </button>
+                <p className="text-sm text-gray-400">
+                    Lesson {currentLessonIndex + 1} of {lessonsData.length}
+                </p>
                 <button
                     onClick={handleNext}
                     disabled={currentLessonIndex === lessonsData.length - 1}
-                    className={`mr-2 px-4 py-1 rounded ${currentLessonIndex === lessonsData.length - 1
+                    className={`mr-2 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
                         ? "bg-blue-900 cursor-not-allowed"
                         : "bg-blue-700 hover:bg-blue-800"
                         } text-white`}
@@ -112,9 +115,6 @@ const LessonsColumn = () => {
                     Next
                 </button>
             </div>
-            <p className="mt-2 text-sm text-gray-400">
-                Lesson {currentLessonIndex + 1} of {lessonsData.length}
-            </p>
         </div>
     );
 };
