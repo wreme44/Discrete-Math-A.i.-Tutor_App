@@ -106,7 +106,7 @@ const ExercisesPage = () => {
         const newIndex = currentExerciseIndex - 1;
         setcurrentExerciseIndex(newIndex);
         sessionStorage.setItem("currentExerciseIndex", newIndex);
-        setShowHint(false);
+        // setShowHint(false);
         setUserSolution("");
     };
 
@@ -114,7 +114,7 @@ const ExercisesPage = () => {
         const newIndex = currentExerciseIndex + 1;
         setcurrentExerciseIndex(newIndex);
         sessionStorage.setItem("currentExerciseIndex", newIndex);
-        setShowHint(false);
+        // setShowHint(false);
         setUserSolution("");
     };
 
@@ -163,6 +163,9 @@ const ExercisesPage = () => {
             .trim();
     };
 
+
+
+
     const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion) => {
 
         // ensure userSolution is not empty or undefined before making API call
@@ -170,44 +173,138 @@ const ExercisesPage = () => {
             alert("Please enter a solution before submitting.");
             return;
         }
-
-        const cleanedSolution = cleanLatexInput(userSolution)
+    
+        const cleanedSolution = cleanLatexInput(userSolution);
+    
         // store users submitted solution
         setSubmittedSolutions((prev) => ({
             ...prev,
             [exerciseId]: userSolution,
         }));
-
+    
         try {
             const response = await fetch('http://localhost:5000/api/validate-solution', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({question: exerciseQuestion, userSolution: cleanedSolution})
-            })
-            const data = await response.json();
-            // trigger gpt Api call
-            setWolframResults((prev) => ({
-                ...prev,
-                [exerciseId]: data.message
-            }));
-        }
-        catch (error) {
+                body: JSON.stringify({ question: exerciseQuestion, userSolution: cleanedSolution })
+            });
+    
+            // error handling
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+    
+            // getting readable stream from 'response body'
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder('utf-8'); // creating TextDecoder to convert bytes to text
+    
+            let solutionResponse = ''; // to accumulate the assistant's response
+    
+            // continuously reading from stream until done
+            while (true) {
+                // reading next chunk of data
+                const { done, value } = await reader.read();
+                if (done) break; // exiting loop when no more data
+    
+                // decoding chunk of data from bytes to string
+                const chunk = decoder.decode(value, { stream: true });
+                const lines = chunk.split('\n').filter(line => line.trim() !== ''); // splitting chunk into lines, filtering out empty lines
+    
+                // going through each line of chunk
+                for (const line of lines) {
+                    // processing data if line starts with 'data: '
+                    if (line.startsWith('data: ')) {
+                        // removing 'data: ' from start of line
+                        const data = line.replace('data: ', '');
+    
+                        // if data is '[DONE]', stop processing
+                        if (data === '[DONE]') {
+                            setWolframResults((prev) => ({
+                                ...prev,
+                                [exerciseId]: solutionResponse
+                            }));
+                            return;
+                        }
+    
+                        try {
+                            // parsing data into JSON format
+                            const parsed = JSON.parse(data);
+                            const text = parsed.content || ''; // extracting content (text) from parsed data
+                            
+                            solutionResponse += text; // appending to solution response
+    
+                            // updating state with the latest assistant response
+                            setWolframResults((prev) => ({
+                                ...prev,
+                                [exerciseId]: solutionResponse
+                            }));
+                        } catch (error) {
+                            console.error('Error parsing streaming data:', error);
+                        }
+                    }
+                }
+            }
+        } catch (error) {
+            // error handling during fetch requests or streaming process
             console.error('Error validating solution:', error);
             setWolframResults((prev) => ({
                 ...prev,
                 [exerciseId]: 'An error occurred while validating the solution.'
             }));
         }
-        // have to clear solutions input each time!!!
-        // have to clear solutions input each time!!!
-        // have to clear solutions input each time!!!
-        // have to clear solutions input each time!!!
-        // have to clear solutions input each time!!!
-        // have to clear solutions input each time!!!
-        // have to clear solutions input each time!!!
     };
+    
+
+
+
+
+    // const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion) => {
+
+    //     // ensure userSolution is not empty or undefined before making API call
+    //     if (!userSolution || userSolution.trim() === "") {
+    //         alert("Please enter a solution before submitting.");
+    //         return;
+    //     }
+
+    //     const cleanedSolution = cleanLatexInput(userSolution)
+    //     // store users submitted solution
+    //     setSubmittedSolutions((prev) => ({
+    //         ...prev,
+    //         [exerciseId]: userSolution,
+    //     }));
+
+    //     try {
+    //         const response = await fetch('http://localhost:5000/api/validate-solution', {
+    //             method: 'POST',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //             },
+    //             body: JSON.stringify({question: exerciseQuestion, userSolution: cleanedSolution})
+    //         })
+    //         const data = await response.json();
+    //         // trigger gpt Api call
+    //         setWolframResults((prev) => ({
+    //             ...prev,
+    //             [exerciseId]: data.message
+    //         }));
+    //     }
+    //     catch (error) {
+    //         console.error('Error validating solution:', error);
+    //         setWolframResults((prev) => ({
+    //             ...prev,
+    //             [exerciseId]: 'An error occurred while validating the solution.'
+    //         }));
+    //     }
+    //     // have to clear solutions input each time!!!
+    //     // have to clear solutions input each time!!!
+    //     // have to clear solutions input each time!!!
+    //     // have to clear solutions input each time!!!
+    //     // have to clear solutions input each time!!!
+    //     // have to clear solutions input each time!!!
+    //     // have to clear solutions input each time!!!
+    // };
 
     if (loading) return <p>Loading exercises...</p>;
     if (error) return <p>{error}</p>;
@@ -234,7 +331,6 @@ const ExercisesPage = () => {
                 // console.log(wrappedLatex)
                 return (
                     <div className="math-block overflow-x-auto">
-
                     <ReactMarkdown
                         children={wrappedLatex}
                         remarkPlugins={[remarkMath, remarkGfm]}
