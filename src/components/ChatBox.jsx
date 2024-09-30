@@ -166,6 +166,38 @@ const ChatBox = () => {
         }
     }, [])
 
+
+    const cleanLatexResponse = useCallback((content) => {
+
+        // regex to detect latex code between $...$ or $$...$$
+        const latexRegex = /\$\$(.*?)\$\$|\$(.*?)\$|`(.*?)`|\\\[(.*?)\\\]/g;
+        // regex to check if latex already wrapped  with $$..$$ or \(..\)
+        const alreadyWrappedLatex = /(\$\$(.*?)\$\$)|\\\((.*?)\\\)/g
+        // detect raw latex without wrappings
+        const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|[A-Za-z]+)\b/g
+        // Check if question contains LaTeX
+        const hasLatex = latexRegex.test(content);
+        // check for no latex wrappings
+        const hasRawLatex = rawLatexRegex.test(content)
+
+        if (hasLatex) {
+
+            let cleanedContent = content.replace(/`/g, '');
+
+            cleanedContent = cleanedContent.replace(/\\[\]]/g, '');
+
+            cleanedContent = cleanedContent.replace(/\$/g, '');
+
+            cleanedContent = `$$ ${cleanedContent} $$`;
+
+            return cleanedContent;
+        }
+        else {
+            // Render non-LaTeX question as plain HTML
+            return content;
+        }
+    }, [])
+
     return (
         <div className='bg-gray-800 p-4 rounded h-full flex flex-col'>
             <div className='chatbox-content flex-1 overflow-y-auto mb-4 overflow-x-hidden'>
@@ -175,8 +207,8 @@ const ChatBox = () => {
                             } break-words max-w-full whitespace-normal`}>
                             {msg.role === 'assistant' ? (
                                 <>
-                                {/* {console.log(msg.content)}
-                                {console.log(cleanLatexResponse(msg.content))} */}
+                                {/* {console.log(msg.content)} */}
+                                {/* {console.log(cleanLatexResponse(msg.content))} */}
                                 <LatexRenderer content={msg.content}/>
                                 </>
                             ) : (
@@ -198,7 +230,7 @@ const ChatBox = () => {
                         </span>
                     </div>
                 )}
-                <div ref={messagesEndRef}/>
+                {/* <div ref={messagesEndRef}/> */}
             </div>
             <div className='flex'>
                 <div className='flex items-end flex-grow'>

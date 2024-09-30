@@ -24,10 +24,10 @@ const isValidJSON = (str) => {
 }
 
 // SSE server sent events
-// handles streaming responses from Gpt Api, forwards them to client
+// handles streaming responses from ChatGPT API, forwards them to client
 app.post('/api/chat', async (req, res) => {
 
-    const { messages } = req.body;
+    const {messages} = req.body;
 
     res.setHeader('Content-Type', 'text/event-stream'); // establishing sse connection
     res.setHeader('Cache-Control', 'no-cache'); // disabling caching
@@ -37,9 +37,7 @@ app.post('/api/chat', async (req, res) => {
     let buffer = ''; 
 
     try {
-
         const response = await axios({
-
             method: 'post',
             url: 'https://api.openai.com/v1/chat/completions',
             headers: {
@@ -62,26 +60,28 @@ app.post('/api/chat', async (req, res) => {
                     'Additionally: ' +
                     '- Stick to topics related to Discrete Math, general math, or computer science. ' +
                     '- Do not discuss or provide information on topics that are unrelated to math, computer science, or Discrete Math concepts. ' +
-
-                    'When sending LaTeX equations, please adhere to the following rules: ' +
-                    '1. Use `$$ $$` for display math (block-level math) and `$ $` for inline math. Avoid using `\[ \]` or `\( \)`. ' +
-                    '2. Remove any unnecessary line breaks or spaces inside LaTeX delimiters. ' +
-                    '3. Ensure that subscript (e.g., `x_{1}`) and superscript (e.g., `x^{2}`) are correctly formatted without extra spaces. ' +
-                    '4. For factorials and ellipsis, use standard LaTeX symbols like `n!` and `\cdots`. ' +
-                    '5. Avoid including extra markdown backticks (` ``` `) in LaTeX blocks. ' +
-                    '6. For powers and exponents, always use the `^` symbol. For example, for squared terms, use `b^2` rather than just `b2` ' +
-                    '7. For ellipses, use the correct LaTeX command `\cdots` for centered ellipses and `\ldots` for lower ellipses. ' +
-                    '8. Provide clean LaTeX that can be easily interpreted by LaTeX rendering engines. ' +
-                    'For example: ' +
-                    'Display math: ' +
-                    '$$ \lim_{x \to a} f(x) $$' +
-                    'Inline math: ' +
-                    '$ x_{1} + x^{2} $' +
-                    'Factorials: ' +
-                    '$$ n! = n \times (n-1) \times \cdots \times 1 $$' +
-                    'Quadratic equation: ' +
-                    '$$ x = \frac{-b \pm \sqrt{b^2-4ac}}{2a} $$' +
-                    ' Please ensure all equations are formatted accordingly.' 
+                    
+                    'When sending LaTeX equations, always follow these rules: ' +
+                    'Always wrap display math (block-level math) with two dollar signs $$ $$, and two dollars signs $$ $$ for inline math as well. Never wrap latex equations with backticks nor with backslash bracket \[ \] nor with backslash parentheses \( \). '
+                    // 'When sending LaTeX equations, please adhere to the following rules: ' +
+                    // '1. Use `$$ $$` for display math (block-level math) and `$ $` for inline math. Avoid using `\[ \]` or `\( \)`. '
+                    // '2. Remove any unnecessary line breaks or spaces inside LaTeX delimiters. ' +
+                    // '3. Ensure that subscript (e.g., `x_{1}`) and superscript (e.g., `x^{2}`) are correctly formatted without extra spaces. ' +
+                    // '4. For factorials and ellipsis, use standard LaTeX symbols like `n!` and `\cdots`. ' +
+                    // '5. Avoid including extra markdown backticks (` ``` `) in LaTeX blocks. ' +
+                    // '6. For powers and exponents, always use the `^` symbol. For example, for squared terms, use `b^2` rather than just `b2` ' +
+                    // '7. For ellipses, use the correct LaTeX command `\cdots` for centered ellipses and `\ldots` for lower ellipses. ' +
+                    // '8. Provide clean LaTeX that can be easily interpreted by LaTeX rendering engines. ' +
+                    // 'For example: ' +
+                    // 'Display math: ' +
+                    // '$$ \lim_{x \to a} f(x) $$' +
+                    // 'Inline math: ' +
+                    // '$ x_{1} + x^{2} $' +
+                    // 'Factorials: ' +
+                    // '$$ n! = n \times (n-1) \times \cdots \times 1 $$' +
+                    // 'Quadratic equation: ' +
+                    // '$$ x = \frac{-b \pm \sqrt{b^2-4ac}}{2a} $$' +
+                    // ' Please ensure all equations are formatted accordingly.' 
                     },
                 ...messages,
               ],
@@ -144,6 +144,60 @@ app.post('/api/chat', async (req, res) => {
         res.status(500).json({ error: 'Error fetching API' });
     }
 });
+
+// handles VALIDATION of user solution using ChatGpt api
+app.post('/api/validate-solution', async (req, res) => {
+
+    const {question, userSolution} = req.body;  // receive question and solution from frontend
+    
+    try {
+        const response = await axios({
+            method: 'post',
+            url: 'https://api.openai.com/v1/chat/completions',
+            headers: {
+                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                'Content-Type': 'application/json',
+            },
+            data: {
+                model: 'gpt-4',
+                messages: [
+                    { 
+                        role: 'system', 
+                        content: `You are a Discrete Math tutor. You are given a problem and a student's proposed solution. Your role is to evaluate the correctness of the solution and provide short feedback or hints.` +
+                        'When sending LaTeX equations, always follow these rules: ' +
+                        'Always wrap display math (block-level math) with two dollar signs $$ $$, and two dollars signs $$ $$ for inline math as well. Never wrap latex equations with backticks nor with backslash bracket \[ \] nor with backslash parentheses \( \).'
+                    },
+                    { 
+                        role: 'user', 
+                        content: `Problem: ${question}. \nStudent's Solution: ${userSolution}. \nEvaluate the solution and explain if it's correct. If incorrect, provide short step-by-step guidance and explaination without giving the final solution.` 
+                    },
+                ],
+            },
+        });
+
+        const assistantMessage = response.data.choices[0].message.content;
+        res.json({message: assistantMessage});  // send response back to frontend
+    } catch (error) {
+        console.error('Error with GPT API:', error);
+        res.status(500).json({ error: 'Error processing request' });
+    }
+});
+
+// handles streaming responses from WOLFRAM API, forwards them to client
+// app.get('/api/wolfram', async (req, res) => {
+
+//     const {input} = req.query;
+//     const appId = 'J5R44H-3T98YUL575'
+//     const apiUrl = `https://api.wolframalpha.com/v2/query?appid=${appId}&input=${encodeURIComponent(input)}&format=plaintext&output=JSON`;
+//     try {
+//         const response = await axios.get(apiUrl);
+//         res.json(response.data)
+//     }
+//     catch (error) {
+//         console.error('Error fetching data from wolfram api:', error.message);
+//         res.status(500).json({error: 'Error fetching data from wolfram api'})
+//     }
+// })
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

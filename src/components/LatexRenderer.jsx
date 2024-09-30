@@ -19,60 +19,74 @@ const LatexRenderer = ({content}) => {
     // cleaning latex, removing markdown notation for proper displaying
     const cleanLatexResponse = useCallback((content) => {
 
-        // if (typeof content !== 'string'){
-        //     return content;
-        // }
+        let cleanedContent = content.replace(/`/g, '');
 
-        let cleanedContent = content;
+        cleanedContent = cleanedContent.replace(/\\[\]]/g, '');
 
-        // replacing triple backticks with $$ for latex blocks
-        cleanedContent = cleanedContent.replace(/```(?:math|latex)?\n([\s\S]*?)\n```/g, '$$$1$$');
+        cleanedContent = cleanedContent.replace(/\$/g, '');
 
-        // removing any remaining single backticks
-        cleanedContent = cleanedContent.replace(/`/g, '');
+        cleanedContent = `$$ ${cleanedContent} $$`;
 
-        // ensuring latex expressions are on their own lines + use consistent delimiters
-        cleanedContent = cleanedContent.replace(/\$\$([^$]+)\$\$/g, '\n$$$1$$\n');
+        return cleanedContent;
+    }, [])
 
-        // replacing double backslashes with single
-        cleanedContent = cleanedContent.replace(/\\\\/g, '\\');
 
-        // 3.
-        // handling specific formatting for matrices: 
-        // ensuring newlines inside matrices are correctly kept
-        cleanedContent = cleanedContent.replace(/\\begin{(pmatrix|bmatrix)}\$/g, '\n$$\\begin{$1}');
-        cleanedContent = cleanedContent.replace(/\\end{(pmatrix|bmatrix)}\s*\$/g, '\\end{$1}\n$$');
+    // const cleanLatexResponse = useCallback((content) => {
 
-        // 2.
-        // replacing \ots with \cdots (since gpt left out the 'c')
-        cleanedContent = cleanedContent.replace(/\\ots/g, '\\cdots');
+    //     // if (typeof content !== 'string'){
+    //     //     return content;
+    //     // }
 
-        // // ensuring power symbols are present (handle missing `^` before exponents)
-        // cleanedContent = cleanedContent.replace(/(\d)(\d+)/g, '$1^{$2}'); // fixes b2 to b^2
+    //     let cleanedContent = content;
 
-        // 4.
-        // ensuring proper spacing between inline math and text
-        // cleanedContent = cleanedContent.replace(/([^\n])(\$\S)/g, '$1\n$2');  // adding new line before inline latex if missing
-        // cleanedContent = cleanedContent.replace(/(\$\S)([^\n])/g, '$1\n$2');  // adding new line after inline latex if missing
+    //     // replacing triple backticks with $$ for latex blocks
+    //     cleanedContent = cleanedContent.replace(/```(?:math|latex)?\n([\s\S]*?)\n```/g, '$$$1$$');
 
-        // // ensuring proper spacing around display math and text
-        // cleanedContent = cleanedContent.replace(/([^\n])(\n\$\$)/g, '$1\n\n$2');  // add double new lines before display math
-        // cleanedContent = cleanedContent.replace(/(\$\$\n)([^\n])/g, '$1\n\n\n$2');    // add new line after display math
+    //     // removing any remaining single backticks
+    //     cleanedContent = cleanedContent.replace(/`/g, '');
 
-        // 1.
-        // handling display math + inline math consistently
-        // converting display math using \[ \] to $$
-        cleanedContent = cleanedContent.replace(/\\\[([^]+?)\\\]/g, '\n$$$1$$\n');
+    //     // ensuring latex expressions are on their own lines + use consistent delimiters
+    //     cleanedContent = cleanedContent.replace(/\$\$([^$]+)\$\$/g, '\n$$$1$$\n');
 
-        // converting inline math using \( \) to single $
-        cleanedContent = cleanedContent.replace(/\\\(([^]+?)\\\)/g, '$$ $1 $$');
+    //     // replacing double backslashes with single
+    //     cleanedContent = cleanedContent.replace(/\\\\/g, '\\');
 
-        // handling common subscript and superscript issues
-        // removing any unnecessary newlines or spaces inside math delimiters
-        // cleanedContent = cleanedContent.replace(/\$\s+([^$]+)\s+\$/g, '$$$1$$');
-        // trimming unnecessary whitespace
-        return cleanedContent.trim();
-    }, []);
+    //     // 3.
+    //     // handling specific formatting for matrices: 
+    //     // ensuring newlines inside matrices are correctly kept
+    //     cleanedContent = cleanedContent.replace(/\\begin{(pmatrix|bmatrix)}\$/g, '\n$$\\begin{$1}');
+    //     cleanedContent = cleanedContent.replace(/\\end{(pmatrix|bmatrix)}\s*\$/g, '\\end{$1}\n$$');
+
+    //     // 2.
+    //     // replacing \ots with \cdots (since gpt left out the 'c')
+    //     cleanedContent = cleanedContent.replace(/\\ots/g, '\\cdots');
+
+    //     // // ensuring power symbols are present (handle missing `^` before exponents)
+    //     // cleanedContent = cleanedContent.replace(/(\d)(\d+)/g, '$1^{$2}'); // fixes b2 to b^2
+
+    //     // 4.
+    //     // ensuring proper spacing between inline math and text
+    //     // cleanedContent = cleanedContent.replace(/([^\n])(\$\S)/g, '$1\n$2');  // adding new line before inline latex if missing
+    //     // cleanedContent = cleanedContent.replace(/(\$\S)([^\n])/g, '$1\n$2');  // adding new line after inline latex if missing
+
+    //     // // ensuring proper spacing around display math and text
+    //     // cleanedContent = cleanedContent.replace(/([^\n])(\n\$\$)/g, '$1\n\n$2');  // add double new lines before display math
+    //     // cleanedContent = cleanedContent.replace(/(\$\$\n)([^\n])/g, '$1\n\n\n$2');    // add new line after display math
+
+    //     // 1.
+    //     // handling display math + inline math consistently
+    //     // converting display math using \[ \] to $$
+    //     cleanedContent = cleanedContent.replace(/\\\[([^]+?)\\\]/g, '\n$$$1$$\n');
+
+    //     // converting inline math using \( \) to single $
+    //     cleanedContent = cleanedContent.replace(/\\\(([^]+?)\\\)/g, '$$ $1 $$');
+
+    //     // handling common subscript and superscript issues
+    //     // removing any unnecessary newlines or spaces inside math delimiters
+    //     // cleanedContent = cleanedContent.replace(/\$\s+([^$]+)\s+\$/g, '$$$1$$');
+    //     // trimming unnecessary whitespace
+    //     return cleanedContent.trim();
+    // }, []);
 
     // renderer / displayer for code blocks: latex, syntax highlighting
     const renderers = {
@@ -99,18 +113,17 @@ const LatexRenderer = ({content}) => {
                     </code>
                 );
             }
-
-            const match = /language-(\w+)/.exec(className || '');
-            const codeContent = String(children).replace(/\n$/, '');
-
+            // const codeContent = String(children).replace(/\n$/, '');
+            const codeContent = String(children).trim();
             // detecting and rendering latex blocks
-            if (/^\$\$.*\$\$$/.test(codeContent.trim())) {
+            if (/^\$\$.*\$\$$/.test(codeContent)) {
 
-                const math = codeContent.replace(/^\$\$(.*)\$\$$/, '$1').trim();
+                // const math = codeContent.replace(/^\$\$(.*)\$\$$/, '$1').trim();
                 return (
                     <div className="math-block overflow-x-auto">
+                        {/* {console.log(codeContent)} */}
                         <ReactMarkdown
-                            children={`$$${math}$$`}
+                            children={codeContent}
                             remarkPlugins={[remarkMath, remarkGfm]}
                             rehypePlugins={[rehypeKatex]}
                         // className="max-w-full break-words" 
@@ -118,7 +131,7 @@ const LatexRenderer = ({content}) => {
                     </div>
                 )
             }
-
+            const match = /language-(\w+)/.exec(className || '');
             // applying syntax highlighting for code blocks
             if (match) {
 
@@ -136,7 +149,6 @@ const LatexRenderer = ({content}) => {
                     </pre>
                 );
             }
-
             return (
                 <pre className="my-2 overflow-x-auto">
                     <code className="hljs" {...props}>
@@ -149,7 +161,7 @@ const LatexRenderer = ({content}) => {
 
     return (
         <ReactMarkdown
-            children={cleanLatexResponse(content)}
+            children={content}
             remarkPlugins={[remarkMath, remarkGfm]}
             rehypePlugins={[rehypeKatex]}
             components={renderers}
