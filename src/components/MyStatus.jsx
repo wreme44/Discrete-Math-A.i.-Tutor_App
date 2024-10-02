@@ -13,7 +13,12 @@ const UserProgress = () => {
       if (user) {
         const { data, error } = await supabase
           .from("userprogress")
-          .select("*")
+          .select(`
+            lesson_id,
+            completed,
+            completed_at,
+            lessons (title)
+          `) // Join with lessons table to get the lesson title
           .eq("user_id", user.id);
 
         if (error) {
@@ -33,7 +38,7 @@ const UserProgress = () => {
       <table className="table-auto w-full text-white">
         <thead>
           <tr className="bg-gray-700">
-            <th className="px-4 py-2">Lesson ID</th>
+            <th className="px-4 py-2">Lesson Title</th>
             <th className="px-4 py-2">Completed</th>
             <th className="px-4 py-2">Completed At</th>
           </tr>
@@ -41,8 +46,8 @@ const UserProgress = () => {
         <tbody>
           {userProgress.length > 0 ? (
             userProgress.map((progress) => (
-              <tr key={progress.progress_id} className="bg-gray-600">
-                <td className="border px-4 py-2">{progress.lesson_id}</td>
+              <tr key={progress.lesson_id} className="bg-gray-600">
+                <td className="border px-4 py-2">{progress.lessons.title}</td> {/* Display lesson title */}
                 <td className="border px-4 py-2">
                   {progress.completed ? "Yes" : "No"}
                 </td>
