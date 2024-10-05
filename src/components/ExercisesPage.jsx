@@ -3,7 +3,6 @@ import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient";
 import LatexRenderer from "./LatexRenderer";
-import WolframAPI from "./WolframAPI";
 import { MathfieldElement } from 'mathlive'
 import '/node_modules/mathlive/dist/mathlive-static.css';
 import '/node_modules/mathlive/dist/mathlive-fonts.css';
@@ -41,6 +40,8 @@ const ExercisesPage = () => {
     // State to hold exercises data fetched from the database
     const [exercisesData, setExercisesData] = useState([]);
     const [groupedExercises, setGroupedExercises] = useState({});
+    // pre determined correct answers
+    const [correctAnswers, setCorrectAnswers] = useState({});
     // State to keep track of current lesson index
     const [currentExerciseIndex, setcurrentExerciseIndex] = useState(() => {
         const savedIndex = sessionStorage.getItem("currentExerciseIndex");
@@ -48,12 +49,14 @@ const ExercisesPage = () => {
     });
     // Toggle hint
     const [showHint, setShowHint] = useState({});
+    const [showGPTFeedback, setShowGPTFeedback] = useState({});
     // loading and error states
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isTyping, setIsTyping] = useState(false);
 
     const [submittedSolutions, setSubmittedSolutions] = useState({});
-    const [wolframResults, setWolframResults] = useState({});
+    const [gptResults, setGptResults] = useState({});
 
     const [userSolution, setUserSolution] = useState("");
 
@@ -63,7 +66,7 @@ const ExercisesPage = () => {
         const fetchExercises = async () => {
             const { data, error } = await supabase
                 .from("exercises") // ensure table name matches exactly
-                .select("*")
+                .select("*, answer") // added answer column, not sure if needed since * selects all ?
                 .order("exercise_id", { ascending: true }); // order by 'id' column in ascending order
 
             if (error) {
@@ -117,10 +120,15 @@ const ExercisesPage = () => {
         // setShowHint(false);
         setUserSolution("");
     };
-
+    // hint + feedback toggling
     const toggleHint = (exerciseId) => {
-
         setShowHint((prevState) => ({
+            ...prevState, [exerciseId]: !prevState[exerciseId],
+        }));
+    };
+
+    const toggleGPTFeedback = (exerciseId) => {
+        setShowGPTFeedback((prevState) => ({
             ...prevState, [exerciseId]: !prevState[exerciseId],
         }));
     };
@@ -163,147 +171,177 @@ const ExercisesPage = () => {
             .trim();
     };
 
+    // GPT api call as Math validator
+    const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion, correctAnswer) => {
 
-
-
-    const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion) => {
-
-        // ensure userSolution is not empty or undefined before making API call
         if (!userSolution || userSolution.trim() === "") {
             alert("Please enter a solution before submitting.");
             return;
         }
-    
+
         const cleanedSolution = cleanLatexInput(userSolution);
-    
+
         // store users submitted solution
         setSubmittedSolutions((prev) => ({
             ...prev,
             [exerciseId]: userSolution,
         }));
-    
+        setIsTyping(true);
+
         try {
+            // standard api call instead of streaming api
             const response = await fetch('http://localhost:5000/api/validate-solution', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ question: exerciseQuestion, userSolution: cleanedSolution })
+                body: JSON.stringify({ question: exerciseQuestion, userSolution: cleanedSolution, correctAnswer })
             });
-    
-            // error handling
+
+            // check if the response is ok
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
-    
-            // getting readable stream from 'response body'
-            const reader = response.body.getReader();
-            const decoder = new TextDecoder('utf-8'); // creating TextDecoder to convert bytes to text
-    
-            let solutionResponse = ''; // to accumulate the assistant's response
-    
-            // continuously reading from stream until done
-            while (true) {
-                // reading next chunk of data
-                const { done, value } = await reader.read();
-                if (done) break; // exiting loop when no more data
-    
-                // decoding chunk of data from bytes to string
-                const chunk = decoder.decode(value, { stream: true });
-                const lines = chunk.split('\n').filter(line => line.trim() !== ''); // splitting chunk into lines, filtering out empty lines
-    
-                // going through each line of chunk
-                for (const line of lines) {
-                    // processing data if line starts with 'data: '
-                    if (line.startsWith('data: ')) {
-                        // removing 'data: ' from start of line
-                        const data = line.replace('data: ', '');
-    
-                        // if data is '[DONE]', stop processing
-                        if (data === '[DONE]') {
-                            setWolframResults((prev) => ({
-                                ...prev,
-                                [exerciseId]: solutionResponse
-                            }));
-                            return;
-                        }
-    
-                        try {
-                            // parsing data into JSON format
-                            const parsed = JSON.parse(data);
-                            const text = parsed.content || ''; // extracting content (text) from parsed data
-                            
-                            solutionResponse += text; // appending to solution response
-    
-                            // updating state with the latest assistant response
-                            setWolframResults((prev) => ({
-                                ...prev,
-                                [exerciseId]: solutionResponse
-                            }));
-                        } catch (error) {
-                            console.error('Error parsing streaming data:', error);
-                        }
-                    }
-                }
-            }
+
+            // get JSON result from backend
+            const result = await response.json();
+            // console.log("Received from backend:", result);
+
+            // extract the 'correct' flag and 'feedback' from the result
+            const { correct, feedback } = result;
+
+            // update the state for correctness flag
+            setCorrectAnswers((prev) => ({
+                ...prev,
+                [exerciseId]: correct,
+            }));
+
+            // update state for GPT feedback
+            setGptResults((prev) => ({
+                ...prev,
+                [exerciseId]: feedback,
+            }));
+
+            setIsTyping(false);
+
         } catch (error) {
-            // error handling during fetch requests or streaming process
+            // error handling for failed requests
             console.error('Error validating solution:', error);
-            setWolframResults((prev) => ({
+            setGptResults((prev) => ({
                 ...prev,
                 [exerciseId]: 'An error occurred while validating the solution.'
             }));
+            setIsTyping(false);
         }
     };
-    
 
-
-
-
-    // const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion) => {
+    // const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion, correctAnswer) => {
 
     //     // ensure userSolution is not empty or undefined before making API call
     //     if (!userSolution || userSolution.trim() === "") {
     //         alert("Please enter a solution before submitting.");
     //         return;
     //     }
-
-    //     const cleanedSolution = cleanLatexInput(userSolution)
+    
+    //     const cleanedSolution = cleanLatexInput(userSolution);
+    
     //     // store users submitted solution
     //     setSubmittedSolutions((prev) => ({
     //         ...prev,
     //         [exerciseId]: userSolution,
     //     }));
-
+    //     setIsTyping(true);
+    
     //     try {
     //         const response = await fetch('http://localhost:5000/api/validate-solution', {
     //             method: 'POST',
     //             headers: {
     //                 'Content-Type': 'application/json',
     //             },
-    //             body: JSON.stringify({question: exerciseQuestion, userSolution: cleanedSolution})
-    //         })
-    //         const data = await response.json();
-    //         // trigger gpt Api call
-    //         setWolframResults((prev) => ({
-    //             ...prev,
-    //             [exerciseId]: data.message
-    //         }));
-    //     }
-    //     catch (error) {
+    //             body: JSON.stringify({ question: exerciseQuestion, userSolution: cleanedSolution, correctAnswer })
+    //         });
+    
+    //         // error handling
+    //         if (!response.ok) {
+    //             throw new Error('Network response was not ok');
+    //         }
+    
+    //         // getting readable stream from 'response body'
+    //         const reader = response.body.getReader();
+    //         const decoder = new TextDecoder('utf-8'); // creating TextDecoder to convert bytes to text
+    
+    //         let solutionResponse = ''; // to accumulate the assistant's response
+    //         let correctFlag = null;     // Track whether the solution is correct
+
+    //         // continuously reading from stream until done
+    //         while (true) {
+    //             // reading next chunk of data
+    //             const { done, value } = await reader.read();
+    //             if (done) break; // exiting loop when no more data
+    
+    //             // decoding chunk of data from bytes to string
+    //             const chunk = decoder.decode(value, { stream: true });
+    //             const lines = chunk.split('\n').filter(line => line.trim() !== ''); // splitting chunk into lines, filtering out empty lines
+    
+    //             // going through each line of chunk
+    //             for (const line of lines) {
+    //                 // processing data if line starts with 'data: '
+    //                 if (line.startsWith('data: ')) {
+    //                     // removing 'data: ' from start of line
+    //                     const data = line.replace('data: ', '');
+    
+    //                     // if data is '[DONE]', stop processing
+    //                     if (data === '[DONE]') {
+    //                         setGptResults((prev) => ({
+    //                             ...prev,
+    //                             [exerciseId]: solutionResponse
+    //                         }));
+
+    //                         if (correctFlag !== null){
+    //                             setCorrectAnswers((prev) => ({
+    //                                 ...prev, [exerciseId]: correctFlag,
+    //                             }))
+    //                         }
+
+    //                         // processing if solution is correct
+    //                         // extracting result as json
+    //                         // const result = await response.json()
+    //                         // const isCorrect = result.correct
+    //                         setIsTyping(false);
+    //                         return;
+    //                     }
+    
+    //                     try {
+    //                         // parsing data into JSON format
+    //                         const parsed = JSON.parse(data);
+    //                         const text = parsed.content || ''; // extracting content (text) from parsed data
+                            
+    //                         solutionResponse += text; // appending to solution response
+
+    //                         if (parsed.correct !== undefined){
+    //                             correctFlag = parsed.correct;
+    //                         }
+    
+    //                         // updating state with the latest assistant response
+    //                         setGptResults((prev) => ({
+    //                             ...prev,
+    //                             [exerciseId]: solutionResponse
+    //                         }));
+    //                     } catch (error) {
+    //                         console.error('Error parsing streaming data:', error);
+    //                     }
+    //                 }
+    //             }
+    //         }
+    //     } catch (error) {
+    //         // error handling during fetch requests or streaming process
     //         console.error('Error validating solution:', error);
-    //         setWolframResults((prev) => ({
+    //         setGptResults((prev) => ({
     //             ...prev,
     //             [exerciseId]: 'An error occurred while validating the solution.'
     //         }));
+    //         setIsTyping(false); // stopping the gpts typing indication
     //     }
-    //     // have to clear solutions input each time!!!
-    //     // have to clear solutions input each time!!!
-    //     // have to clear solutions input each time!!!
-    //     // have to clear solutions input each time!!!
-    //     // have to clear solutions input each time!!!
-    //     // have to clear solutions input each time!!!
-    //     // have to clear solutions input each time!!!
     // };
 
     if (loading) return <p>Loading exercises...</p>;
@@ -356,6 +394,9 @@ const ExercisesPage = () => {
         }
     };
 
+    // calculating if all answers are correct for the current set of exercises
+    const allCorrect = currentExercises.every((exercise) => correctAnswers[exercise.exercise_id]);
+    
     return (
         <div className="flex flex-col h-full">
             {currentLessonId && (
@@ -363,12 +404,10 @@ const ExercisesPage = () => {
             )}
             <div className="flex-1 overflow-y-auto pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentExercises.map((exercise) => (
-                    <div key={exercise.exercise_id} className="mb-36 flex-1 overflow-y-auto pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+                    <div key={exercise.exercise_id} className="mb-36 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                         {renderContent(exercise.question)}                         
                         {/* MathLiveInput for the exercise */}
                         <div className="mt-16">
-                            {/* <h3 className="text-lg font-semibold mb-2">Your Solution:</h3> */}
-
                             <MathLiveInput
                                 value={submittedSolutions[exercise.exercise_id] || ""}
                                 onChange={(value) => setSubmittedSolutions({
@@ -378,15 +417,16 @@ const ExercisesPage = () => {
                             />
                             <button
                                 onClick={() =>
-                                    handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question)
+                                    handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question, exercise.answer)
                                 }
-                                className=" px-1 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-full"
+                                className="px-1 py-2 bg-indigo-700 hover:bg-indigo-800 active:bg-indigo-900 focus:outline-none 
+                                 focus:ring-2 focus:ring-indigo-500 text-white rounded-full transform transition duration-200 ease-in-out hover:scale-105 active:scale-95"
+                                disabled={isTyping}
                             >
                                 Submit Solution
                             </button>
                         </div>
-                                                {/* Show user's submitted solution */}
-
+                        {/* Show user's submitted solution */}
                         {submittedSolutions[exercise.exercise_id] && (
                             <div className="mt-4">
                                 <h4 className="text-md font-semibold">Your Solution:</h4>
@@ -395,25 +435,49 @@ const ExercisesPage = () => {
                                 </div>
                             </div>
                         )}
-                                                {/* Display Wolfram API Results */}
-
-                        {wolframResults[exercise.exercise_id] && (
+                        {/* Display GPT Results validation for in/correct*/}
+                        {correctAnswers[exercise.exercise_id] !== undefined && (
                             <div className="mt-4">
-                                <h4 className="text-md font-semibold">Tutor Feedback:</h4>
-                                <LatexRenderer content={wolframResults[exercise.exercise_id]}/>
-                            </div>
+                                <h4 className={`text-md font-semibold ${correctAnswers[exercise.exercise_id] ? 'correct-answer' : 'incorrect-answer'}`}>
+                                    {correctAnswers[exercise.exercise_id] ? 'Your solution is correct! Well Done.' : 'Your solution is incorrect.'}
+                                </h4>
+                            </div>    
                         )}
-                        <button
-                            onClick={() => toggleHint(exercise.exercise_id)}
-                            className="mt-1 px-2 py-1 bg-gray-600 hover:bg-gray-500 rounded-full text-white"
-                        >
-                            Show Hint
-                            {/* {showHint ? "Hide Hint" : "Show Hint"} */}
-                        </button>
+                        {/* hint + feedback buttons */}
+                        <div className="mt-5">
+                            <button
+                                onClick={() => toggleHint(exercise.exercise_id)}
+                                className="mt-1 px-2 py-1 bg-gray-600 hover:bg-gray-500 rounded-full text-white"
+                            >
+                                {showHint[exercise.exercise_id] ? 'Hide Hint' : 'Show Hint'}
+                            </button>
+                            {/* GPT feedback button if feedback response exists*/}
+                            {gptResults[exercise.exercise_id] && (
+                                <button
+                                    onClick={() => toggleGPTFeedback(exercise.exercise_id)}
+                                    className="mt-1 ml-5 px-2 py-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800 hover:to-yellow-600 rounded-full text-white"
+                                >
+                                    {showGPTFeedback[exercise.exercise_id] ? 'Hide Tutor Feedback' : 'Show Tutor Feedback'}
+                                </button>
+                            )}
+                        </div>
+                        {/* display hint from database */}
                         {showHint[exercise.exercise_id] && (
-                            <div className=" pb-1 pt-0 px-2 bg-gray-600 rounded">
+                            <div className="mt-2 pb-1 pt-0 px-2 bg-gray-600 rounded">
                                 <h3 className="text-md font-semibold mb-1">Hint:</h3>
                                 <div className="text-sm">{renderContent(exercise.hint)}</div>
+                            </div>
+                        )}
+                        {/* display GPT feedback when the button is clicked */}
+                        {showGPTFeedback[exercise.exercise_id] && (
+                            <div className="mt-2">
+                                <h4 className="text-md font-semibold">Tutor Feedback:</h4>
+                                <LatexRenderer content={gptResults[exercise.exercise_id]} />
+                            </div>
+                        )}
+                        {isTyping && (
+                            <div className='mb-2 text-left'>
+                                <img className='typing-gif' alt='... ...' src='/loading2.1.gif' />
                             </div>
                         )}
                     </div>
@@ -433,9 +497,10 @@ const ExercisesPage = () => {
                 <p className="text-sm text-gray-400">
                     Exercise {currentLessonIndex + 1} of {lessonsData.length}
                 </p>
+                {/* allCOrrect check, prevent user from next page */}
                 <button
                     onClick={handleNext}
-                    disabled={currentLessonIndex === lessonsData.length - 1}
+                    disabled={!allCorrect || currentLessonIndex === lessonsData.length - 1}
                     className={`mr-4 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
                         ? "bg-blue-900 cursor-not-allowed"
                         : "bg-blue-700 hover:bg-blue-800"
@@ -449,93 +514,3 @@ const ExercisesPage = () => {
 };
 
 export default ExercisesPage;
-
-
-
-
-
-
-
-// return (
-//     <div className="flex flex-col h-full">
-//         {currentLessonId && (
-//             <h2 className="text-xl font-bold mb-1">Lesson {currentLessonId}</h2>
-//         )}
-        
-//         {currentExercises.map((exercise) => (
-//             <div key={exercise.exercise_id} className="mb-6">
-//                 <div className="flex-1 overflow-y-auto pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
-//                     {renderContent(exercise.question)} 
-//                 </div>
-//                 {showHint && (
-//                     <div className="mt-4 pb-1 pt-0 px-2 bg-gray-600 rounded">
-//                         <h3 className="text-md font-semibold mb-1">Hint:</h3>
-//                         <p className="text-sm">{renderContent(exercise.hint)}</p>
-//                     </div>
-//                 )}
-//                 {/* MathLiveInput for the exercise */}
-//                 <div className="mt-4">
-//                     {/* <h3 className="text-lg font-semibold mb-2">Your Solution:</h3> */}
-//                     <MathLiveInput
-//                         value={submittedSolutions[exercise.exercise_id] || ""}
-//                         onChange={(value) => setSubmittedSolutions({
-//                             ...submittedSolutions,
-//                             [exercise.exercise_id]: value
-//                         })}
-//                     />
-//                     <button
-//                         onClick={() => handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question)}
-//                         className=" px-1 py-2 bg-indigo-700 hover:bg-indigo-800 text-white rounded-full"
-//                     >
-//                         Submit Solution
-//                     </button>
-//                 </div>
-//                 {/* Show user's submitted solution */}
-//                 {submittedSolutions[exercise.exercise_id] && (
-//                     <div className="mt-4">
-//                         <h4 className="text-md font-semibold">Your Solution:</h4>
-//                         <p>{submittedSolutions[exercise.exercise_id]}</p>
-//                     </div>
-//                 )}
-//                 {/* Display Wolfram API Results */}
-//                 {wolframResults[exercise.exercise_id] && (
-//                     <div className="mt-4">
-//                         <h4 className="text-md font-semibold">Wolfram Alpha Result:</h4>
-//                         {wolframResults[exercise.exercise_id]}
-//                     </div>
-//                 )}
-//                 <button
-//                     onClick={toggleHint}
-//                     className="mt-1 mb-11 px-2 py-1 bg-gray-600 hover:bg-gray-500 rounded-full text-white"
-//                 >
-//                     {showHint ? "Hide Hint" : "Show Hint"}
-//                 </button>
-//             </div>
-//         ))}
-//         <div className="mt-4 flex justify-between">
-//             <button
-//                 onClick={handlePrevious}
-//                 disabled={currentExerciseIndex === 0}
-//                 className={px-2 py-1 rounded ${currentExerciseIndex === 0
-//                     ? "bg-blue-900 cursor-not-allowed"
-//                     : "bg-blue-700 hover:bg-blue-800"
-//                     } text-white}
-//             >
-//                 Previous
-//             </button>
-//             <button
-//                 onClick={handleNext}
-//                 disabled={currentExerciseIndex === exercisesData.length - 1}
-//                 className={mr-2 px-4 py-1 rounded ${currentExerciseIndex === exercisesData.length - 1
-//                     ? "bg-blue-900 cursor-not-allowed"
-//                     : "bg-blue-700 hover:bg-blue-800"
-//                     } text-white}
-//             >
-//                 Next
-//             </button>
-//         </div>
-//         <p className="mt-2 text-sm text-gray-400">
-//             Exercise {currentExerciseIndex + 1} of {exercisesData.length}
-//         </p>
-//     </div>
-// );

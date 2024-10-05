@@ -628,8 +628,8 @@ pre {
 }
 
 .typing-gif {
-    width: 15px;
-    height: 15px;
+    width: 35px;
+    height: 35px;
     /* background-color: transparent; */
 }
 
@@ -646,8 +646,24 @@ math-field {
     font-size: 1.5em;
     border-radius: 18px;
     border: 3px solid #090909;
+    background-color: #090909;
+    color: white;
 }
 
 math-field:hover {
     cursor: pointer;
+}
+
+
+/* --------------------------------------------------------------------- */
+
+/* Exercise Page */
+
+/* Correct / Incorrect user solution text color */
+.correct-answer {
+    color: #0eb87f !important; /* Tailwind's green-500 */
+}
+
+.incorrect-answer {
+    color: #d31717 !important; /* Tailwind's red-500 */
 }

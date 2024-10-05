@@ -212,7 +212,7 @@ const ChatBox = () => {
                                 <LatexRenderer content={msg.content}/>
                                 </>
                             ) : (
-                                msg.content
+                                <LatexRenderer content={msg.content}/>
                             )}
                         </span>
                     </div>
@@ -220,13 +220,13 @@ const ChatBox = () => {
                     <div className='d-mentor-box'>
                         <h3>DiscreteMentor</h3>
                         <img className="d-mentor" src='/D.Mentor2.png'/>
-                        {/* <img className='typing-gif' alt='... ...' src='/loading.gif'/> */}
+                        {/* <img className='typing-gif' alt='... ...' src='/loading2.1.gif'/> */}
                     </div>
                 )}
                 {isTyping && (
                     <div className='mb-2 text-left'>
-                        <span className='inline-block p-2 rounded bg-gray-800 text-white'>
-                            <em><img className='typing-gif' alt='... ...' src='/loading.gif'/></em>
+                        <span className='inline-block p-2 rounded'>
+                            <img className='typing-gif' alt='... ...' src='/loading2.1.gif'/>
                         </span>
                     </div>
                 )}

@@ -149,15 +149,20 @@ app.post('/api/chat', async (req, res) => {
 // handles VALIDATION of user solution using ChatGpt api
 app.post('/api/validate-solution', async (req, res) => {
 
-    const { question, userSolution } = req.body;  // receive question and solution from frontend
+    const { question, userSolution, correctAnswer } = req.body;  // receive question and solution from frontend
 
-    res.setHeader('Content-Type', 'text/event-stream'); // establishing sse connection
-    res.setHeader('Cache-Control', 'no-cache'); // disabling caching
-    res.setHeader('Connection', 'keep-alive'); // continuous streaming
-    res.flushHeaders(); // flushing headers to establish SSE with frontend
+    // console.log("Received Question:", question);
+    // console.log("Received User Solution:", userSolution);
+    // console.log("Received Correct Answer:", correctAnswer);
 
-    // buffer to accumulate the chunks, to make sure each chunk is complete json before sending to frontend
-    let buffer = '';
+    // res.setHeader('Content-Type', 'text/event-stream'); // establishing sse connection
+    // res.setHeader('Cache-Control', 'no-cache'); // disabling caching
+    // res.setHeader('Connection', 'keep-alive'); // continuous streaming
+    // res.flushHeaders(); // flushing headers to establish SSE with frontend
+
+    // // buffer to accumulate the chunks, to make sure each chunk is complete json before sending to frontend
+    // let buffer = '';
+    let solutionResponse = '';
 
     try {
         const response = await axios({
@@ -172,114 +177,117 @@ app.post('/api/validate-solution', async (req, res) => {
                 messages: [
                     {
                         role: 'system',
-                        content: `You are a Discrete Math tutor. You are given a problem and a student's proposed solution. Your role is to evaluate the correctness of the solution and provide short feedback or hints.` +
-                            'When sending LaTeX equations, always follow these rules: ' +
-                            'Always wrap display math (block-level math) with two dollar signs $$ $$, and two dollars signs $$ $$ for inline math as well. Never wrap latex equations with backticks nor with backslash bracket \[ \] nor with backslash parentheses \( \).'
+                        content: `You are a Discrete Math tutor. You will be given a math problem, the student's solution, and the correct answer. Your job is to compare the student's solution with the correct answer and determine if it's correct. You will return a response in JSON format as follows: { "correct": true/false, "feedback": "feedback on the solution"}.` +
+                            'Addtionally, when sending LaTeX equations, always follow these rules: ' +
+                            'Always wrap display math (block-level math) with two dollar signs $$ $$, always wrap inline math with two dollars signs $$ $$ as well. Never wrap latex equations with backticks nor with backslash bracket \[ \] nor with backslash parentheses \( \).'
                     },
                     {
                         role: 'user',
-                        content: `Problem: ${question}. \nStudent's Solution: ${userSolution}. \nEvaluate the solution and explain if it's correct. If incorrect, provide short step-by-step guidance and explanation without giving the final solution.`
+                        content: `Problem: ${question}. \nStudent's Solution: ${userSolution}. \nCorrect Answer: ${correctAnswer}. \nCompare the student's solution with the correct answer and return the correct field as true/false and feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not provide the correct answer.`
                     },
                 ],
-                stream: true, // enabling streaming
+                // stream: true, // enabling streaming
             },
-            responseType: 'stream',
+            // responseType: 'stream',
         });
 
         // real-time streaming response in chunks, each chunk is parsed, content extracted and sent to client
-        response.data.on('data', (chunk) => {
-            buffer += chunk.toString();
+        // response.data.on('data', (chunk) => {
+        //     buffer += chunk.toString();
 
-            const lines = buffer
-                .split('\n')
-                .filter(line => line.trim() !== '');
+        //     const lines = buffer
+        //         .split('\n')
+        //         .filter(line => line.trim() !== '');
 
-            for (const line of lines) {
-                if (line.startsWith('data: ')) {
-                    const data = line.replace('data: ', '');
+        //     for (const line of lines) {
+        //         if (line.startsWith('data: ')) {
+        //             const data = line.replace('data: ', '');
 
-                    if (data === '[DONE]') {
-                        res.write('data: [DONE]\n\n');
-                        res.end();
-                        return;
-                    }
+        //             if (data === '[DONE]') {
 
-                    try {
-                        if (isValidJSON(data)) {
-                            const parsed = JSON.parse(data);
-                            const content = parsed.choices?.[0]?.delta?.content || '';
-                            if (content) {
-                                res.write(`data: ${JSON.stringify({ content })}\n\n`);
-                            }
-                        }
-                        buffer = ''; // clearing buffer after parsing for next chunk
-                    } catch (error) {
-                        console.error('Error parsing SSE data:', error);
-                    }
-                }
-            }
-        });
+        //                 // Finalize response, send accumulated solutionResponse
+        //                 try {
+        //                     const parsed = JSON.parse(solutionResponse);  // Parse full JSON response at the end
+        //                     const { correct, feedback } = parsed;  // Extract correct and feedback
+        //                     console.log("Correctness:", correct, "Feedback:", feedback);  // Log for debugging
+                            
+        //                     // Send the final response back to the frontend
+        //                     res.write(`data: ${JSON.stringify({ correct, feedback })}\n\n`);
+        //                     res.end();
+        //                 } catch (error) {
+        //                     console.error('Error parsing full solution response:', error);
+        //                 }
+        //                 return;
 
-        response.data.on('end', () => {
-            res.end();
-        });
+        //                 // console.log("Stream completed")
 
-        response.data.on('error', (error) => {
-            console.error('Stream error:', error);
-            res.write('data: {"error": "Error streaming response from GPT API"}\n\n');
-            res.end();
-        });
+
+        //                 // res.write('data: [DONE]\n\n');
+        //                 // res.end();
+        //                 // return;
+        //             }
+        //             // Accumulate the solution response
+        //             solutionResponse += data;
+        //             // try {
+        //             //     if (isValidJSON(data)) {
+        //             //         const parsed = JSON.parse(data);
+        //             //         const content = parsed.choices?.[0]?.delta?.content || '';
+
+        //             //         let feedback;
+        //             //         let correct = null;
+        //             //         try {
+        //             //             const feedbackResponse = JSON.parse(content);
+        //             //             feedback = feedbackResponse.feedback;
+        //             //             correct = feedbackResponse.correct;
+
+        //             //             console.log("Correctness:", correct);
+
+        //             //         }
+        //             //         catch (err) {
+        //             //             feedback = content;
+        //             //         }
+        //             //         // sending the response with "correct" and "feedback" fields
+        //             //         if (feedback) {
+
+        //             //             console.log("Sending Feedback:", feedback);
+
+
+        //             //             res.write(`data: ${JSON.stringify({ correct, feedback })}\n\n`);
+        //             //         }
+        //             //     }
+        //             //     buffer = ''; // clearing buffer after parsing for next chunk
+        //             // } catch (error) {
+        //             //     console.error('Error parsing SSE data:', error);
+        //             // }
+        //         }
+        //     }
+        //     // buffer = ''; // clearing buffer after parsing for next chunk
+        // });
+
+        // response.data.on('end', () => {
+        //     res.end();
+        // });
+
+        // response.data.on('error', (error) => {
+        //     console.error('Stream error:', error);
+        //     res.write('data: {"error": "Error streaming response from GPT API"}\n\n');
+        //     res.end();
+        // });
+
+        // Accumulate the response body
+        solutionResponse += response.data.choices[0].message.content;
+
+        // Parsing the response as JSON
+        const parsedResponse = JSON.parse(solutionResponse);
+
+        // Send the parsed response back to the frontend
+        res.json(parsedResponse);
+
     } catch (error) {
         console.error('Error fetching API:', error);
         res.status(500).json({ error: 'Error processing request' });
     }
 });
-
-
-
-
-
-
-// app.post('/api/validate-solution', async (req, res) => {
-
-//     const {question, userSolution} = req.body;  // receive question and solution from frontend
-
-//     try {
-//         const response = await axios({
-//             method: 'post',
-//             url: 'https://api.openai.com/v1/chat/completions',
-//             headers: {
-//                 'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-//                 'Content-Type': 'application/json',
-//             },
-//             data: {
-//                 model: 'gpt-4',
-//                 messages: [
-//                     { 
-//                         role: 'system', 
-//                         content: `You are a Discrete Math tutor. You are given a problem and a student's proposed solution. Your role is to evaluate the correctness of the solution and provide short feedback or hints.` +
-//                         'When sending LaTeX equations, always follow these rules: ' +
-//                         'Always wrap display math (block-level math) with two dollar signs $$ $$, and two dollars signs $$ $$ for inline math as well. Never wrap latex equations with backticks nor with backslash bracket \[ \] nor with backslash parentheses \( \).'
-//                     },
-//                     { 
-//                         role: 'user', 
-//                         content: `Problem: ${question}. \nStudent's Solution: ${userSolution}. \nEvaluate the solution and explain if it's correct. If incorrect, provide short step-by-step guidance and explaination without giving the final solution.` 
-//                     },
-//                 ],
-//             },
-//         });
-//         const assistantMessage = response.data.choices[0].message.content;
-//         res.json({message: assistantMessage});  // send response back to frontend
-//     } catch (error) {
-//         console.error('Error with GPT API:', error);
-//         res.status(500).json({ error: 'Error processing request' });
-//     }
-// });
-
-
-
-
-
 
 // handles streaming responses from WOLFRAM API, forwards them to client
 // app.get('/api/wolfram', async (req, res) => {
