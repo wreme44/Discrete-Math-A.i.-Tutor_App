@@ -48,17 +48,19 @@ const MyProfile = () => {
 
     return (
         <div className="myAccount">
-            <div className="logo-account">
+            {/* <div className="logo-account">
                 <img className="logo-profile" src="./logo.png" />
-            </div>
+            </div> */}
             <div className="myAccount-content">
-                <h5 className="myAccount-title">Your DiscreteMentor Account,</h5>
+                <h5 className="myAccount-title">Your DiscreteMentor Account</h5>
                 <h2 className="username">{user ? name : 'Sign up or Login below'}</h2>
                 {user ? (
                     <>
-                        <button className="check-status-button" onClick={handleCheckStatus}>
-                            Check Your Progress
-                        </button>
+                        <div className="check-status-div">
+                            <button className="check-status-button" onClick={handleCheckStatus}>
+                                Check Your Progress
+                            </button>
+                        </div>
                         <button className="signout-button" onClick={handleSignOut}>Sign Out</button>
                     </>
                 ) : (

@@ -419,8 +419,8 @@ const ExercisesPage = () => {
                                 onClick={() =>
                                     handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question, exercise.answer)
                                 }
-                                className="px-1 py-2 bg-indigo-700 hover:bg-indigo-800 active:bg-indigo-900 focus:outline-none 
-                                 focus:ring-2 focus:ring-indigo-500 text-white rounded-full transform transition duration-200 ease-in-out hover:scale-105 active:scale-95"
+                                className="ml-3 px-1 py-0 bg-blue-700 hover:bg-blue-600 active:bg-blue-900 focus:outline-none 
+                                 focus:ring-2 focus:ring-blue-500 text-white rounded-full transform transition duration-200 ease-in-out hover:scale-105 active:scale-95"
                                 disabled={isTyping}
                             >
                                 Submit Solution
@@ -447,7 +447,8 @@ const ExercisesPage = () => {
                         <div className="mt-5">
                             <button
                                 onClick={() => toggleHint(exercise.exercise_id)}
-                                className="mt-1 px-2 py-1 bg-gray-600 hover:bg-gray-500 rounded-full text-white"
+                                className="mt-1 px-2 py-0 bg-gray-600 hover:bg-gray-500 focus:outline-none 
+                                 focus:ring-2 focus:ring-gray-500 rounded-full text-white"
                             >
                                 {showHint[exercise.exercise_id] ? 'Hide Hint' : 'Show Hint'}
                             </button>
