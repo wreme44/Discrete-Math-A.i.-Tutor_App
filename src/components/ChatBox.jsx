@@ -203,8 +203,9 @@ const ChatBox = () => {
             <div className='chatbox-content flex-1 overflow-y-auto mb-4 overflow-x-hidden'>
                 {messages.length > 0 ? (messages.map((msg, index) => (
                     <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
-                        <span className={`latex-container inline-block p-2 rounded ${msg.role === 'user' ? 'bg-blue-900 text-white' : 'bg-gray-800'
-                            } break-words max-w-full whitespace-normal`}>
+                        <span className={`latex-container inline-block p-2 rounded ${msg.role === 'user' ? 
+                        'bg-blue-900 text-white' : 'bg-gray-800'} 
+                        break-words max-w-full whitespace-normal`}>
                             {msg.role === 'assistant' ? (
                                 <>
                                 {/* {console.log(msg.content)} */}
@@ -237,7 +238,8 @@ const ChatBox = () => {
                     <textarea
                         placeholder='Message Tutor'
                         ref={textareaRef}
-                        className="flex-1 p-2 rounded-2xl bg-gray-700 resize-none break-words"
+                        className="flex-1 p-2 rounded-2xl bg-gray-700 focus:outline-none 
+                                 focus:ring-1 focus:ring-amber-500 resize-none break-words"
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
                         onKeyDown={(e) => {
@@ -250,7 +252,8 @@ const ChatBox = () => {
                         style={{ overflow: 'hidden' }}
                     />
                     <button 
-                        className="ml-2 p-2 bg-blue-400 rounded-2xl flex-shrink-0" 
+                        className="ml-2 p-2 bg-blue-400 focus:outline-none 
+                                 focus:ring-1 focus:ring-amber-500 rounded-2xl flex-shrink-0" 
                         style={{width: '50px', height: '40px'}} 
                         onClick={handleSend}
                         disabled={isTyping}

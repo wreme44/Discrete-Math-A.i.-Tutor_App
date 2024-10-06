@@ -670,6 +670,11 @@ math-field {
 
 }
 
+math-field:focus {
+    outline: none; 
+    box-shadow: 0 0 0 1px #3b7190;
+}
+
 math-field:hover {
     cursor: pointer;
 }
@@ -686,4 +691,28 @@ math-field:hover {
 
 .incorrect-answer {
     color: #d31717 !important; /* Tailwind's red-500 */
+}
+
+
+
+
+
+.triangle-btn {
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent;
+    border-right: 40px solid transparent;
+    border-bottom: 60px solid blue;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.triangle-btn:hover {
+    transform: scale(1.05);
+}
+
+.triangle-btn:active {
+    transform: scale(0.95);
 }

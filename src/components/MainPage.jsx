@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import ChatBox from './ChatBox'
 import LessonsColumn from './LessonsColumn';
@@ -8,10 +8,19 @@ const MainPage = () => {
 
     const [isChatVisible, setIsChatVisible] = useState(false);
     const [isSmallScreen, setIsSmallScreen] = useState(false);
+    const [lessonCompleted, setLessonCompleted] = useState(false);
 
     const toggleChatBox = () => {
         setIsChatVisible(!isChatVisible)
     }
+
+    const handleLessonCompletion = useCallback((isCompleted) => {
+        setLessonCompleted(isCompleted)
+    }, [])
+
+    const resetLessonCompletion = useCallback(() => {
+        setLessonCompleted(false);
+    })
 
     useEffect(() => {
 
@@ -33,7 +42,10 @@ const MainPage = () => {
     return (
         <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-16 min-h-screen md:h-screen">
             <div className="col-span-1 bg-gray-800 pl-3 pt-3 pb-2 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
-                <LessonsColumn />
+                <LessonsColumn 
+                    lessonCompleted={lessonCompleted}
+                    onLessonChange={resetLessonCompletion}
+                />
             </div>
             <div className="md:col-span-2 bg-gray-800 pl-3 pt-3 pb-2 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
                 <button className={`fixed hidden md:inline-flex top-16 right-5 items-center bg-gradient-to-r
@@ -47,7 +59,7 @@ const MainPage = () => {
                         ) : (<><ChevronDownIcon className="w-4 h-4 mr-1"/>Message Tutor</>
                     )}
                 </button>
-                <ExercisesPage />
+                <ExercisesPage onLessonCompletion={handleLessonCompletion}/>
             </div>
             <div className={`rounded overflow-y-auto ${isSmallScreen
                 ? 'md:hidden col-span-1 max-h-full h-[500px]'

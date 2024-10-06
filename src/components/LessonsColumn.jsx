@@ -4,7 +4,7 @@ import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient";
 import LatexRenderer from "./LatexRenderer";
 
-const LessonsColumn = () => {
+const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
     // State to hold lessons data fetched from the database
     const [lessonsData, setLessonsData] = useState([]);
     // State to keep track of current lesson index
@@ -139,6 +139,10 @@ const LessonsColumn = () => {
 
         setCurrentLessonIndex(newIndex);
         sessionStorage.setItem("currentLessonIndex", newIndex);
+
+        if (typeof onLessonChange === 'function'){
+            onLessonChange();
+        }
     };
 
     if (loading) return <p>Loading lessons...</p>;
@@ -194,16 +198,24 @@ const LessonsColumn = () => {
                 <p className="text-sm text-gray-400">
                     Lesson {currentLessonIndex + 1} of {lessonsData.length}
                 </p>
-                <button
-                    onClick={handleNext}
-                    disabled={currentLessonIndex === lessonsData.length - 1}
-                    className={`mr-2 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
-                        ? "bg-blue-900 cursor-not-allowed"
-                        : "bg-blue-700 hover:bg-blue-800"
-                        } text-white`}
-                >
-                    Next
-                </button>
+                <div className="relative group">
+                    <button
+                        onClick={handleNext}
+                        disabled={!lessonCompleted || currentLessonIndex === lessonsData.length - 1}
+                        className={`mr-2 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
+                            ? "bg-blue-900 cursor-not-allowed"
+                            : "bg-blue-700 hover:bg-blue-800"
+                            } text-white`}
+                    >
+                        Next
+                    </button>
+                    {!lessonCompleted && (
+                        <div className="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
+                            Complete all questions first
+                            <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     );

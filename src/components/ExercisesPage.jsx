@@ -15,7 +15,7 @@ import 'highlight.js/styles/atom-one-dark.css';
 import remarkGfm from 'remark-gfm'
 
 
-const MathLiveInput = ({value, onChange}) => {
+const MathLiveInput = ({value, onChange, onFocus}) => {
 
     const mathfieldRef = useRef(null);
 
@@ -33,10 +33,10 @@ const MathLiveInput = ({value, onChange}) => {
         }
     }, [value, onChange]);
 
-    return <math-field ref={mathfieldRef} />;
+    return <math-field ref={mathfieldRef} onFocus={onFocus}/>;
 }
 
-const ExercisesPage = () => {
+const ExercisesPage = ({onLessonCompletion}) => {
     // State to hold exercises data fetched from the database
     const [exercisesData, setExercisesData] = useState([]);
     const [groupedExercises, setGroupedExercises] = useState({});
@@ -56,6 +56,7 @@ const ExercisesPage = () => {
     const [isTyping, setIsTyping] = useState(false);
 
     const [submittedSolutions, setSubmittedSolutions] = useState({});
+    const [inputAlert, setInputAlert] = useState({});
     const [gptResults, setGptResults] = useState({});
 
     const [userSolution, setUserSolution] = useState("");
@@ -175,9 +176,11 @@ const ExercisesPage = () => {
     const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion, correctAnswer) => {
 
         if (!userSolution || userSolution.trim() === "") {
-            alert("Please enter a solution before submitting.");
+            setInputAlert((prev) => ({...prev, [exerciseId]: true}));
             return;
         }
+
+        setInputAlert((prev) => ({...prev, [exerciseId]: false})); // clear if valid input
 
         const cleanedSolution = cleanLatexInput(userSolution);
 
@@ -234,6 +237,16 @@ const ExercisesPage = () => {
             setIsTyping(false);
         }
     };
+
+        // calculating if all answers are correct for the current set of exercises
+    const allCorrect = currentExercises.every((exercise) => correctAnswers[exercise.exercise_id]);
+
+    // notifying main page / lessons page if all exercises completed
+    useEffect(() => {
+        if (typeof onLessonCompletion === 'function'){ // only call if its defined
+            onLessonCompletion(allCorrect)
+        }
+    }, [allCorrect, onLessonCompletion]) 
 
     // const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion, correctAnswer) => {
 
@@ -394,8 +407,7 @@ const ExercisesPage = () => {
         }
     };
 
-    // calculating if all answers are correct for the current set of exercises
-    const allCorrect = currentExercises.every((exercise) => correctAnswers[exercise.exercise_id]);
+
     
     return (
         <div className="flex flex-col h-full">
@@ -407,13 +419,14 @@ const ExercisesPage = () => {
                     <div key={exercise.exercise_id} className="mb-36 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                         {renderContent(exercise.question)}                         
                         {/* MathLiveInput for the exercise */}
-                        <div className="mt-16">
+                        <div className="relative mt-16">
                             <MathLiveInput
                                 value={submittedSolutions[exercise.exercise_id] || ""}
                                 onChange={(value) => setSubmittedSolutions({
                                     ...submittedSolutions,
                                     [exercise.exercise_id]: value,
                                 })}
+                                onFocus={() => setInputAlert(false)}
                             />
                             <button
                                 onClick={() =>
@@ -425,6 +438,12 @@ const ExercisesPage = () => {
                             >
                                 Submit Solution
                             </button>
+                            {inputAlert[exercise.exercise_id] && (
+                                <div className="absolute bottom-full left-8 mb-2 mt-1 bg-teal-600 text-white text-xs rounded py-1 px-2 w-60 z-10">
+                                    Please enter a solution before submitting
+                                    <div className="absolute left-28 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                </div>
+                            )}
                         </div>
                         {/* Show user's submitted solution */}
                         {submittedSolutions[exercise.exercise_id] && (
@@ -456,7 +475,8 @@ const ExercisesPage = () => {
                             {gptResults[exercise.exercise_id] && (
                                 <button
                                     onClick={() => toggleGPTFeedback(exercise.exercise_id)}
-                                    className="mt-1 ml-5 px-2 py-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800 hover:to-yellow-600 rounded-full text-white"
+                                    className="mt-1 ml-5 px-2 py-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800 hover:to-yellow-600 
+                                     focus:outline-none focus:ring-2 focus:ring-yellow-600 rounded-full text-white"
                                 >
                                     {showGPTFeedback[exercise.exercise_id] ? 'Hide Tutor Feedback' : 'Show Tutor Feedback'}
                                 </button>
@@ -499,16 +519,25 @@ const ExercisesPage = () => {
                     Exercise {currentLessonIndex + 1} of {lessonsData.length}
                 </p>
                 {/* allCOrrect check, prevent user from next page */}
-                <button
-                    onClick={handleNext}
-                    disabled={!allCorrect || currentLessonIndex === lessonsData.length - 1}
-                    className={`mr-4 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
-                        ? "bg-blue-900 cursor-not-allowed"
-                        : "bg-blue-700 hover:bg-blue-800"
-                        } text-white`}
-                >
-                    Next
-                </button>
+                <div className="relative group">
+                    <button
+                        onClick={handleNext}
+                        disabled={!allCorrect || currentLessonIndex === lessonsData.length - 1}
+                        className={`mr-4 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
+                            ? "bg-blue-900 cursor-not-allowed"
+                            : "bg-blue-700 hover:bg-blue-800"
+                            } text-white`}
+                    >
+                        Next
+                    </button>
+                    {!allCorrect && (
+                        <div className="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
+                            Complete all questions first
+                            <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                        </div>
+                    )}
+                </div>
+                
             </div>
         </div>
     );
