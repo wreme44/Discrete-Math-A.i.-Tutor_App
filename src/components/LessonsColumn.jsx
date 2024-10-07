@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useLessonProgress } from './LessonProgressContext';
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient";
 import LatexRenderer from "./LatexRenderer";
 
-const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
+const LessonsColumn = () => {
+    const { allExercisesCompleted } = useLessonProgress(); // Use the context state
     // State to hold lessons data fetched from the database
     const [lessonsData, setLessonsData] = useState([]);
     // State to keep track of current lesson index
@@ -17,7 +19,9 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
     const [error, setError] = useState(null);
     // State to manage user ID
     const [userId, setUserId] = useState(null);
-
+    // State to hold completed lessons
+    const [completedLessons, setCompletedLessons] = useState({}); // { lesson_id: true/false }
+    // fetching lessons
     useEffect(() => {
         const fetchLessons = async () => {
             const { data, error } = await supabase
@@ -35,9 +39,11 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
         };
 
         const fetchUserProgress = async () => {
-            const { data: { user }, error } = await supabase.auth.getUser();
+            const { data, error } = await supabase.auth.getUser(); // data: { user }, error
+            const user = data.user
             if (error) {
                 console.error("Error fetching user:", error);
+                setUserId(null);
                 return;
             }
 
@@ -47,36 +53,53 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
                 // Fetch user's progress from 'userprogress' table
                 const { data: progressData, error: progressError } = await supabase
                     .from("userprogress")
-                    .select("lesson_id")
+                    .select("lesson_id, completed")
                     .eq("user_id", user.id)
                     .order("completed_at", { ascending: false })
                     .limit(1);  // Fetch the most recent lesson the user completed
 
                 if (progressError) {
-                    console.error("Error fetching user progress:", progressError);
+                    console.error("Error fetching user progress:", progressError.message);
+                } else {
+                    // convert to map for lookup
+                    const completedMap = {}
+                    progressData.forEach(progress => {
+                        completedMap[progress.lesson_id] = progress.completed;
+                    })
+                    setCompletedLessons(completedMap);
                 }
+            } else {
+                // for non logged in users
+                const completed = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
+                setCompletedLessons(completed);
+            }
+        }
+        fetchLessons().then(fetchUserProgress);
 
                 // Set the current lesson index based on user's progress or default to 0
-                if (progressData && progressData.length > 0) {
-                    const lastCompletedLessonId = progressData[0].lesson_id;
-                    const lastLessonIndex = lessonsData.findIndex(lesson => lesson.lesson_id === lastCompletedLessonId);
+        //         if (progressData && progressData.length > 0) {
+        //             const lastCompletedLessonId = progressData[0].lesson_id;
+        //             const lastLessonIndex = lessonsData.findIndex(lesson => lesson.lesson_id === lastCompletedLessonId);
 
-                    if (lastLessonIndex !== -1) {
-                        setCurrentLessonIndex(lastLessonIndex + 1); // Go to the next lesson
-                        sessionStorage.setItem("currentLessonIndex", lastLessonIndex + 1);
-                    }
-                }
-            }
-        };
+        //             if (lastLessonIndex !== -1) {
+        //                 setCurrentLessonIndex(lastLessonIndex + 1); // Go to the next lesson
+        //                 sessionStorage.setItem("currentLessonIndex", lastLessonIndex + 1);
+        //             }
+        //         }
+        //     }
+        // };
 
-        fetchLessons();
-        fetchUserProgress();
-    }, [lessonsData.length]);
+        // fetchLessons();
+        // fetchUserProgress();
+    }, []); // [lessonsData.length]
 
     // Function to update the userprogress table
     const updateProgress = async (lessonId, completed = false) => {
         if (!userId) {
-            console.warn("No user is logged in. Progress update aborted.");
+            // console.warn("No user is logged in. Progress update aborted.");
+            const updatedCompletedLessons = {...completedLessons, [lessonId]: completed};
+            setCompletedLessons(updatedCompletedLessons);
+            sessionStorage.setItem('completedLessons', JSON.stringify(updatedCompletedLessons));
             return; // Abort the update if no user is logged in
         }
 
@@ -88,7 +111,7 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
             .single(); // Check if the progress for this lesson already exists
 
         if (progressError && progressError.code !== 'PGRST116') {
-            console.error("Error fetching progress:", progressError);
+            console.error("Error fetching progress:", progressError.message);
         }
 
         if (!progressData) {
@@ -103,7 +126,8 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
                 });
 
             if (insertError) {
-                console.error("Error inserting progress:", insertError);
+                console.error("Error inserting progress:", insertError.message);
+                return;
             }
         } else {
             // If progress data already exists, update it with a new timestamp
@@ -118,10 +142,13 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
 
             if (updateError) {
                 console.error("Error updating progress:", updateError);
+                return;
             }
         }
-
         console.log("Progress updated for lesson:", lessonId);
+        setCompletedLessons(prev => ({
+            ...prev, [lessonId]: completed,
+        }));
     };
 
     const handlePrevious = () => {
@@ -131,18 +158,18 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
     };
 
     const handleNext = () => {
+        // const lessonId = lessonsData[currentLessonIndex].lesson_id;
+
+        // if (allExercisesCompleted){
+        //     updateProgress(lessonId, true);
+        // }
         const newIndex = currentLessonIndex + 1;
-        const lessonId = lessonsData[currentLessonIndex].lesson_id;
 
         // Mark current lesson as completed and update user progress
-        updateProgress(lessonId, true);
+        // updateProgress(lessonId, true);
 
         setCurrentLessonIndex(newIndex);
         sessionStorage.setItem("currentLessonIndex", newIndex);
-
-        if (typeof onLessonChange === 'function'){
-            onLessonChange();
-        }
     };
 
     if (loading) return <p>Loading lessons...</p>;
@@ -171,6 +198,8 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
             );
         }
     };
+
+    const isLessonCompleted = completedLessons[currentLesson?.lesson_id];
 
     return (
         <div className="flex flex-col h-full">
@@ -201,7 +230,7 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
                 <div className="relative group">
                     <button
                         onClick={handleNext}
-                        disabled={!lessonCompleted || currentLessonIndex === lessonsData.length - 1}
+                        disabled={!isLessonCompleted || currentLessonIndex === lessonsData.length - 1}
                         className={`mr-2 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
                             ? "bg-blue-900 cursor-not-allowed"
                             : "bg-blue-700 hover:bg-blue-800"
@@ -209,7 +238,7 @@ const LessonsColumn = ({lessonCompleted, onLessonChange}) => {
                     >
                         Next
                     </button>
-                    {!lessonCompleted && (
+                    {!isLessonCompleted && (
                         <div className="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
                             Complete all questions first
                             <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>

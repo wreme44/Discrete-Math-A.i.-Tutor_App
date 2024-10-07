@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import {useLessonProgress} from './LessonProgressContext';
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient";
@@ -36,7 +37,11 @@ const MathLiveInput = ({value, onChange, onFocus}) => {
     return <math-field ref={mathfieldRef} onFocus={onFocus}/>;
 }
 
-const ExercisesPage = ({onLessonCompletion}) => {
+const ExercisesPage = () => {
+
+
+    const [user, setUser] = useState(null);
+    const [userId, setUserId] = useState(null);
     // State to hold exercises data fetched from the database
     const [exercisesData, setExercisesData] = useState([]);
     const [groupedExercises, setGroupedExercises] = useState({});
@@ -62,7 +67,21 @@ const ExercisesPage = ({onLessonCompletion}) => {
     const [userSolution, setUserSolution] = useState("");
 
     const [lessonsData, setLessonsData] = useState([]);
-
+    // fetching user info
+    useEffect(() => {
+        const fetchUser = async () => {
+            const {data, error} = await supabase.auth.getUser()
+            if (error) {
+                console.error("Error fetching user:", error.message)
+            }
+            else {
+                setUser(data.user)
+                setUserId(data.user?.id);
+            }
+        }
+        fetchUser();
+    }, [])
+    // fetching exercise & lessons
     useEffect(() => {
         const fetchExercises = async () => {
             const { data, error } = await supabase
@@ -74,6 +93,7 @@ const ExercisesPage = ({onLessonCompletion}) => {
                 console.error("Error fetching exercises:", error.message);
                 setError(error.message);
             } else {
+                // grouping exercises by lesson_id for easier access
                 const grouped = data.reduce((acc, exercise) => {
                     if (!acc[exercise.lesson_id]) {
                         acc[exercise.lesson_id] = [];
@@ -106,41 +126,13 @@ const ExercisesPage = ({onLessonCompletion}) => {
         fetchLessons();
     }, []);
 
-    const handlePrevious = () => {
-        const newIndex = currentExerciseIndex - 1;
-        setcurrentExerciseIndex(newIndex);
-        sessionStorage.setItem("currentExerciseIndex", newIndex);
-        // setShowHint(false);
-        setUserSolution("");
-    };
-
-    const handleNext = () => {
-        const newIndex = currentExerciseIndex + 1;
-        setcurrentExerciseIndex(newIndex);
-        sessionStorage.setItem("currentExerciseIndex", newIndex);
-        // setShowHint(false);
-        setUserSolution("");
-    };
-    // hint + feedback toggling
-    const toggleHint = (exerciseId) => {
-        setShowHint((prevState) => ({
-            ...prevState, [exerciseId]: !prevState[exerciseId],
-        }));
-    };
-
-    const toggleGPTFeedback = (exerciseId) => {
-        setShowGPTFeedback((prevState) => ({
-            ...prevState, [exerciseId]: !prevState[exerciseId],
-        }));
-    };
+    // determine current lesson and exercises
 
     // get all unique lesson Ids
     const lessonIds = Object.keys(groupedExercises);
-
     // get exercises for current lesson id based on currentExerciseIndex
     const currentLessonId = lessonIds[currentExerciseIndex];
     const currentExercises = groupedExercises[currentLessonId] || [];
-
     const currentLessonIndex = lessonsData.findIndex(lesson => lesson.lesson_id === parseInt(currentLessonId));
 
     const cleanLatexInput = (latexInput) => {
@@ -209,7 +201,6 @@ const ExercisesPage = ({onLessonCompletion}) => {
             // get JSON result from backend
             const result = await response.json();
             // console.log("Received from backend:", result);
-
             // extract the 'correct' flag and 'feedback' from the result
             const { correct, feedback } = result;
 
@@ -238,128 +229,69 @@ const ExercisesPage = ({onLessonCompletion}) => {
         }
     };
 
-        // calculating if all answers are correct for the current set of exercises
-    const allCorrect = currentExercises.every((exercise) => correctAnswers[exercise.exercise_id]);
-
-    // notifying main page / lessons page if all exercises completed
     useEffect(() => {
-        if (typeof onLessonCompletion === 'function'){ // only call if its defined
-            onLessonCompletion(allCorrect)
+        // Loop through correctAnswers and trigger progress update for the correct ones
+        Object.keys(correctAnswers).forEach(async (exerciseId) => {
+            if (correctAnswers[exerciseId]) {
+                await updateExerciseProgress(exerciseId); // Only update for correct answers
+            }
+        });
+    }, [correctAnswers]); // Runs whenever correctAnswers state changes
+
+    const updateExerciseProgress = async (exerciseId, currentLessonId) => {
+
+        try {
+            // updating userprogress
+            if (userId) {
+                const { data: progressData, error: progressError } = await supabase
+                    .from("user_exercise_progress")
+                    .select('*')
+                    .eq('user_id', userId)
+                    .eq('exercise_id', exerciseId)
+                    .single(); // checking if progress for this exercise exists
+
+                if (!progressData) {
+                    // insert new progress for this exercise
+                    const { error: insertError } = await supabase
+                        .from("user_exercise_progress")
+                        .insert({
+                            user_id: userId,
+                            lesson_id: currentLessonId,
+                            exercise_id: exerciseId,
+                            completed: true,
+                            completed_at: new Date(),
+                        });
+                    if (insertError) {
+                        console.error("Error inserting progress:", insertError.message)
+                        return;
+                    }
+                } else {
+                    // updating existing progress for this exercise
+                    const { error: updateError } = await supabase
+                        .from("user_exercise_progress")
+                        .update({
+                            completed: true,
+                            completed_at: new Date(),
+                        })
+                        .eq('user_id', userId)
+                        .eq('exercise_id', exerciseId);
+
+                    if (updateError) {
+                        console.error("Error updating progress:", updateError);
+                        return;
+                    }
+                }
+                // console.log("Progress updated for exercise:", exerciseId);
+            } else {
+                // non logged in users
+                const completedExercises = JSON.parse(sessionStorage.getItem('completedExercises')) || {};
+                completedExercises[exerciseId] = true;
+                sessionStorage.setItem('completedExercises', JSON.stringify(completedExercises));
+            }
+        } catch (error){
+            console.error("Error updating exercise progress:", error)
         }
-    }, [allCorrect, onLessonCompletion]) 
-
-    // const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion, correctAnswer) => {
-
-    //     // ensure userSolution is not empty or undefined before making API call
-    //     if (!userSolution || userSolution.trim() === "") {
-    //         alert("Please enter a solution before submitting.");
-    //         return;
-    //     }
-    
-    //     const cleanedSolution = cleanLatexInput(userSolution);
-    
-    //     // store users submitted solution
-    //     setSubmittedSolutions((prev) => ({
-    //         ...prev,
-    //         [exerciseId]: userSolution,
-    //     }));
-    //     setIsTyping(true);
-    
-    //     try {
-    //         const response = await fetch('http://localhost:5000/api/validate-solution', {
-    //             method: 'POST',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //             },
-    //             body: JSON.stringify({ question: exerciseQuestion, userSolution: cleanedSolution, correctAnswer })
-    //         });
-    
-    //         // error handling
-    //         if (!response.ok) {
-    //             throw new Error('Network response was not ok');
-    //         }
-    
-    //         // getting readable stream from 'response body'
-    //         const reader = response.body.getReader();
-    //         const decoder = new TextDecoder('utf-8'); // creating TextDecoder to convert bytes to text
-    
-    //         let solutionResponse = ''; // to accumulate the assistant's response
-    //         let correctFlag = null;     // Track whether the solution is correct
-
-    //         // continuously reading from stream until done
-    //         while (true) {
-    //             // reading next chunk of data
-    //             const { done, value } = await reader.read();
-    //             if (done) break; // exiting loop when no more data
-    
-    //             // decoding chunk of data from bytes to string
-    //             const chunk = decoder.decode(value, { stream: true });
-    //             const lines = chunk.split('\n').filter(line => line.trim() !== ''); // splitting chunk into lines, filtering out empty lines
-    
-    //             // going through each line of chunk
-    //             for (const line of lines) {
-    //                 // processing data if line starts with 'data: '
-    //                 if (line.startsWith('data: ')) {
-    //                     // removing 'data: ' from start of line
-    //                     const data = line.replace('data: ', '');
-    
-    //                     // if data is '[DONE]', stop processing
-    //                     if (data === '[DONE]') {
-    //                         setGptResults((prev) => ({
-    //                             ...prev,
-    //                             [exerciseId]: solutionResponse
-    //                         }));
-
-    //                         if (correctFlag !== null){
-    //                             setCorrectAnswers((prev) => ({
-    //                                 ...prev, [exerciseId]: correctFlag,
-    //                             }))
-    //                         }
-
-    //                         // processing if solution is correct
-    //                         // extracting result as json
-    //                         // const result = await response.json()
-    //                         // const isCorrect = result.correct
-    //                         setIsTyping(false);
-    //                         return;
-    //                     }
-    
-    //                     try {
-    //                         // parsing data into JSON format
-    //                         const parsed = JSON.parse(data);
-    //                         const text = parsed.content || ''; // extracting content (text) from parsed data
-                            
-    //                         solutionResponse += text; // appending to solution response
-
-    //                         if (parsed.correct !== undefined){
-    //                             correctFlag = parsed.correct;
-    //                         }
-    
-    //                         // updating state with the latest assistant response
-    //                         setGptResults((prev) => ({
-    //                             ...prev,
-    //                             [exerciseId]: solutionResponse
-    //                         }));
-    //                     } catch (error) {
-    //                         console.error('Error parsing streaming data:', error);
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     } catch (error) {
-    //         // error handling during fetch requests or streaming process
-    //         console.error('Error validating solution:', error);
-    //         setGptResults((prev) => ({
-    //             ...prev,
-    //             [exerciseId]: 'An error occurred while validating the solution.'
-    //         }));
-    //         setIsTyping(false); // stopping the gpts typing indication
-    //     }
-    // };
-
-    if (loading) return <p>Loading exercises...</p>;
-    if (error) return <p>{error}</p>;
-    // const currentExercise = exercisesData[currentExerciseIndex];
+    }
 
     const renderContent = (question) => {
 
@@ -407,8 +339,338 @@ const ExercisesPage = ({onLessonCompletion}) => {
         }
     };
 
+    const {setAllExercisesCompleted} = useLessonProgress(); // Import the context function
+    // const allCorrect = currentExercises.every((exercise) => correctAnswers[exercise.exercise_id]);
+    const allCorrect = currentExercises.length > 0 && currentExercises.every((exercise) => correctAnswers[exercise.exercise_id]);
 
+    // When moving to a new page, reset allCorrect and correctAnswers
+    useEffect(() => {
+        // Reset correctAnswers and the completion state when a new set of exercises is loaded
+        setCorrectAnswers({});
+        setAllExercisesCompleted(false);  // Reset the context to lock the buttons again
+        setSubmittedSolutions({}); // Optionally, reset submitted solutions for the new page
+    }, [currentExerciseIndex, setAllExercisesCompleted]); // Runs when moving to a new exercise page    
+
+    // calculating if all answers are correct for the current set of exercises
+
+    // // notifying main page / lessons page if all exercises completed
+    // useEffect(() => {
+    //     if (typeof onLessonCompletion === 'function'){ // only call if its defined
+    //         onLessonCompletion(allCorrect)
+    //     }
+    // }, [allCorrect, onLessonCompletion]) 
+
+    // checking completion status 
+    useEffect(() => {
+
+        // Update the context state when all exercises are completed
+        if (allCorrect) {
+            setAllExercisesCompleted(true);
+        } else {
+            setAllExercisesCompleted(false);
+        }
+
+        const checkExerciseCompletion = async () => {
+            if (!currentLessonId) return;
+
+            if (userId) {
+                // logged in users - checking completion in supabase
+                const {data, error} = await supabase
+                    .from("user_exercise_progress")
+                    .select("exercise_id, completed")
+                    .eq("user_id", userId)
+                    .in("exercise_id", currentExercises.map(ex => ex.exercise_id)); // Filter by the current exercise IDs
+                    // .eq("lesson_id", currentLessonId)
+                    // .single();
+
+                if (error) {
+                    if (error.code === 'PGRST116') { // no data found
+                        // not completed - do nothing
+                        // maybe reset correctAnswers if needed
+                    } else {
+                        console.error("Error checking lesson completion:", error.message);
+                    }
+                } else {
+                    const completedExercises = data.reduce((acc, progress) => {
+                        if (progress.completed) {
+                            acc[progress.exercise_id] = true;
+                        }
+                        return acc;
+                    }, {});
+                    // if (data.completed) {
+                    //     // lesson already completed - marking all exercises as correct
+                    //     const allCorrectMap = currentExercises.reduce((acc, exercise) => {
+                    //         acc[exercise.exercise_id] = true;
+                    //         return acc;
+                    //     }, {});
+                        // setCorrectAnswers(allCorrectMap);
+                    setCorrectAnswers(completedExercises)
+                    
+                }
+            } else {
+                // non logged in users - checking completion in sessionStorage
+                const completedExercises = JSON.parse(sessionStorage.getItem('completedExercises')) || {};
+                const completedForThisLesson = currentExercises.reduce((acc, exercise) => {
+                    if (completedExercises[exercise.exercise_id]) {
+                        acc[exercise.exercise_id] = true;
+                    }
+                    return acc;
+                }, {});
+                setCorrectAnswers(completedForThisLesson);
+            }
+            //     const completedLessons = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
+            //     if (completedLessons[currentLessonId]) {
+            //         // lesson already completed - marking all exercises as correct
+            //         const allCorrectMap = currentExercises.reduce((acc, exercise) => {
+            //             acc[exercise.exercise_id] = true;
+            //             return acc;
+            //         }, {});
+            //         setCorrectAnswers(allCorrectMap);
+            //     }
+            // }
+        };
+        checkExerciseCompletion();
+    }, [currentLessonId, userId, currentExercises]); // setAllExercisesCompleted, correctAnswers
+
+    // update completion status when all correct
+    useEffect(() => {
+        // console.log('useEffect triggered');
+        // console.log('allCorrect:', allCorrect);
+        // console.log('currentLessonId:', currentLessonId);
+        // console.log('userId:', userId);
+        if (allCorrect && currentLessonId) {
+            if (userId) {
+                // logged in users - updating supabase
+
+
+                const markLessonCompleted = async () => {
+                    try {
+                        // First, check if the lesson has already been marked as completed
+                        const { data: existingProgress, error: selectError } = await supabase
+                            .from("userprogress")
+                            .select('*')
+                            .eq('user_id', userId)
+                            .eq('lesson_id', currentLessonId)
+                            .eq('completed', true) // Ensure we're checking if it's marked as complete
+                            .single(); // Get a single row
+        
+                        if (selectError && selectError.code !== 'PGRST116') {
+                            console.error("Error checking existing progress:", selectError.message);
+                            return;
+                        }
+        
+                        if (!existingProgress) {
+                            // If no existing progress or not marked as completed, insert or update
+                            const { error: upsertError } = await supabase
+                                .from("userprogress")
+                                .upsert({
+                                    user_id: userId,
+                                    lesson_id: currentLessonId,
+                                    completed: true,
+                                    completed_at: new Date(),
+                                });
+        
+                            if (upsertError) {
+                                console.error("Error marking lesson completed:", upsertError.message);
+                            } else {
+                                console.log(`Lesson ${currentLessonId} marked as completed for user ${userId}`);
+                            }
+                        }
+                    } catch (error) {
+                        console.error("Error completing the lesson:", error);
+                    }
+                };
+        
+                markLessonCompleted();
+
+                // const markLessonCompleted = async () => {
+                //     try {
+                //         // First, check if a row already exists for the user and the current lesson
+                //         const { data: existingProgress, error: selectError } = await supabase
+                //             .from("userprogress")
+                //             .select('*')
+                //             .eq('user_id', userId)
+                //             .eq('lesson_id', currentLessonId)
+                //             .eq('completed', true) // Ensure we're checking if it's marked as complete
+                //             .single(); // Get a single row
+
+                //         if (selectError && selectError.code !== 'PGRST116') { // 'PGRST116' is the code for "No data found"
+                //             console.error("Error checking existing progress:", selectError.message);
+                //             return;
+                //         }
+
+                //         if (!existingProgress) {
+                //             // If no existing progress, insert a new row
+                //             const { error: insertError } = await supabase
+                //                 .from("userprogress")
+                //                 .insert({
+                //                     user_id: userId,
+                //                     lesson_id: currentLessonId,
+                //                     completed: true,
+                //                     completed_at: new Date(),
+                //                 });
+
+                //             if (insertError) {
+                //                 console.error("Error inserting new progress:", insertError.message);
+                //                 return;
+                //             }
+                //         } else {
+                //             // If progress exists, update the existing row
+                //             const { error: updateError } = await supabase
+                //                 .from("userprogress")
+                //                 .update({
+                //                     completed: true,
+                //                     completed_at: new Date(),
+                //                 })
+                //                 .eq('user_id', userId)
+                //                 .eq('lesson_id', currentLessonId);
+
+                //             if (updateError) {
+                //                 console.error("Error updating progress:", updateError.message);
+                //                 return;
+                //             }
+                //         }
+
+                //         console.log(`Lesson ${currentLessonId} marked as completed for user ${userId}`);
+                //     } catch (error) {
+                //         console.error("Error updating lesson completion:", error);
+                //     }
+                // };
+                // markLessonCompleted();
+                
+                
+                // const markLessonCompleted = async () => {
+                //     const {error} = await supabase
+                //         .from("userprogress")
+                //         .upsert(
+                //             {
+                //                 user_id: userId,
+                //                 lesson_id: currentLessonId,
+                //                 completed: true,
+                //                 completed_at: new Date(),
+                //             },
+                //             {onConflict: ['user_id', 'lesson_id']} // ensuring upsert on user_id and lesson_id
+                //         );
+                //     if (error) {
+                //         console.error("Error updating lesson completion:", error.message);
+                //     } else {
+                //         console.log(`Lesson ${currentLessonId} marked as completed for user ${user.id}`);
+                //     }
+                // };
+                // markLessonCompleted();
+            } else {
+                // non logged in users - updating sessionStorage
+                const completedLessons = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
+                completedLessons[currentLessonId] = true;
+                sessionStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+                console.log(`Lesson ${currentLessonId} marked as completed in sessionStorage`);
+            }
+        }
+    }, [allCorrect, currentLessonId, userId]);
+
+    // Function to update the userprogress table
+    const updateProgress = async (lessonId, completed = false) => {
+        if (!userId) {
+            // console.warn("No user is logged in. Progress update aborted.");
+            const updatedCompletedLessons = { ...completedLessons, [lessonId]: completed };
+            setCompletedLessons(updatedCompletedLessons);
+            sessionStorage.setItem('completedLessons', JSON.stringify(updatedCompletedLessons));
+            return; // Abort the update if no user is logged in
+        }
+
+        const { data: progressData, error: progressError } = await supabase
+            .from("userprogress")
+            .select('*')
+            .eq('user_id', userId)
+            .eq('lesson_id', lessonId)
+            .single(); // Check if the progress for this lesson already exists
+
+        if (progressError && progressError.code !== 'PGRST116') {
+            console.error("Error fetching progress:", progressError.message);
+        }
+
+        if (!progressData) {
+            // If no progress data exists, insert a new row with a completion timestamp
+            const { error: insertError } = await supabase
+                .from("userprogress")
+                .insert({
+                    user_id: userId,
+                    lesson_id: lessonId,
+                    completed: completed,
+                    completed_at: new Date(), // Add timestamp
+                });
+
+            if (insertError) {
+                console.error("Error inserting progress:", insertError.message);
+                return;
+            }
+        } else {
+            // If progress data already exists, update it with a new timestamp
+            const { error: updateError } = await supabase
+                .from("userprogress")
+                .update({
+                    completed: completed,
+                    completed_at: new Date(), // Update timestamp
+                })
+                .eq('user_id', userId)
+                .eq('lesson_id', lessonId);
+
+            if (updateError) {
+                console.error("Error updating progress:", updateError);
+                return;
+            }
+        }
+        console.log("Progress updated for lesson:", lessonId);
+        setCompletedLessons(prev => ({
+            ...prev, [lessonId]: completed,
+        }));
+    };
     
+    // handling navigation buttons
+    const handlePrevious = () => {
+        const newIndex = currentExerciseIndex - 1;
+        setcurrentExerciseIndex(newIndex);
+        sessionStorage.setItem("currentExerciseIndex", newIndex);
+        // setShowHint(false);
+        setUserSolution("");
+    };
+
+    const handleNext = () => {
+        // const lessonId = lessonsData[currentLessonIndex].lesson_id;
+        const newIndex = currentExerciseIndex + 1;
+
+        if (allCorrect) {
+            setcurrentExerciseIndex(newIndex);
+            sessionStorage.setItem("currentExerciseIndex", newIndex);
+            setUserSolution("");  // Reset solution field for the new page
+        } else {
+            // Show an alert or prevent navigation if all exercises aren't correct
+            alert("Please complete all exercises before moving to the next page.");
+        }
+    
+        // updateProgress(lessonId, true);
+        // setcurrentExerciseIndex(newIndex);
+        // sessionStorage.setItem("currentExerciseIndex", newIndex);
+        // setShowHint(false);
+        // setUserSolution("");
+    };
+    // hint + feedback toggling
+    const toggleHint = (exerciseId) => {
+        setShowHint((prevState) => ({
+            ...prevState, [exerciseId]: !prevState[exerciseId],
+        }));
+    };
+
+    const toggleGPTFeedback = (exerciseId) => {
+        setShowGPTFeedback((prevState) => ({
+            ...prevState, [exerciseId]: !prevState[exerciseId],
+        }));
+    };
+    // render component
+    if (loading) return <p>Loading exercises...</p>;
+    if (error) return <p>{error}</p>;
+    // const currentExercise = exercisesData[currentExerciseIndex];
+
     return (
         <div className="flex flex-col h-full">
             {currentLessonId && (
