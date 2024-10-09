@@ -230,7 +230,7 @@ const LessonsColumn = () => {
                 <div className="relative group">
                     <button
                         onClick={handleNext}
-                        disabled={!isLessonCompleted || currentLessonIndex === lessonsData.length - 1}
+                        disabled={currentLessonIndex === lessonsData.length - 1} // !isLessonCompleted || 
                         className={`mr-2 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
                             ? "bg-blue-900 cursor-not-allowed"
                             : "bg-blue-700 hover:bg-blue-800"
@@ -238,12 +238,12 @@ const LessonsColumn = () => {
                     >
                         Next
                     </button>
-                    {!isLessonCompleted && (
+                    {/* {!isLessonCompleted && (
                         <div className="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
                             Complete all questions first
                             <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                         </div>
-                    )}
+                    )} */}
                 </div>
             </div>
         </div>
