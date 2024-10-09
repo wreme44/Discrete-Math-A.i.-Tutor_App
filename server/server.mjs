@@ -183,7 +183,7 @@ app.post('/api/validate-solution', async (req, res) => {
                     },
                     {
                         role: 'user',
-                        content: `Problem: ${question}. \nStudent's Solution: ${userSolution}. \nCorrect Answer: ${correctAnswer}. \nCompare the student's solution with the correct answer and return the correct field as true/false and feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not provide the correct answer.`
+                        content: `Problem: ${question}. \nStudent's Solution: ${userSolution}. \nCorrect Answer: ${correctAnswer}. \nCompare the student's solution with the correct answer and return the correct field as true/false and feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not provide the correct answer. Ignore whether the student wrote their answer in correct LaTeX format or not. Only verify the correctness of the solution.`
                     },
                 ],
                 // stream: true, // enabling streaming
@@ -210,7 +210,7 @@ app.post('/api/validate-solution', async (req, res) => {
         //                     const parsed = JSON.parse(solutionResponse);  // Parse full JSON response at the end
         //                     const { correct, feedback } = parsed;  // Extract correct and feedback
         //                     console.log("Correctness:", correct, "Feedback:", feedback);  // Log for debugging
-                            
+
         //                     // Send the final response back to the frontend
         //                     res.write(`data: ${JSON.stringify({ correct, feedback })}\n\n`);
         //                     res.end();
