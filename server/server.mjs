@@ -45,7 +45,7 @@ app.post('/api/chat', async (req, res) => {
                 'Content-Type': 'application/json',
             },
             data: {
-                model: 'gpt-4',
+                model: 'chatgpt-4o-latest',
                 messages: [ // pre prompting gpt
                     {
                         role: 'system', content: 'You are a Discrete Math tutor assistant. Your role is to guide students to a correct understanding of Discrete Math through interactive learning. ' +
@@ -173,7 +173,7 @@ app.post('/api/validate-solution', async (req, res) => {
                 'Content-Type': 'application/json',
             },
             data: {
-                model: 'gpt-4',
+                model: 'chatgpt-4o-latest',
                 messages: [
                     {
                         role: 'system',
