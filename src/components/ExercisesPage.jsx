@@ -367,21 +367,16 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
         }
     }
 
+
     const renderContent = (question) => {
+
         // console.log(question)
         // regex to detect latex code between $...$ or $$...$$
         const latexRegex = /\$\$(.*?)\$\$|\$(.*?)\$/g;
+        // regex to check if latex already wrapped  with $$..$$ or \(..\)
+        // const alreadyWrappedLatex = /(\$\$(.*?)\$\$)|\\\((.*?)\\\)/g
         // detect raw latex without wrappings
         const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|neg|land|lor|to|times|infty|leq|geq|neq|approx|forall|exists|subseteq|supseteq|cup|cap|nabla|partial|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|not|[A-Za-z]+)\b/g;
-        // regex to find other LaTeX wrappings such as \(...\) or \[...\]
-        const unwantedLatexWrappings = /\\\(|\\\)|\\\[|\\\]/g;
-        
-        // Function to wrap raw LaTeX commands in $$ if not already wrapped
-        const wrapLatex = (text) => {
-            // removing unwanted latex wrappers
-            let cleanedText = text.replace(unwantedLatexWrappings, "");
-            return cleanedText.replace(rawLatexRegex, (match) => `$$ ${match} $$`);
-        };
         // Check if question contains LaTeX
         const hasLatex = latexRegex.test(question);
         // check for no latex wrappings
@@ -390,9 +385,8 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
         if (hasLatex || hasRawLatex) {
 
             if (hasRawLatex) {
-                // if raw latex exists, wrap only those parts, not the entire content
-                const wrappedLatex = hasRawLatex ? wrapLatex(question) : question;
-                // console.log("Wrapped: ", wrappedLatex)
+                const wrappedLatex = `$$ ${question} $$`
+                // console.log(wrappedLatex)
                 return (
                     <div className="math-block overflow-x-auto">
                     <ReactMarkdown
@@ -414,6 +408,59 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                 <div
                     dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(marked(question)),
+                    }}
+                />
+            );
+        }
+    };
+
+    const renderGptContent = (content) => {
+        // console.log(question)
+        // regex to detect latex code between $...$ or $$...$$
+        const latexRegex = /\$\$(.*?)\$\$|\$(.*?)\$/g;
+        // detect raw latex without wrappings
+        const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|neg|land|lor|to|times|infty|leq|geq|neq|approx|forall|exists|subseteq|supseteq|cup|cap|nabla|partial|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|not|[A-Za-z]+)\b/g;
+        // regex to find other LaTeX wrappings such as \(...\) or \[...\]
+        const unwantedLatexWrappings = /\\\(|\\\)|\\\[|\\\]/g;
+        
+        // Function to wrap raw LaTeX commands in $$ if not already wrapped
+        const wrapLatex = (text) => {
+            // removing unwanted latex wrappers
+            let cleanedText = text.replace(unwantedLatexWrappings, "");
+            return cleanedText.replace(rawLatexRegex, (match) => `$$ ${match} $$`);
+        };
+        // Check if question contains LaTeX
+        const hasLatex = latexRegex.test(content);
+        // check for no latex wrappings
+        const hasRawLatex = rawLatexRegex.test(content)
+
+        if (hasLatex || hasRawLatex) {
+
+            if (hasRawLatex) {
+                // if raw latex exists, wrap only those parts, not the entire content
+                const wrappedLatex = hasRawLatex ? wrapLatex(content) : content;
+                // console.log("Wrapped: ", wrappedLatex)
+                return (
+                    <div className="math-block overflow-x-auto">
+                    <ReactMarkdown
+                        children={wrappedLatex}
+                        remarkPlugins={[remarkMath, remarkGfm]}
+                        rehypePlugins={[rehypeKatex]}
+                        className="prose prose-sm sm:prose lg:prose-lg dark:prose-invert max-w-full break-words"
+                    />
+                    </div>
+                )
+            }
+            else if (hasLatex) {
+                return <LatexRenderer content={content}/>
+            }
+        }
+        else {
+            // Render non-LaTeX question as plain HTML
+            return (
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(marked(content)),
                     }}
                 />
             );
@@ -749,7 +796,7 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                         {showGPTFeedback[exercise.exercise_id] && (
                             <div className="mt-2">
                                 <h4 className="text-md font-semibold">Tutor Feedback:</h4>
-                                {renderContent(gptResults[exercise.exercise_id])}
+                                {renderGptContent(gptResults[exercise.exercise_id])}
                                 {/* <LatexRenderer content={gptResults[exercise.exercise_id]} /> */}
                             </div>
                         )}
