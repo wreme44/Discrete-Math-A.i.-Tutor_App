@@ -14,7 +14,7 @@ import 'katex/dist/katex.min.css';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 import remarkGfm from 'remark-gfm'
-
+import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
 const MathLiveInput = ({value, onChange, onFocus}) => {
 
@@ -37,8 +37,7 @@ const MathLiveInput = ({value, onChange, onFocus}) => {
     return <math-field ref={mathfieldRef} onFocus={onFocus}/>;
 }
 
-const ExercisesPage = () => {
-
+const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComplete
 
     const [user, setUser] = useState(null);
     const [userId, setUserId] = useState(null);
@@ -61,12 +60,17 @@ const ExercisesPage = () => {
     const [isTyping, setIsTyping] = useState(false);
 
     const [submittedSolutions, setSubmittedSolutions] = useState({});
+    const [uploadedImage, setUploadedImage] = useState({});
+    const [imagesDisplay, setImagesDisplay] = useState({});
     const [inputAlert, setInputAlert] = useState({});
     const [gptResults, setGptResults] = useState({});
 
     const [userSolution, setUserSolution] = useState("");
 
     const [lessonsData, setLessonsData] = useState([]);
+    const [lessonMarkedDone, setLessonMarkedDone] = useState({});
+    // const [isLessonCompleted, setIsLessonCompleted] = useState(false);
+
     // fetching user info
     useEffect(() => {
         const fetchUser = async () => {
@@ -164,45 +168,92 @@ const ExercisesPage = () => {
             .trim();
     };
 
+    // image handler for user uploads
+    const handleImageUpload = (event, exerciseId) => {
+
+        const file = event.target.files[0];
+        if(file){
+            if (file.size > 2000000) { // 10mb limit for now
+                alert("The image size must be less than 20 MB.")
+                return;
+            }
+            const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
+            if (!allowedTypes.includes(file.type)){
+                alert("Only JPEG, JPG, PNG, GIF, or WEBP image types allowed.")
+                return;
+            }
+            setImagesDisplay(prevImages => ({
+                ...prevImages, [exerciseId]: URL.createObjectURL(file),
+            }));
+            setUploadedImage(prevUploaded => ({
+                ...prevUploaded, [exerciseId]: file,
+            }));
+        }
+    }
+
     // GPT api call as Math validator
     const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion, correctAnswer) => {
 
-        if (!userSolution || userSolution.trim() === "") {
+        if ((!userSolution || userSolution.trim() === "") && !uploadedImage[exerciseId]) {
             setInputAlert((prev) => ({...prev, [exerciseId]: true}));
             return;
         }
-
         setInputAlert((prev) => ({...prev, [exerciseId]: false})); // clear if valid input
 
-        const cleanedSolution = cleanLatexInput(userSolution);
+        let cleanedSolution = null;
+        let base64Image = null;
 
+        let messages = [
+            {type: "text", text: `Exercise Question: ${exerciseQuestion}`}, 
+            {type: "text", text: `Correct Answer: ${correctAnswer}`}
+        ];
+
+        if (userSolution && userSolution.trim() !== "") {
+            cleanedSolution = cleanLatexInput(userSolution);
+            messages.push({
+                type: "text",
+                text: `User solution: ${cleanedSolution}`
+            });
+        }
+        
+        if (uploadedImage && uploadedImage[exerciseId]) {
+            const file = uploadedImage[exerciseId];
+            base64Image = await convertToBase64(file);
+            messages.push({
+                type: "image_url",
+                // image_url: `data:image/png;base64,${base64Image}`
+                image_url: `data:image/png;base64,${base64Image.split(',')[1]}` // Remove the data prefix as backend expects it
+            });
+        }
+        const payload = {messages}
+        // Log the payload to check
+        console.log("Sending payload:", payload);
         // store users submitted solution
         setSubmittedSolutions((prev) => ({
             ...prev,
             [exerciseId]: userSolution,
         }));
-        setIsTyping(true);
+        // while processing / validating
+        setIsTyping(true); 
 
         try {
             // standard api call instead of streaming api
             const response = await fetch('http://localhost:5000/api/validate-solution', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ question: exerciseQuestion, userSolution: cleanedSolution, correctAnswer })
+                headers: {'Content-Type': 'application/json',},
+                body: JSON.stringify(payload),
             });
-
             // check if the response is ok
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                const errorData = await response.json();
+                throw new Error(`Error: ${errorData.error || 'Network response was not ok'}`);
             }
-
             // get JSON result from backend
             const result = await response.json();
             // console.log("Received from backend:", result);
+
             // extract the 'correct' flag and 'feedback' from the result
-            const { correct, feedback } = result;
+            const {correct, feedback} = result;
 
             // update the state for correctness flag
             setCorrectAnswers((prev) => ({
@@ -219,15 +270,38 @@ const ExercisesPage = () => {
             setIsTyping(false);
 
         } catch (error) {
-            // error handling for failed requests
-            console.error('Error validating solution:', error);
-            setGptResults((prev) => ({
-                ...prev,
-                [exerciseId]: 'An error occurred while validating the solution.'
-            }));
+            if (error.message) {
+                console.error('Error validating solution:', error.message);
+                setGptResults((prev) => ({
+                    ...prev,
+                    [exerciseId]: `Error: ${error.message}`
+                }));
+            } else {
+                console.error('Unknown error validating solution:', error);
+                setGptResults((prev) => ({
+                    ...prev,
+                    [exerciseId]: 'An unknown error occurred while validating the solution.'
+                }));
+            }
             setIsTyping(false);
+        } finally {
+            // Resetting image state after submission
+            setUploadedImage(prev => ({
+                ...prev,
+                [exerciseId]: null,
+            }));
         }
     };
+
+    // converting image to base64
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        })
+    }
 
     useEffect(() => {
         // Loop through correctAnswers and trigger progress update for the correct ones
@@ -294,14 +368,20 @@ const ExercisesPage = () => {
     }
 
     const renderContent = (question) => {
-
         // console.log(question)
         // regex to detect latex code between $...$ or $$...$$
         const latexRegex = /\$\$(.*?)\$\$|\$(.*?)\$/g;
-        // regex to check if latex already wrapped  with $$..$$ or \(..\)
-        const alreadyWrappedLatex = /(\$\$(.*?)\$\$)|\\\((.*?)\\\)/g
         // detect raw latex without wrappings
-        const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|[A-Za-z]+)\b/g
+        const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|neg|land|lor|to|times|infty|leq|geq|neq|approx|forall|exists|subseteq|supseteq|cup|cap|nabla|partial|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|not|[A-Za-z]+)\b/g;
+        // regex to find other LaTeX wrappings such as \(...\) or \[...\]
+        const unwantedLatexWrappings = /\\\(|\\\)|\\\[|\\\]/g;
+        
+        // Function to wrap raw LaTeX commands in $$ if not already wrapped
+        const wrapLatex = (text) => {
+            // removing unwanted latex wrappers
+            let cleanedText = text.replace(unwantedLatexWrappings, "");
+            return cleanedText.replace(rawLatexRegex, (match) => `$$ ${match} $$`);
+        };
         // Check if question contains LaTeX
         const hasLatex = latexRegex.test(question);
         // check for no latex wrappings
@@ -310,8 +390,9 @@ const ExercisesPage = () => {
         if (hasLatex || hasRawLatex) {
 
             if (hasRawLatex) {
-                const wrappedLatex = `$$ ${question} $$`
-                // console.log(wrappedLatex)
+                // if raw latex exists, wrap only those parts, not the entire content
+                const wrappedLatex = hasRawLatex ? wrapLatex(question) : question;
+                // console.log("Wrapped: ", wrappedLatex)
                 return (
                     <div className="math-block overflow-x-auto">
                     <ReactMarkdown
@@ -339,7 +420,7 @@ const ExercisesPage = () => {
         }
     };
 
-    const {setAllExercisesCompleted} = useLessonProgress(); // Import the context function
+    // const {setAllExercisesCompleted} = useLessonProgress(); // Import the context function
     // const allCorrect = currentExercises.every((exercise) => correctAnswers[exercise.exercise_id]);
     const allCorrect = currentExercises.length > 0 && currentExercises.every((exercise) => correctAnswers[exercise.exercise_id]);
 
@@ -347,27 +428,27 @@ const ExercisesPage = () => {
     useEffect(() => {
         // Reset correctAnswers and the completion state when a new set of exercises is loaded
         setCorrectAnswers({});
-        setAllExercisesCompleted(false);  // Reset the context to lock the buttons again
+        onExerciseCompletion(false);  // Reset the context to lock the buttons again
         setSubmittedSolutions({}); // Optionally, reset submitted solutions for the new page
-    }, [currentExerciseIndex, setAllExercisesCompleted]); // Runs when moving to a new exercise page    
+    }, [currentExerciseIndex, onExerciseCompletion]); // Runs when moving to a new exercise page    
 
     // calculating if all answers are correct for the current set of exercises
 
-    // // notifying main page / lessons page if all exercises completed
-    // useEffect(() => {
-    //     if (typeof onLessonCompletion === 'function'){ // only call if its defined
-    //         onLessonCompletion(allCorrect)
-    //     }
-    // }, [allCorrect, onLessonCompletion]) 
+    // notifying main page / lessons page if all exercises completed
+    useEffect(() => {
+        if (onExerciseCompletion){ 
+            onExerciseCompletion(allCorrect)
+        }
+    }, [allCorrect, onExerciseCompletion]) 
 
     // checking completion status 
     useEffect(() => {
 
-        // Update the context state when all exercises are completed
+        // update lessons next page button when all exercises are completed
         if (allCorrect) {
-            setAllExercisesCompleted(true);
+            onExerciseCompletion(true);
         } else {
-            setAllExercisesCompleted(false);
+            onExerciseCompletion(false);
         }
 
         const checkExerciseCompletion = async () => {
@@ -382,7 +463,6 @@ const ExercisesPage = () => {
                     .in("exercise_id", currentExercises.map(ex => ex.exercise_id)); // Filter by the current exercise IDs
                     // .eq("lesson_id", currentLessonId)
                     // .single();
-
                 if (error) {
                     if (error.code === 'PGRST116') { // no data found
                         // not completed - do nothing
@@ -397,15 +477,7 @@ const ExercisesPage = () => {
                         }
                         return acc;
                     }, {});
-                    // if (data.completed) {
-                    //     // lesson already completed - marking all exercises as correct
-                    //     const allCorrectMap = currentExercises.reduce((acc, exercise) => {
-                    //         acc[exercise.exercise_id] = true;
-                    //         return acc;
-                    //     }, {});
-                        // setCorrectAnswers(allCorrectMap);
                     setCorrectAnswers(completedExercises)
-                    
                 }
             } else {
                 // non logged in users - checking completion in sessionStorage
@@ -418,19 +490,9 @@ const ExercisesPage = () => {
                 }, {});
                 setCorrectAnswers(completedForThisLesson);
             }
-            //     const completedLessons = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
-            //     if (completedLessons[currentLessonId]) {
-            //         // lesson already completed - marking all exercises as correct
-            //         const allCorrectMap = currentExercises.reduce((acc, exercise) => {
-            //             acc[exercise.exercise_id] = true;
-            //             return acc;
-            //         }, {});
-            //         setCorrectAnswers(allCorrectMap);
-            //     }
-            // }
         };
         checkExerciseCompletion();
-    }, [currentLessonId, userId, currentExercises]); // setAllExercisesCompleted, correctAnswers
+    }, [currentLessonId, userId, currentExercises]); //, allCorrect, onExerciseCompletion
 
     // update completion status when all correct
     useEffect(() => {
@@ -441,8 +503,6 @@ const ExercisesPage = () => {
         if (allCorrect && currentLessonId) {
             if (userId) {
                 // logged in users - updating supabase
-
-
                 const markLessonCompleted = async () => {
                     try {
                         // First, check if the lesson has already been marked as completed
@@ -453,14 +513,20 @@ const ExercisesPage = () => {
                             .eq('lesson_id', currentLessonId)
                             .eq('completed', true) // Ensure we're checking if it's marked as complete
                             .single(); // Get a single row
-        
+
                         if (selectError && selectError.code !== 'PGRST116') {
                             console.error("Error checking existing progress:", selectError.message);
                             return;
                         }
-        
-                        if (!existingProgress) {
-                            // If no existing progress or not marked as completed, insert or update
+                        if (existingProgress) {
+                            // convert to map for lookup
+                            const completedMap = {
+                                [existingProgress.lesson_id]: existingProgress.completed
+                            };
+                            setLessonMarkedDone(completedMap);
+                        }
+                        else {
+                            // if no existing progress or not marked as completed, insert or update
                             const { error: upsertError } = await supabase
                                 .from("userprogress")
                                 .upsert({
@@ -469,190 +535,60 @@ const ExercisesPage = () => {
                                     completed: true,
                                     completed_at: new Date(),
                                 });
-        
+
                             if (upsertError) {
                                 console.error("Error marking lesson completed:", upsertError.message);
                             } else {
-                                console.log(`Lesson ${currentLessonId} marked as completed for user ${userId}`);
+                                // console.log(`Lesson ${currentLessonId} marked as completed for user ${userId}`);
+                                const completedMap = {
+                                    [currentLessonId]: true
+                                };
+                                setLessonMarkedDone(completedMap);
                             }
                         }
                     } catch (error) {
                         console.error("Error completing the lesson:", error);
                     }
                 };
-        
-                markLessonCompleted();
-
-                // const markLessonCompleted = async () => {
-                //     try {
-                //         // First, check if a row already exists for the user and the current lesson
-                //         const { data: existingProgress, error: selectError } = await supabase
-                //             .from("userprogress")
-                //             .select('*')
-                //             .eq('user_id', userId)
-                //             .eq('lesson_id', currentLessonId)
-                //             .eq('completed', true) // Ensure we're checking if it's marked as complete
-                //             .single(); // Get a single row
-
-                //         if (selectError && selectError.code !== 'PGRST116') { // 'PGRST116' is the code for "No data found"
-                //             console.error("Error checking existing progress:", selectError.message);
-                //             return;
-                //         }
-
-                //         if (!existingProgress) {
-                //             // If no existing progress, insert a new row
-                //             const { error: insertError } = await supabase
-                //                 .from("userprogress")
-                //                 .insert({
-                //                     user_id: userId,
-                //                     lesson_id: currentLessonId,
-                //                     completed: true,
-                //                     completed_at: new Date(),
-                //                 });
-
-                //             if (insertError) {
-                //                 console.error("Error inserting new progress:", insertError.message);
-                //                 return;
-                //             }
-                //         } else {
-                //             // If progress exists, update the existing row
-                //             const { error: updateError } = await supabase
-                //                 .from("userprogress")
-                //                 .update({
-                //                     completed: true,
-                //                     completed_at: new Date(),
-                //                 })
-                //                 .eq('user_id', userId)
-                //                 .eq('lesson_id', currentLessonId);
-
-                //             if (updateError) {
-                //                 console.error("Error updating progress:", updateError.message);
-                //                 return;
-                //             }
-                //         }
-
-                //         console.log(`Lesson ${currentLessonId} marked as completed for user ${userId}`);
-                //     } catch (error) {
-                //         console.error("Error updating lesson completion:", error);
-                //     }
-                // };
-                // markLessonCompleted();
-                
-                
-                // const markLessonCompleted = async () => {
-                //     const {error} = await supabase
-                //         .from("userprogress")
-                //         .upsert(
-                //             {
-                //                 user_id: userId,
-                //                 lesson_id: currentLessonId,
-                //                 completed: true,
-                //                 completed_at: new Date(),
-                //             },
-                //             {onConflict: ['user_id', 'lesson_id']} // ensuring upsert on user_id and lesson_id
-                //         );
-                //     if (error) {
-                //         console.error("Error updating lesson completion:", error.message);
-                //     } else {
-                //         console.log(`Lesson ${currentLessonId} marked as completed for user ${user.id}`);
-                //     }
-                // };
-                // markLessonCompleted();
-            } else {
+                markLessonCompleted();             
+            } 
+            else {
                 // non logged in users - updating sessionStorage
                 const completedLessons = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
                 completedLessons[currentLessonId] = true;
                 sessionStorage.setItem('completedLessons', JSON.stringify(completedLessons));
                 console.log(`Lesson ${currentLessonId} marked as completed in sessionStorage`);
             }
+            // else {
+            //     const completedLessons = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
+            //     const isLessonCompleted = !!completedLessons[currentLessonId];
+            //     setCompletedLessons(prev => ({ ...prev, [currentLessonId]: isLessonCompleted }));
+    
+            //     if (!isLessonCompleted) {
+            //         completedLessons[currentLessonId] = true;
+            //         sessionStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+            //         console.log(`Lesson ${currentLessonId} marked as completed in sessionStorage`);
+            //     } else {
+            //         console.log(`Lesson ${currentLessonId} is already marked as completed in sessionStorage`);
+            //     }
+            // }
         }
     }, [allCorrect, currentLessonId, userId]);
-
-    // Function to update the userprogress table
-    const updateProgress = async (lessonId, completed = false) => {
-        if (!userId) {
-            // console.warn("No user is logged in. Progress update aborted.");
-            const updatedCompletedLessons = { ...completedLessons, [lessonId]: completed };
-            setCompletedLessons(updatedCompletedLessons);
-            sessionStorage.setItem('completedLessons', JSON.stringify(updatedCompletedLessons));
-            return; // Abort the update if no user is logged in
-        }
-
-        const { data: progressData, error: progressError } = await supabase
-            .from("userprogress")
-            .select('*')
-            .eq('user_id', userId)
-            .eq('lesson_id', lessonId)
-            .single(); // Check if the progress for this lesson already exists
-
-        if (progressError && progressError.code !== 'PGRST116') {
-            console.error("Error fetching progress:", progressError.message);
-        }
-
-        if (!progressData) {
-            // If no progress data exists, insert a new row with a completion timestamp
-            const { error: insertError } = await supabase
-                .from("userprogress")
-                .insert({
-                    user_id: userId,
-                    lesson_id: lessonId,
-                    completed: completed,
-                    completed_at: new Date(), // Add timestamp
-                });
-
-            if (insertError) {
-                console.error("Error inserting progress:", insertError.message);
-                return;
-            }
-        } else {
-            // If progress data already exists, update it with a new timestamp
-            const { error: updateError } = await supabase
-                .from("userprogress")
-                .update({
-                    completed: completed,
-                    completed_at: new Date(), // Update timestamp
-                })
-                .eq('user_id', userId)
-                .eq('lesson_id', lessonId);
-
-            if (updateError) {
-                console.error("Error updating progress:", updateError);
-                return;
-            }
-        }
-        console.log("Progress updated for lesson:", lessonId);
-        setCompletedLessons(prev => ({
-            ...prev, [lessonId]: completed,
-        }));
-    };
     
     // handling navigation buttons
     const handlePrevious = () => {
         const newIndex = currentExerciseIndex - 1;
         setcurrentExerciseIndex(newIndex);
         sessionStorage.setItem("currentExerciseIndex", newIndex);
-        // setShowHint(false);
         setUserSolution("");
     };
 
     const handleNext = () => {
         // const lessonId = lessonsData[currentLessonIndex].lesson_id;
-        const newIndex = currentExerciseIndex + 1;
-
-        if (allCorrect) {
-            setcurrentExerciseIndex(newIndex);
-            sessionStorage.setItem("currentExerciseIndex", newIndex);
-            setUserSolution("");  // Reset solution field for the new page
-        } else {
-            // Show an alert or prevent navigation if all exercises aren't correct
-            alert("Please complete all exercises before moving to the next page.");
-        }
-    
-        // updateProgress(lessonId, true);
-        // setcurrentExerciseIndex(newIndex);
-        // sessionStorage.setItem("currentExerciseIndex", newIndex);
-        // setShowHint(false);
-        // setUserSolution("");
+        const newIndex = currentExerciseIndex + 1;    
+        setcurrentExerciseIndex(newIndex);
+        sessionStorage.setItem("currentExerciseIndex", newIndex);
+        setUserSolution("");
     };
     // hint + feedback toggling
     const toggleHint = (exerciseId) => {
@@ -671,6 +607,10 @@ const ExercisesPage = () => {
     if (error) return <p>{error}</p>;
     // const currentExercise = exercisesData[currentExerciseIndex];
 
+    const currentLesson = lessonsData[currentLessonIndex];
+    const isLessonCompleted = lessonMarkedDone[currentLesson?.lesson_id];
+    // const isLessonCompleted = lessonComplete[currentLessonId];
+
     return (
         <div className="flex flex-col h-full">
             {currentLessonId && (
@@ -681,7 +621,7 @@ const ExercisesPage = () => {
                     <div key={exercise.exercise_id} className="mb-36 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                         {renderContent(exercise.question)}                         
                         {/* MathLiveInput for the exercise */}
-                        <div className="relative mt-16">
+                        <div className="relative mt-16 flex items-center space-x-1">
                             <MathLiveInput
                                 value={submittedSolutions[exercise.exercise_id] || ""}
                                 onChange={(value) => setSubmittedSolutions({
@@ -690,63 +630,117 @@ const ExercisesPage = () => {
                                 })}
                                 onFocus={() => setInputAlert(false)}
                             />
-                            <button
-                                onClick={() =>
-                                    handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question, exercise.answer)
-                                }
-                                className="ml-3 px-1 py-0 bg-blue-700 hover:bg-blue-600 active:bg-blue-900 focus:outline-none 
-                                 focus:ring-2 focus:ring-blue-500 text-white rounded-full transform transition duration-200 ease-in-out hover:scale-105 active:scale-95"
-                                disabled={isTyping}
-                            >
-                                Submit Solution
-                            </button>
-                            {inputAlert[exercise.exercise_id] && (
-                                <div className="absolute bottom-full left-8 mb-2 mt-1 bg-teal-600 text-white text-xs rounded py-1 px-2 w-60 z-10">
-                                    Please enter a solution before submitting
-                                    <div className="absolute left-28 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                            {/* image Upload */}
+                            <div className="relative inline-block group">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(event) => handleImageUpload(event, exercise.exercise_id)}
+                                    className="hidden"
+                                    id={`fileInput-${exercise.exercise_id}`}
+                                />
+                                {/* upload button */}
+                                <button
+                                    type="button"
+                                    onClick={() => document.getElementById(`fileInput-${exercise.exercise_id}`).click()}
+                                    className="relative flex items-center ml-2 w-6 h-6 active:bg-blue-900
+                                         focus:outline-none outline-none border-none rounded-full transform 
+                                         transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                >
+                                    <img className='upload-icon' alt='... ...' src='/attach-image.svg' />
+                                </button>
+                                <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 mb-2 bg-teal-600
+                                        text-white text-xs rounded-lg py-1 pl-1 pr-0 w-20 opacity-0 group-hover:opacity-100 
+                                        transition-opacity duration-500 z-10">
+                                    {/* "absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1" */}
+                                    Upload Image
+                                    <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                                 </div>
-                            )}
+                            </div>
+                            {/* Submit Solution */}
+                            <div className="relative inline-block group">
+                                <button
+                                    onClick={() =>
+                                        handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question, exercise.answer)
+                                    }
+                                    className="relative flex items-center w-11 h-10 ml-2 px-0 py-0 outline-none 
+                                    focus:outline-none border-none rounded-full active:bg-blue-900 transform  
+                                    transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                    disabled={isTyping}
+                                >
+                                    <img className='upload-icon' alt='... ...' src='/submit.svg' />
+                                </button>
+                                <div className="absolute bottom-11 left-7 transform -translate-x-1/2 mb-2 bg-teal-600
+                                        text-white text-xs rounded-lg py-1 pl-1 pr-0 w-24 opacity-0 group-hover:opacity-100 
+                                        transition-opacity duration-500 z-10">
+                                    {/* "absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1" */}
+                                    Submit Solution
+                                    <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                </div>
+                                {inputAlert[exercise.exercise_id] && (
+                                    <div className="absolute bottom-12 right-32 mb-2 mt-1 bg-teal-600 text-white text-xs rounded py-1 px-2 w-60 z-10">
+                                        Please enter a solution before submitting
+                                        <div className="absolute left-28 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
                         {/* Show user's submitted solution */}
                         {submittedSolutions[exercise.exercise_id] && (
                             <div className="mt-4">
-                                <h4 className="text-md font-semibold">Your Solution:</h4>
+                                <h4 className="text-md font-semibold">Your Input Solution:</h4>
                                 <div className="mb-4">
                                     {renderContent(submittedSolutions[exercise.exercise_id])}
                                 </div>
                             </div>
                         )}
+                        {/* Show user's IMAGE solution */}
+                        {imagesDisplay[exercise.exercise_id] && (
+                            <div className="mt-4">
+                                <h4 className="text-md font-semibold">Your Image Solution:</h4>
+                                <img
+                                    src={imagesDisplay[exercise.exercise_id]}
+                                    alt="Uploaded solution preview"
+                                    className="w-2/3 h-auto border border-gray-400 rounded mt-2"
+                                />
+                            </div>
+                        )}
                         {/* Display GPT Results validation for in/correct*/}
                         {correctAnswers[exercise.exercise_id] !== undefined && (
                             <div className="mt-4">
-                                <h4 className={`text-md font-semibold ${correctAnswers[exercise.exercise_id] ? 'correct-answer' : 'incorrect-answer'}`}>
+                                <h4 className={`text-md font-semibold ${correctAnswers[exercise.exercise_id] ? 'correct-answer' : 'incorrect-answer'}`}> 
                                     {correctAnswers[exercise.exercise_id] ? 'Your solution is correct! Well Done.' : 'Your solution is incorrect.'}
                                 </h4>
                             </div>    
                         )}
                         {/* hint + feedback buttons */}
-                        <div className="mt-5">
+                        <div className="flex mt-5">
                             <button
                                 onClick={() => toggleHint(exercise.exercise_id)}
-                                className="mt-1 px-2 py-0 bg-gray-600 hover:bg-gray-500 focus:outline-none 
-                                 focus:ring-2 focus:ring-gray-500 rounded-full text-white"
+                                className="relative flex items-center w-14 h-10 ml-0 px-0 py-0 outline-none 
+                                    focus:outline-none border-none rounded-full transform  
+                                    transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                             >
-                                {showHint[exercise.exercise_id] ? 'Hide Hint' : 'Show Hint'}
+                                {showHint[exercise.exercise_id] 
+                                ? <img className='upload-icon' alt='... ...' src='/hide-hint.svg' />
+                                : <img className='upload-icon' alt='... ...' src='/show-hint.svg' />}
                             </button>
                             {/* GPT feedback button if feedback response exists*/}
                             {gptResults[exercise.exercise_id] && (
                                 <button
                                     onClick={() => toggleGPTFeedback(exercise.exercise_id)}
-                                    className="mt-1 ml-5 px-2 py-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800 hover:to-yellow-600 
-                                     focus:outline-none focus:ring-2 focus:ring-yellow-600 rounded-full text-white"
+                                    className="mt-1 ml-3 px-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800  
+                                     hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 rounded-full text-white flex items-center"
                                 >
-                                    {showGPTFeedback[exercise.exercise_id] ? 'Hide Tutor Feedback' : 'Show Tutor Feedback'}
+                                    {showGPTFeedback[exercise.exercise_id] 
+                                    ? (<><XMarkIcon className="w-4 h-4 mr-1" />Tutor Feedback</>)
+                                    : (<><ChevronDownIcon className="w-4 h-4 mr-1" />Tutor Feedback</>)}
                                 </button>
                             )}
                         </div>
                         {/* display hint from database */}
                         {showHint[exercise.exercise_id] && (
-                            <div className="mt-2 pb-1 pt-0 px-2 bg-gray-600 rounded">
+                            <div className="mt-2 pb-1 pt-0 px-2 bg-gray-700 rounded">
                                 <h3 className="text-md font-semibold mb-1">Hint:</h3>
                                 <div className="text-sm">{renderContent(exercise.hint)}</div>
                             </div>
@@ -755,7 +749,8 @@ const ExercisesPage = () => {
                         {showGPTFeedback[exercise.exercise_id] && (
                             <div className="mt-2">
                                 <h4 className="text-md font-semibold">Tutor Feedback:</h4>
-                                <LatexRenderer content={gptResults[exercise.exercise_id]} />
+                                {renderContent(gptResults[exercise.exercise_id])}
+                                {/* <LatexRenderer content={gptResults[exercise.exercise_id]} /> */}
                             </div>
                         )}
                         {isTyping && (
@@ -766,40 +761,37 @@ const ExercisesPage = () => {
                     </div>
                 ))}
             </div>
-            <div className="mt-1 flex justify-between">
+            <div className="flex justify-between items-end">
                 <button
                     onClick={handlePrevious}
                     disabled={currentLessonIndex === 0}
-                    className={`px-2 py-0 rounded-full ${currentLessonIndex === 0
-                        ? "bg-blue-900 cursor-not-allowed"
-                        : "bg-blue-700 hover:bg-blue-800"
-                        } text-white`}
+                    className={`rounded-full w-8 h-8 ${currentLessonIndex === 0
+                        ? "bg-blue-600 hover:bg-red-600" // cursor-not-allowed
+                        : "bg-blue-500 hover:bg-blue-400"}`}
                 >
-                    Previous
+                    <img className='prev-page-icon' alt='... ...' src='/prev-page.svg' />
                 </button>
                 <p className="text-sm text-gray-400">
                     Exercise {currentLessonIndex + 1} of {lessonsData.length}
                 </p>
-                {/* allCOrrect check, prevent user from next page */}
-                <div className="relative group">
+                {/* allCorrect check, prevent user from next page */}
+                <div className="relative group flex">
                     <button
                         onClick={handleNext}
-                        disabled={!allCorrect || currentLessonIndex === lessonsData.length - 1}
-                        className={`mr-4 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
-                            ? "bg-blue-900 cursor-not-allowed"
-                            : "bg-blue-700 hover:bg-blue-800"
-                            } text-white`}
+                        disabled={!isLessonCompleted || currentLessonIndex === lessonsData.length - 1}
+                        className={`mr-4 rounded-full w-8 h-8 ${currentLessonIndex === lessonsData.length - 1
+                            ? "bg-blue-600 hover:bg-red-600" //cursor-not-allowed
+                            : "bg-blue-500 hover:bg-blue-400"}`}
                     >
-                        Next
+                        <img className='next-page-icon' alt='... ...' src='/next-page.svg' />
                     </button>
-                    {!allCorrect && (
-                        <div className="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
+                    {!isLessonCompleted && (
+                        <div className="absolute bottom-full left-auto transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
                             Complete all questions first
-                            <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                            <div className="absolute left-16 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                         </div>
                     )}
                 </div>
-                
             </div>
         </div>
     );

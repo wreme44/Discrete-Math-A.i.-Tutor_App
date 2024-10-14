@@ -11,7 +11,8 @@ const port = process.env.PORT || 5000;
 
 // middlewares
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit: '20mb'}));
+app.use(express.urlencoded({limit: '20mb', extended: true}));
 // making sure each chunk is a complete json object
 const isValidJSON = (str) => {
 
@@ -22,6 +23,24 @@ const isValidJSON = (str) => {
         return false;
     }
 }
+
+// handling image file uploads
+// const storage = multer.memoryStorage();
+// const upload = multer({
+//     storage: storage,
+//     limits: {fileSize: 10000000}, // 10 MB limit
+//     fileFilter: function (req, file, cb) {
+//         const filetypes = /jpeg|jpg|png|gif/;
+//         const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+//         const mimetype = filetypes.test(file.mimetype);
+
+//         if (mimetype && extname) {
+//             return cb(null, true);
+//         } else {
+//             cb('Only images are allowed.');
+//         }
+//     }
+// });
 
 // SSE server sent events
 // handles streaming responses from ChatGPT API, forwards them to client
@@ -45,44 +64,27 @@ app.post('/api/chat', async (req, res) => {
                 'Content-Type': 'application/json',
             },
             data: {
-                model: 'chatgpt-4o-latest',
+                model: 'gpt-4o',
                 messages: [ // pre prompting gpt
                     {
-                        role: 'system', content: 'You are a Discrete Math tutor assistant. Your role is to guide students to a correct understanding of Discrete Math through interactive learning. ' +
+                        role: 'system', content: 'You are a Discrete Math tutor assistant. Your role is to guide students to a correct understanding of Discrete Math through interactive learning.' +
 
                             'When a student asks for help, do the following: ' +
-                            '1. Start by guiding the student through the problem with hints, questions, or explanations that encourage them to think critically about the solution. ' +
-                            '2. Avoid giving the full solution immediately. Instead, break down the problem into smaller steps and provide hints or explain key concepts relevant to the problem. ' +
-                            '3. If the student struggles after receiving hints, offer more detailed guidance or clarification without revealing the full answer. ' +
-                            '4. Only provide the full solution after the student has made an effort to understand or explicitly asks for the solution. ' +
-                            '5. When giving the full solution, provide a clear and detailed explanation, ensuring the student understands each step. ' +
-                            'Your goal is to foster learning by helping students build their own problem-solving skills, not just providing answers. ' +
+                            '1. Start by guiding the student through the problem with hints, questions, or explanations that encourage them to think critically about the solution.' +
+                            '2. Avoid giving the full solution immediately. Instead, break down the problem into smaller steps and provide hints or explain key concepts relevant to the problem.' +
+                            '3. If the student struggles after receiving hints, offer more detailed guidance or clarification without revealing the full answer.' +
+                            '4. Only provide the full solution after the student has made an effort to understand or explicitly asks for the solution.' +
+                            '5. When giving the full solution, provide a clear and detailed explanation, ensuring the student understands each step.' +
+                            'Your goal is to foster learning by helping students build their own problem-solving skills, not just providing answers.' +
 
                             'Additionally: ' +
-                            '- Stick to topics related to Discrete Math, general math, or computer science. ' +
-                            '- Do not discuss or provide information on topics that are unrelated to math, computer science, or Discrete Math concepts. ' +
+                            '- Stick to topics related to Discrete Math, general math, or computer science.' +
+                            '- Do not discuss or provide information on topics that are unrelated to math, computer science, or Discrete Math concepts.' +
 
-                            'When sending LaTeX equations, always follow these rules: ' +
-                            'Always wrap display math (block-level math) with two dollar signs $$ $$, and two dollars signs $$ $$ for inline math as well. Never wrap latex equations with backticks nor with backslash bracket \[ \] nor with backslash parentheses \( \). '
-                        // 'When sending LaTeX equations, please adhere to the following rules: ' +
-                        // '1. Use `$$ $$` for display math (block-level math) and `$ $` for inline math. Avoid using `\[ \]` or `\( \)`. '
-                        // '2. Remove any unnecessary line breaks or spaces inside LaTeX delimiters. ' +
-                        // '3. Ensure that subscript (e.g., `x_{1}`) and superscript (e.g., `x^{2}`) are correctly formatted without extra spaces. ' +
-                        // '4. For factorials and ellipsis, use standard LaTeX symbols like `n!` and `\cdots`. ' +
-                        // '5. Avoid including extra markdown backticks (` ``` `) in LaTeX blocks. ' +
-                        // '6. For powers and exponents, always use the `^` symbol. For example, for squared terms, use `b^2` rather than just `b2` ' +
-                        // '7. For ellipses, use the correct LaTeX command `\cdots` for centered ellipses and `\ldots` for lower ellipses. ' +
-                        // '8. Provide clean LaTeX that can be easily interpreted by LaTeX rendering engines. ' +
-                        // 'For example: ' +
-                        // 'Display math: ' +
-                        // '$$ \lim_{x \to a} f(x) $$' +
-                        // 'Inline math: ' +
-                        // '$ x_{1} + x^{2} $' +
-                        // 'Factorials: ' +
-                        // '$$ n! = n \times (n-1) \times \cdots \times 1 $$' +
-                        // 'Quadratic equation: ' +
-                        // '$$ x = \frac{-b \pm \sqrt{b^2-4ac}}{2a} $$' +
-                        // ' Please ensure all equations are formatted accordingly.' 
+                            'When sending LaTeX content, always follow these rules:' +
+                            '- Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).' +
+                            '- Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).' +
+                            '- Make sure that all LaTeX content is consistently wrapped using only double dollar signs ($$ ... $$).'
                     },
                     ...messages,
                 ],
@@ -146,164 +148,151 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-// handles VALIDATION of user solution using ChatGpt api
+// construct promptContent
+const buildPromptContent = ({ exerciseQuestion, correctAnswer, userSolution, image }) => {
+    let content = [
+        {type: 'text', text: `Problem: ${exerciseQuestion}`}, 
+        {type: 'text', text: `\nCorrect Answer: ${correctAnswer}`}, 
+
+    ];
+
+    if (userSolution) {
+        content.push({type: 'text', text: `Student's Solution: ${userSolution}.`});
+        content.push({type: 'text', text: `\nCompare the student's solution with the Correct Answer that is given and return the "correct" field as true or false. 
+            Provide feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not reveal the correct answer.
+            \nIgnore whether the student wrote their answer in correct LaTeX format or not. Only verify the correctness of the solution.
+            \nAdditionaly when sending LaTeX content, always follow these rules:' +
+            - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
+            - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).
+            - Make sure that all LaTeX content is consistently wrapped using only double dollar signs ($$ ... $$).`})
+    }
+    if (image) {
+        content.push({type: 'image_url', image_url: {url: image}});
+        content.push({type: 'text', text: `\nThe student's solution has been provided as an image. Compare the image solution with the provided Correct Answer.
+            Return the "correct" field as true or false. Provide feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not reveal the correct answer.
+            \nAdditionaly when sending LaTeX content, always follow these rules:' +
+            - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
+            - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).
+            - Make sure that all LaTeX content is consistently wrapped using only double dollar signs ($$ ... $$).`})
+    }
+
+    return content;
+};
+
+// handles VALIDATION of user solution with image, using ChatGpt api
 app.post('/api/validate-solution', async (req, res) => {
+    // Log the incoming request
+    // console.log("Received request body:", req.body);
+    const {messages} = req.body;
 
-    const { question, userSolution, correctAnswer } = req.body;  // receive question and solution from frontend
+    if (!messages || !Array.isArray(messages)) {
+        return res.status(400).json({ error: 'Invalid messages format.' });
+    }
 
-    // console.log("Received Question:", question);
-    // console.log("Received User Solution:", userSolution);
-    // console.log("Received Correct Answer:", correctAnswer);
+    // extract essential parts
+    const exerciseQuestion = messages.find(m => m.type === "text" && m.text.startsWith("Exercise Question:"))?.text.replace("Exercise Question: ", "").trim();
+    const correctAnswer = messages.find(m => m.type === "text" && m.text.startsWith("Correct Answer:"))?.text.replace("Correct Answer: ", "").trim();
+    const userSolution = messages.find(m => m.type === "text" && m.text.startsWith("User solution:"))?.text.replace("User solution: ", "").trim();
+    const image = messages.find(m => m.type === "image_url")?.image_url;
 
-    // res.setHeader('Content-Type', 'text/event-stream'); // establishing sse connection
-    // res.setHeader('Cache-Control', 'no-cache'); // disabling caching
-    // res.setHeader('Connection', 'keep-alive'); // continuous streaming
-    // res.flushHeaders(); // flushing headers to establish SSE with frontend
+    if (!exerciseQuestion || !correctAnswer) {
+        return res.status(400).json({error: 'Exercise question or correct answer missing.'});
+    }
+    if (!userSolution && !image) {
+        return res.status(400).json({error: 'No solution provided.'});
+    }
 
-    // // buffer to accumulate the chunks, to make sure each chunk is complete json before sending to frontend
-    // let buffer = '';
-    let solutionResponse = '';
+    const promptContentArray = buildPromptContent({ exerciseQuestion, correctAnswer, userSolution, image });
+    console.log('Prompt Content:', promptContentArray);
 
-    try {
-        const response = await axios({
-            method: 'post',
-            url: 'https://api.openai.com/v1/chat/completions',
+    const openAIMessages = [
+        {
+            role: 'system',
+                content: `You are a Discrete Math tutor. You will be given a math problem, the student's solution, and the Correct Answer. 
+                        The may receive the student's solution as either text or an image or both.
+ 
+                        1. Compare the student's text solution (if provided) and / or the image solution (if provided) with the Correct Answer, and determine if it's correct. 
+                        2. Always return a response in valid JSON format with {"correct": true/false, "feedback": "feedback on the solution"}.
+                        Do not return plain text responses unless explicitly instructed otherwise.
+                        When sending the JSON response, do not wrap it in triple backticks. Simply return valid JSON without any markdown or code block formatting. 
+                        3. If the solution is incorrect, give feedback but do not reveal the correct answer.`
+
+                        // Additionaly when sending LaTeX content, always follow these rules:' +
+                        // - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
+                        // - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).
+                        // - Make sure that all LaTeX content is consistently wrapped using only double dollar signs ($$ ... $$).
+            },
+            {
+                role: 'user',
+                content: promptContentArray,
+            },
+    ];
+    const data = {
+        model: 'gpt-4o', 
+        messages: openAIMessages,
+        max_tokens: 500 
+    };
+    try {    
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', data, {
             headers: {
-                'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+                Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
                 'Content-Type': 'application/json',
             },
-            data: {
-                model: 'chatgpt-4o-latest',
-                messages: [
-                    {
-                        role: 'system',
-                        content: `You are a Discrete Math tutor. You will be given a math problem, the student's solution, and the correct answer. Your job is to compare the student's solution with the correct answer and determine if it's correct. You will return a response in JSON format as follows: { "correct": true/false, "feedback": "feedback on the solution"}.` +
-                            'Addtionally, when sending LaTeX equations, always follow these rules: ' +
-                            'Always wrap display math (block-level math) with two dollar signs $$ $$, always wrap inline math with two dollars signs $$ $$ as well. Never wrap latex equations with backticks nor with backslash bracket \[ \] nor with backslash parentheses \( \).'
-                    },
-                    {
-                        role: 'user',
-                        content: `Problem: ${question}. \nStudent's Solution: ${userSolution}. \nCorrect Answer: ${correctAnswer}. \nCompare the student's solution with the correct answer and return the correct field as true/false and feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not provide the correct answer. Ignore whether the student wrote their answer in correct LaTeX format or not. Only verify the correctness of the solution.`
-                    },
-                ],
-                // stream: true, // enabling streaming
-            },
-            // responseType: 'stream',
         });
 
-        // real-time streaming response in chunks, each chunk is parsed, content extracted and sent to client
-        // response.data.on('data', (chunk) => {
-        //     buffer += chunk.toString();
+        const result = response.data.choices[0].message.content;
+        // logging raw result to check format
+        // console.log('Raw GPT response:', result);
 
-        //     const lines = buffer
-        //         .split('\n')
-        //         .filter(line => line.trim() !== '');
+        // step 1: remove triple backticks (```) if any
+        let sanitizedResult = result.replace(/```/g, '');
 
-        //     for (const line of lines) {
-        //         if (line.startsWith('data: ')) {
-        //             const data = line.replace('data: ', '');
+        // step 2: detect and remove latex $ sign wrappers
+        const latexRegex = /\$\$(.*?)\$\$|\$(.*?)\$/g;
+        // detect raw latex
+        const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|neg|land|lor|to|times|infty|leq|geq|neq|approx|forall|exists|subseteq|supseteq|cup|cap|nabla|partial|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|not|[A-Za-z]+)\b/g; 
 
-        //             if (data === '[DONE]') {
+        // check if latex is present (wrapped or raw)
+        const hasLatex = latexRegex.test(sanitizedResult);
+        const hasRawLatex = rawLatexRegex.test(sanitizedResult);
 
-        //                 // Finalize response, send accumulated solutionResponse
-        //                 try {
-        //                     const parsed = JSON.parse(solutionResponse);  // Parse full JSON response at the end
-        //                     const { correct, feedback } = parsed;  // Extract correct and feedback
-        //                     console.log("Correctness:", correct, "Feedback:", feedback);  // Log for debugging
+        if (hasLatex || hasRawLatex) {
+            // step 3: remove $ signs around latex expressions
+            sanitizedResult = sanitizedResult.replace(/\$\$/g, '').replace(/\$/g, '');
+        }
+        // step 4: escape backslashes for valid json
+        const escapedResult = sanitizedResult.replace(/\\/g, '\\\\');
+        // console.log('Escaped GPT response (before JSON parsing):', escapedResult);
 
-        //                     // Send the final response back to the frontend
-        //                     res.write(`data: ${JSON.stringify({ correct, feedback })}\n\n`);
-        //                     res.end();
-        //                 } catch (error) {
-        //                     console.error('Error parsing full solution response:', error);
-        //                 }
-        //                 return;
+        // step 5: try to parse escaped result
+        if (escapedResult.trim().startsWith('{') && escapedResult.trim().endsWith('}')) {
 
-        //                 // console.log("Stream completed")
-
-
-        //                 // res.write('data: [DONE]\n\n');
-        //                 // res.end();
-        //                 // return;
-        //             }
-        //             // Accumulate the solution response
-        //             solutionResponse += data;
-        //             // try {
-        //             //     if (isValidJSON(data)) {
-        //             //         const parsed = JSON.parse(data);
-        //             //         const content = parsed.choices?.[0]?.delta?.content || '';
-
-        //             //         let feedback;
-        //             //         let correct = null;
-        //             //         try {
-        //             //             const feedbackResponse = JSON.parse(content);
-        //             //             feedback = feedbackResponse.feedback;
-        //             //             correct = feedbackResponse.correct;
-
-        //             //             console.log("Correctness:", correct);
-
-        //             //         }
-        //             //         catch (err) {
-        //             //             feedback = content;
-        //             //         }
-        //             //         // sending the response with "correct" and "feedback" fields
-        //             //         if (feedback) {
-
-        //             //             console.log("Sending Feedback:", feedback);
-
-
-        //             //             res.write(`data: ${JSON.stringify({ correct, feedback })}\n\n`);
-        //             //         }
-        //             //     }
-        //             //     buffer = ''; // clearing buffer after parsing for next chunk
-        //             // } catch (error) {
-        //             //     console.error('Error parsing SSE data:', error);
-        //             // }
-        //         }
-        //     }
-        //     // buffer = ''; // clearing buffer after parsing for next chunk
-        // });
-
-        // response.data.on('end', () => {
-        //     res.end();
-        // });
-
-        // response.data.on('error', (error) => {
-        //     console.error('Stream error:', error);
-        //     res.write('data: {"error": "Error streaming response from GPT API"}\n\n');
-        //     res.end();
-        // });
-
-        // Accumulate the response body
-        solutionResponse += response.data.choices[0].message.content;
-
-        // Parsing the response as JSON
-        const parsedResponse = JSON.parse(solutionResponse);
-
-        // Send the parsed response back to the frontend
-        res.json(parsedResponse);
-
+            let jsonResponse = JSON.parse(escapedResult);
+            // step 6: remove extra backslashes in latex
+            jsonResponse.feedback = jsonResponse.feedback.replace(/\\\\/g, '\\');  // restore single backslashes
+            // console.log('Non-escaped GPT response (AFTER JSON parsing):', jsonResponse);
+            // step 7: return cleaned up response as json
+            res.json(jsonResponse);
+        } else {
+            console.error('Non-JSON response', sanitizedResult)
+            res.json({error: 'GPT returned a non-JSON response', details: sanitizedResult})
+        }
     } catch (error) {
-        console.error('Error fetching API:', error);
-        res.status(500).json({ error: 'Error processing request' });
+        if (error.response) {
+            // OpenAI API responded with an error
+            console.error('OpenAI API Error:', error.response.data);
+            res.status(error.response.status).json({ error: error.response.data });
+        } else if (error.request) {
+            // No response received from OpenAI
+            console.error('No response from OpenAI:', error.request);
+            res.status(500).json({ error: 'No response from OpenAI' });
+        } else {
+            // Other errors
+            console.error('Error:', error.message);
+            res.status(500).json({ error: 'An unexpected error occurred' });
+        }
     }
 });
-
-// handles streaming responses from WOLFRAM API, forwards them to client
-// app.get('/api/wolfram', async (req, res) => {
-
-//     const {input} = req.query;
-//     const appId = 'J5R44H-3T98YUL575'
-//     const apiUrl = `https://api.wolframalpha.com/v2/query?appid=${appId}&input=${encodeURIComponent(input)}&format=plaintext&output=JSON`;
-//     try {
-//         const response = await axios.get(apiUrl);
-//         res.json(response.data)
-//     }
-//     catch (error) {
-//         console.error('Error fetching data from wolfram api:', error.message);
-//         res.status(500).json({error: 'Error fetching data from wolfram api'})
-//     }
-// })
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

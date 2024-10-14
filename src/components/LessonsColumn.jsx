@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useLessonProgress } from './LessonProgressContext';
+// import { useLessonProgress } from './LessonProgressContext';
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient";
 import LatexRenderer from "./LatexRenderer";
 
-const LessonsColumn = () => {
-    const { allExercisesCompleted } = useLessonProgress(); // Use the context state
+const LessonsColumn = ({allCorrect, onLessonChange}) => { // setLessonCompleted
+    // const { allExercisesCompleted } = useLessonProgress(); // Use the context state
     // State to hold lessons data fetched from the database
     const [lessonsData, setLessonsData] = useState([]);
     // State to keep track of current lesson index
@@ -74,7 +74,7 @@ const LessonsColumn = () => {
                 setCompletedLessons(completed);
             }
         }
-        fetchLessons().then(fetchUserProgress);
+        fetchLessons().then(fetchUserProgress) 
 
                 // Set the current lesson index based on user's progress or default to 0
         //         if (progressData && progressData.length > 0) {
@@ -93,64 +93,71 @@ const LessonsColumn = () => {
         // fetchUserProgress();
     }, []); // [lessonsData.length]
 
-    // Function to update the userprogress table
-    const updateProgress = async (lessonId, completed = false) => {
-        if (!userId) {
-            // console.warn("No user is logged in. Progress update aborted.");
-            const updatedCompletedLessons = {...completedLessons, [lessonId]: completed};
-            setCompletedLessons(updatedCompletedLessons);
-            sessionStorage.setItem('completedLessons', JSON.stringify(updatedCompletedLessons));
-            return; // Abort the update if no user is logged in
-        }
+    // fetching lessons and user progress again to unlock next page
+    useEffect(() => {
+        const fetchLessons = async () => {
+            const { data, error } = await supabase
+                .from('lessons') // Ensure the table name matches exactly
+                .select('*')
+                .order('lesson_id', { ascending: true }); // Order by 'lesson_id' column in ascending order
 
-        const { data: progressData, error: progressError } = await supabase
-            .from("userprogress")
-            .select('*')
-            .eq('user_id', userId)
-            .eq('lesson_id', lessonId)
-            .single(); // Check if the progress for this lesson already exists
+            if (error) {
+                console.error('Error fetching lessons:', error.message);
+                setError(error.message);
+            } else {
+                setLessonsData(data);
+                setLoading(false);
+            }
+        };
 
-        if (progressError && progressError.code !== 'PGRST116') {
-            console.error("Error fetching progress:", progressError.message);
-        }
-
-        if (!progressData) {
-            // If no progress data exists, insert a new row with a completion timestamp
-            const { error: insertError } = await supabase
-                .from("userprogress")
-                .insert({
-                    user_id: userId,
-                    lesson_id: lessonId,
-                    completed: completed,
-                    completed_at: new Date(), // Add timestamp
-                });
-
-            if (insertError) {
-                console.error("Error inserting progress:", insertError.message);
+        const fetchUserProgress = async () => {
+            const { data, error } = await supabase.auth.getUser(); // data: { user }, error
+            const user = data.user
+            if (error) {
+                console.error("Error fetching user:", error);
+                setUserId(null);
                 return;
             }
-        } else {
-            // If progress data already exists, update it with a new timestamp
-            const { error: updateError } = await supabase
-                .from("userprogress")
-                .update({
-                    completed: completed,
-                    completed_at: new Date(), // Update timestamp
-                })
-                .eq('user_id', userId)
-                .eq('lesson_id', lessonId);
 
-            if (updateError) {
-                console.error("Error updating progress:", updateError);
-                return;
+            setUserId(user ? user.id : null);
+
+            if (user) {
+                // Fetch user's progress from 'userprogress' table
+                const { data: progressData, error: progressError } = await supabase
+                    .from("userprogress")
+                    .select("lesson_id, completed")
+                    .eq("user_id", user.id)
+                    .order("completed_at", { ascending: false })
+                    .limit(1);  // Fetch the most recent lesson the user completed
+
+                if (progressError) {
+                    console.error("Error fetching user progress:", progressError.message);
+                } else {
+                    // convert to map for lookup
+                    const completedMap = {}
+                    progressData.forEach(progress => {
+                        completedMap[progress.lesson_id] = progress.completed;
+                    })
+                    setCompletedLessons(completedMap);
+                }
+            } else {
+                // for non logged in users
+                const completed = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
+                setCompletedLessons(completed);
             }
         }
-        console.log("Progress updated for lesson:", lessonId);
-        setCompletedLessons(prev => ({
-            ...prev, [lessonId]: completed,
-        }));
-    };
+        fetchLessons().then(fetchUserProgress) 
 
+    }, [allCorrect]); 
+
+    // Pass the entire completedLessons object up to MainPage
+    // useEffect(() => {
+    //     if (setLessonCompleted) {
+    //         setLessonCompleted(completedLessons); // Pass the entire object to MainPage
+    //     }
+    // }, [completedLessons, setLessonCompleted]);
+
+    // Prev Next Buttons
     const handlePrevious = () => {
         const newIndex = currentLessonIndex - 1;
         setCurrentLessonIndex(newIndex);
@@ -170,6 +177,7 @@ const LessonsColumn = () => {
 
         setCurrentLessonIndex(newIndex);
         sessionStorage.setItem("currentLessonIndex", newIndex);
+        onLessonChange(); // resetting exercise completion
     };
 
     if (loading) return <p>Loading lessons...</p>;
@@ -213,37 +221,35 @@ const LessonsColumn = () => {
                     </>
                 )}
             </div>
-            <div className="mt-1 flex justify-between">
+            <div className="flex justify-between items-end">
                 <button
                     onClick={handlePrevious}
                     disabled={currentLessonIndex === 0}
-                    className={`px-2 py-0 rounded-full ${currentLessonIndex === 0
-                        ? "bg-blue-900 cursor-not-allowed"
-                        : "bg-blue-700 hover:bg-blue-800"
-                        } text-white`}
+                    className={`rounded-full w-8 h-8 ${currentLessonIndex === 0
+                        ? "bg-blue-600 hover:bg-red-600" // cursor-not-allowed
+                        : "bg-blue-500 hover:bg-blue-400"}`}
                 >
-                    Previous
+                    <img className='prev-page-icon' alt='... ...' src='/prev-page.svg' />
                 </button>
                 <p className="text-sm text-gray-400">
                     Lesson {currentLessonIndex + 1} of {lessonsData.length}
                 </p>
-                <div className="relative group">
+                <div className="relative group flex">
                     <button
-                        onClick={handleNext}
-                        disabled={currentLessonIndex === lessonsData.length - 1} // !isLessonCompleted || 
-                        className={`mr-2 px-4 py-0 rounded-full ${currentLessonIndex === lessonsData.length - 1
-                            ? "bg-blue-900 cursor-not-allowed"
-                            : "bg-blue-700 hover:bg-blue-800"
-                            } text-white`}
+                        onClick={handleNext} // !(isLessonCompleted || allCorrect)
+                        disabled={!isLessonCompleted || currentLessonIndex === lessonsData.length - 1} 
+                        className={`mr-4 rounded-full w-8 h-8 ${currentLessonIndex === lessonsData.length - 1
+                            ? "bg-blue-600 hover:bg-red-600" // cursor-not-allowed
+                            : "bg-blue-500 hover:bg-blue-400"}`}
                     >
-                        Next
+                        <img className='next-page-icon' alt='... ...' src='/next-page.svg' />
                     </button>
-                    {/* {!isLessonCompleted && (
-                        <div className="absolute bottom-full left-1/3 transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
+                    {!isLessonCompleted && (
+                        <div className="absolute bottom-full left-auto transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
                             Complete all questions first
-                            <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                            <div className="absolute left-16 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                         </div>
-                    )} */}
+                    )}
                 </div>
             </div>
         </div>
@@ -251,3 +257,214 @@ const LessonsColumn = () => {
 };
 
 export default LessonsColumn;
+
+
+
+
+// Function to update the userprogress table
+    // const updateProgress = async (lessonId, completed = false) => {
+    //     if (!userId) {
+    //         // console.warn("No user is logged in. Progress update aborted.");
+    //         const updatedCompletedLessons = {...completedLessons, [lessonId]: completed};
+    //         setCompletedLessons(updatedCompletedLessons);
+    //         sessionStorage.setItem('completedLessons', JSON.stringify(updatedCompletedLessons));
+    //         return; // Abort the update if no user is logged in
+    //     }
+
+    //     const { data: progressData, error: progressError } = await supabase
+    //         .from("userprogress")
+    //         .select('*')
+    //         .eq('user_id', userId)
+    //         .eq('lesson_id', lessonId)
+    //         .single(); // Check if the progress for this lesson already exists
+
+    //     if (progressError && progressError.code !== 'PGRST116') {
+    //         console.error("Error fetching progress:", progressError.message);
+    //     }
+
+    //     if (!progressData) {
+    //         // If no progress data exists, insert a new row with a completion timestamp
+    //         const { error: insertError } = await supabase
+    //             .from("userprogress")
+    //             .insert({
+    //                 user_id: userId,
+    //                 lesson_id: lessonId,
+    //                 completed: completed,
+    //                 completed_at: new Date(), // Add timestamp
+    //             });
+
+    //         if (insertError) {
+    //             console.error("Error inserting progress:", insertError.message);
+    //             return;
+    //         }
+    //     } else {
+    //         // If progress data already exists, update it with a new timestamp
+    //         const { error: updateError } = await supabase
+    //             .from("userprogress")
+    //             .update({
+    //                 completed: completed,
+    //                 completed_at: new Date(), // Update timestamp
+    //             })
+    //             .eq('user_id', userId)
+    //             .eq('lesson_id', lessonId);
+
+    //         if (updateError) {
+    //             console.error("Error updating progress:", updateError);
+    //             return;
+    //         }
+    //     }
+    //     console.log("Progress updated for lesson:", lessonId);
+    //     setCompletedLessons(prev => ({
+    //         ...prev, [lessonId]: completed,
+    //     }));
+    // };
+
+
+
+    // const fetchUserProgress = async () => {
+    //     const { data, error } = await supabase.auth.getUser(); // data: { user }, error
+    //     const user = data.user
+    //     if (error) {
+    //         console.error("Error fetching user:", error);
+    //         setUserId(null);
+    //         return;
+    //     }
+
+    //     setUserId(user ? user.id : null);
+
+    //     if (user) {
+    //         // Fetch user's progress from 'userprogress' table
+    //         const { data: progressData, error: progressError } = await supabase
+    //             .from("userprogress")
+    //             .select("lesson_id, completed")
+    //             .eq("user_id", user.id)
+    //             .order("completed_at", { ascending: false })
+    //             .limit(1);  // Fetch the most recent lesson the user completed
+
+    //         if (progressError) {
+    //             console.error("Error fetching user progress:", progressError.message);
+    //         } else {
+    //             // convert to map for lookup
+    //             const completedMap = {}
+    //             progressData.forEach(progress => {
+    //                 completedMap[progress.lesson_id] = progress.completed;
+    //             })
+    //             setCompletedLessons(completedMap);
+    //         }
+    //     } else {
+    //         // for non logged in users
+    //         const completed = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
+    //         setCompletedLessons(completed);
+    //     }
+    // }
+    // fetchLessons().then(fetchUserProgress);
+    // useEffect(() => {
+    //     const fetchUserProgressForLesson = async () => {
+    //         const { data: user, error } = await supabase.auth.getUser();
+    //         if (error || !user || !lessonsData[currentLessonIndex]) {
+    //             return; // Ensure user and lesson data is available before proceeding
+    //         }
+
+    //         const lessonId = lessonsData[currentLessonIndex]?.lesson_id;
+
+    //         if (!lessonId) {
+    //             return; // Skip if lesson_id is undefined
+    //         }
+
+    //         const { data: progressData, error: progressError } = await supabase
+    //             .from("userprogress")
+    //             .select("lesson_id, completed")
+    //             .eq("user_id", user.id)
+    //             .eq("lesson_id", lessonId);
+
+    //         if (progressError) {
+    //             console.error("Error fetching user progress for lesson:", progressError.message);
+    //         } else if (progressData?.length > 0) {
+    //             setCompletedLessons((prev) => ({
+    //                 ...prev,
+    //                 [lessonId]: progressData[0].completed
+    //             }));
+    //         }
+    //     };
+
+    //     if (lessonsData.length > 0) {
+    //         fetchUserProgressForLesson();  // Refetch progress for the current lesson
+    //     }
+    // }, [currentLessonIndex, lessonsData]);
+
+
+    // refetching or updating user progress when moving between lessons
+    // useEffect(() => {
+    //     const fetchAllUserProgress = async () => {
+    //         const { data: user, error } = await supabase.auth.getUser();
+    //         if (error || !user) {
+    //             return; // Ensure user is available
+    //         }
+
+    //         // Ensure lessonsData has been populated
+    //         if (lessonsData.length === 0) {
+    //             return;  // Avoid fetching progress if lessonsData is empty
+    //         }
+
+    //         // Fetch all progress for this user again
+    //         const { data: progressData, error: progressError } = await supabase
+    //             .from("userprogress")
+    //             .select("lesson_id, completed")
+    //             .eq("user_id", user.id);
+
+    //         if (progressError) {
+    //             console.error("Error fetching user progress for lessons:", progressError.message);
+    //         } else {
+    //             const completedMap = progressData.reduce((acc, progress) => {
+    //                 acc[progress.lesson_id] = progress.completed;
+    //                 return acc;
+    //             }, {});
+    //             setCompletedLessons(completedMap);  // Update the completed lessons state
+    //         }
+    //     };
+
+    //     if (lessonsData.length > 0) {
+    //         fetchAllUserProgress();  // Refetch progress for all lessons
+    //     }
+
+    //     // fetchAllUserProgress();  // Refetch progress for all lessons
+    // }, [currentLessonIndex]);  // Runs when the lesson index changes
+
+    // useEffect(() => {
+    //     const reFetchUserProgress = async () => {
+    //         const { data, error } = await supabase.auth.getUser(); // data: { user }, error
+    //         const user = data.user
+    //         if (error) {
+    //             console.error("Error fetching user:", error);
+    //             setUserId(null);
+    //             return;
+    //         }
+
+    //         setUserId(user ? user.id : null);
+
+    //         if (user) {
+    //             // Fetch user's progress from 'userprogress' table
+    //             const { data: progressData, error: progressError } = await supabase
+    //                 .from("userprogress")
+    //                 .select("lesson_id, completed")
+    //                 .eq("user_id", user.id)
+
+    //             if (progressError) {
+    //                 console.error("Error fetching user progress:", progressError.message);
+    //             } else {
+    //                 // convert to map for lookup
+    //                 const completedMap = {}
+    //                 progressData.forEach(progress => {
+    //                     completedMap[progress.lesson_id] = progress.completed;
+    //                 })
+    //                 setCompletedLessons(completedMap);
+    //             }
+    //         } else {
+    //             // for non logged in users
+    //             const completed = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
+    //             setCompletedLessons(completed);
+    //         }
+    //     }
+    //     reFetchUserProgress();
+
+    // }, [currentLessonIndex]);

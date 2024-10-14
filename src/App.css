@@ -690,14 +690,14 @@ math-field:hover {
 }
 
 .incorrect-answer {
-    color: #d31717 !important; /* Tailwind's red-500 */
+    color: #d31717 !important; /* Tailwind's red-500 */    
 }
 
 
 
 
 
-.triangle-btn {
+/* .triangle-btn {
     width: 0;
     height: 0;
     border-left: 40px solid transparent;
@@ -715,4 +715,4 @@ math-field:hover {
 
 .triangle-btn:active {
     transform: scale(0.95);
-}
+} */
