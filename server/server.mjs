@@ -161,7 +161,7 @@ const buildPromptContent = ({ exerciseQuestion, correctAnswer, userSolution, ima
         content.push({type: 'text', text: `\nCompare the student's solution with the Correct Answer that is given and return the "correct" field as true or false. 
             Provide feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not reveal the correct answer.
             \nIgnore whether the student wrote their answer in correct LaTeX format or not. Only verify the correctness of the solution.
-            \nAdditionaly when sending LaTeX content, always follow these rules:' +
+            \nAdditionaly when sending LaTeX content, always follow these rules:
             - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
             - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).
             - Make sure that all LaTeX content is consistently wrapped using only double dollar signs ($$ ... $$).`})
@@ -169,8 +169,12 @@ const buildPromptContent = ({ exerciseQuestion, correctAnswer, userSolution, ima
     if (image) {
         content.push({type: 'image_url', image_url: {url: image}});
         content.push({type: 'text', text: `\nThe student's solution has been provided as an image. Compare the image solution with the provided Correct Answer.
-            Return the "correct" field as true or false. Provide feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not reveal the correct answer.
-            \nAdditionaly when sending LaTeX content, always follow these rules:' +
+            Return the "correct" field as true or false. Provide feedback in the form of short hints or step-by-step guidance. 
+            If the image solution is incorrect, do not reveal the correct answer.
+            Ensure that the content in the image solution is directly related to the exercise question provided. 
+            If the content of the image solution does not match or address the exercise question, consider it a false solution, and do not evaluate it further. 
+            Instead, respond with a message indicating that the image solution does not relate to the question.
+            \nAdditionaly when sending LaTeX content, always follow these rules:
             - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
             - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).
             - Make sure that all LaTeX content is consistently wrapped using only double dollar signs ($$ ... $$).`})
@@ -203,7 +207,7 @@ app.post('/api/validate-solution', async (req, res) => {
     }
 
     const promptContentArray = buildPromptContent({ exerciseQuestion, correctAnswer, userSolution, image });
-    console.log('Prompt Content:', promptContentArray);
+    // console.log('Prompt Content:', promptContentArray);
 
     const openAIMessages = [
         {
@@ -215,7 +219,9 @@ app.post('/api/validate-solution', async (req, res) => {
                         2. Always return a response in valid JSON format with {"correct": true/false, "feedback": "feedback on the solution"}.
                         Do not return plain text responses unless explicitly instructed otherwise.
                         When sending the JSON response, do not wrap it in triple backticks. Simply return valid JSON without any markdown or code block formatting. 
-                        3. If the solution is incorrect, give feedback but do not reveal the correct answer.`
+                        3. If the solution is incorrect, give feedback but do not reveal the correct answer.
+                        If the content in the image solution is not directly related to the exercise question provided, consider it a false solution, and do not evaluate it further. 
+                        Instead, respond with a message indicating that the image solution does not relate to the question.`
 
                         // Additionaly when sending LaTeX content, always follow these rules:' +
                         // - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).

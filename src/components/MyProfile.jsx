@@ -33,7 +33,7 @@ const MyProfile = () => {
     }, []);
 
     if (isLoading) {
-        return <div><img src='/loading.gif' /></div>;
+        return <div className="flex items-center justify-center min-h-screen"><img src='/loading-ripple.svg' /></div>;
     }
 
     const handleSignOut = async () => {

@@ -91,6 +91,19 @@ so all regular CSS is in App.css, Tailwind CSS in index.css*/
 @tailwind components;
 @tailwind utilities;
 
+/* @font-face {
+  font-family: 'Aptos';
+  src: url('/path/to/aptos.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Roboto';
+  src: url('/path/to/roboto.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Lato';
+  src: url('/path/to/lato.woff2') format('woff2');
+} */
+
 /* main page 3 column grid */
 
 /* making scroll bar 'invisible' */

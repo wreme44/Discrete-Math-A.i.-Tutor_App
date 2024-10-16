@@ -128,7 +128,7 @@ const LessonsColumn = ({allCorrect, onLessonChange}) => { // setLessonCompleted
                     .select("lesson_id, completed")
                     .eq("user_id", user.id)
                     .order("completed_at", { ascending: false })
-                    .limit(1);  // Fetch the most recent lesson the user completed
+                    // .limit(1);  // Fetch the most recent lesson the user completed
 
                 if (progressError) {
                     console.error("Error fetching user progress:", progressError.message);
@@ -148,7 +148,7 @@ const LessonsColumn = ({allCorrect, onLessonChange}) => { // setLessonCompleted
         }
         fetchLessons().then(fetchUserProgress) 
 
-    }, [allCorrect]); 
+    }, [allCorrect, currentLessonIndex, lessonsData]); 
 
     // Pass the entire completedLessons object up to MainPage
     // useEffect(() => {

@@ -199,7 +199,7 @@ const ChatBox = () => {
     }, [])
 
     return (
-        <div className='bg-gray-800 p-4 rounded h-full flex flex-col'>
+        <div className='bg-gray-800 border-2 border-amber-500 border-opacity-50 p-4 rounded h-full flex flex-col'>
             <div className='chatbox-content flex-1 overflow-y-auto mb-4 overflow-x-hidden'>
                 {messages.length > 0 ? (messages.map((msg, index) => (
                     <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
@@ -252,13 +252,17 @@ const ChatBox = () => {
                         style={{ overflow: 'hidden' }}
                     />
                     <button 
-                        className="ml-2 p-2 bg-blue-400 focus:outline-none 
-                                 focus:ring-1 focus:ring-amber-500 rounded-2xl flex-shrink-0" 
-                        style={{width: '50px', height: '40px'}} 
+                        className="ml-1 px-0 py-0 outline-none 
+                        focus:outline-none border-2 border-yellow-600 hover:border-yellow-600 rounded-full transform  
+                        transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                        // className="ml-2 p-2 bg-blue-400 focus:outline-none 
+                        //          focus:ring-1 focus:ring-amber-500 rounded-2xl flex-shrink-0" 
+                        // style={{width: '50px', height: '40px'}} 
                         onClick={handleSend}
                         disabled={isTyping}
                     >
-                        <img src="/send-button.png" alt="Send" style={{width: '100%', height: '100%'}} />
+                        {/* <img src="/send-button.png" alt="Send" style={{width: '100%', height: '100%'}} /> */}
+                        <img className="upload-icon w-10 h-auto mr-0" alt="Submit" src="/submit2.svg" />
                     </button>
                 </div>
             </div>

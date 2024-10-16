@@ -74,7 +74,7 @@ const MainPage = () => {
             </div>
             <div className={`rounded overflow-y-auto ${isSmallScreen
                 ? 'md:hidden col-span-1 max-h-full h-[500px]'
-                : `md:absolute right-1 md:col-span-1 md:w-1/3 w-full z-10 border-2 border-amber-500 transition-all duration-1000 ease-in-out 
+                : `md:absolute right-1 md:col-span-1 md:w-1/3 w-full z-10 border-2 border-amber-500 border-opacity-75 transition-all duration-1000 ease-in-out 
                 ${isChatVisible ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}`}
                 {...(!isSmallScreen && {
                     style: { height: '85%', marginTop: '95px', pointerEvents: isChatVisible ? 'auto' : 'none' }

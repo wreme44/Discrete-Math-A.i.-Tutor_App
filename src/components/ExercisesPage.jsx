@@ -367,7 +367,6 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
         }
     }
 
-
     const renderContent = (question) => {
 
         // console.log(question)
@@ -690,13 +689,13 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                                 <button
                                     type="button"
                                     onClick={() => document.getElementById(`fileInput-${exercise.exercise_id}`).click()}
-                                    className="relative flex items-center ml-2 w-6 h-6 active:bg-blue-900
-                                         focus:outline-none outline-none border-none rounded-full transform 
-                                         transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                    className="relative flex items-center ml-2 w-6 h-6 focus:outline-none
+                                        outline-none border-none rounded-full transform transition
+                                        duration-75 ease-in-out hover:scale-105 active:scale-95"
                                 >
-                                    <img className='upload-icon' alt='... ...' src='/attach-image.svg' />
+                                    <img className='upload-icon' alt='... ...' src='/image-upload.svg' />
                                 </button>
-                                <div className="absolute bottom-9 left-1/2 transform -translate-x-1/2 mb-2 bg-teal-600
+                                <div className="absolute bottom-7 left-1/2 transform -translate-x-1/2 mb-2 bg-teal-600
                                         text-white text-xs rounded-lg py-1 pl-1 pr-0 w-20 opacity-0 group-hover:opacity-100 
                                         transition-opacity duration-500 z-10">
                                     {/* "absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1" */}
@@ -710,29 +709,34 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                                     onClick={() =>
                                         handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question, exercise.answer)
                                     }
-                                    className="relative flex items-center w-11 h-10 ml-2 px-0 py-0 outline-none 
-                                    focus:outline-none border-none rounded-full active:bg-blue-900 transform  
-                                    transition duration-75 ease-in-out hover:scale-105 active:scale-95"
-                                    disabled={isTyping}
-                                >
-                                    <img className='upload-icon' alt='... ...' src='/submit.svg' />
+                                    className="relative flex items-center justify-center w-full md:w-10/12 lg:w10/12 xl:w-11/12 h-10 ml-8 mr-1 px-0 py-0 bg-blue-900 outline-none 
+                                        focus:outline-none border-1 border-cyan-600 hover:border-teal-600 rounded-full transform  
+                                        transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                        disabled={isTyping}
+                                    >
+                                    <div className="flex items-center">
+                                        <img className="upload-icon w-6 h-auto mr-0" alt="Submit" src="/submit3.svg" />
+                                        <span className="text-slate-100 font-serif ml-1 mr-1 text-lg">Submit</span>
+                                    </div>
                                 </button>
-                                <div className="absolute bottom-11 left-7 transform -translate-x-1/2 mb-2 bg-teal-600
+                                {/* info message on hover */}
+                                <div className="absolute bottom-full left-2/3 transform -translate-x-1/2 mb-2 bg-teal-600
                                         text-white text-xs rounded-lg py-1 pl-1 pr-0 w-24 opacity-0 group-hover:opacity-100 
                                         transition-opacity duration-500 z-10">
                                     {/* "absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1" */}
                                     Submit Solution
                                     <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                {/* info alert message when input empty */}
                                 </div>
                                 {inputAlert[exercise.exercise_id] && (
-                                    <div className="absolute bottom-12 right-32 mb-2 mt-1 bg-teal-600 text-white text-xs rounded py-1 px-2 w-60 z-10">
+                                    <div className="absolute bottom-12 right-52 mb-2 mt-1 bg-teal-600 text-white text-xs rounded py-1 px-2 w-60 z-10">
                                         Please enter a solution before submitting
-                                        <div className="absolute left-28 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                        <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                                     </div>
                                 )}
                             </div>
                         </div>
-                        {/* Show user's submitted solution */}
+                        {/* Show user's solution */}
                         {submittedSolutions[exercise.exercise_id] && (
                             <div className="mt-4">
                                 <h4 className="text-md font-semibold">Your Input Solution:</h4>
@@ -748,35 +752,35 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                                 <img
                                     src={imagesDisplay[exercise.exercise_id]}
                                     alt="Uploaded solution preview"
-                                    className="w-2/3 h-auto border border-gray-400 rounded mt-2"
+                                    className="w-2/3 h-auto border-2 border-gray-600 rounded mt-2"
                                 />
                             </div>
                         )}
                         {/* Display GPT Results validation for in/correct*/}
                         {correctAnswers[exercise.exercise_id] !== undefined && (
-                            <div className="mt-4">
+                            <div className="mt-4 -mb-10">
                                 <h4 className={`text-md font-semibold ${correctAnswers[exercise.exercise_id] ? 'correct-answer' : 'incorrect-answer'}`}> 
                                     {correctAnswers[exercise.exercise_id] ? 'Your solution is correct! Well Done.' : 'Your solution is incorrect.'}
                                 </h4>
                             </div>    
                         )}
                         {/* hint + feedback buttons */}
-                        <div className="flex mt-5">
+                        <div className="flex items-center mt-1 -mb-14">
                             <button
                                 onClick={() => toggleHint(exercise.exercise_id)}
-                                className="relative flex items-center w-14 h-10 ml-0 px-0 py-0 outline-none 
+                                className="w-24 h-auto ml-0 px-0 py-0 outline-none 
                                     focus:outline-none border-none rounded-full transform  
-                                    transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                    transition duration-75 ease-in-out hover:scale-110 active:scale-90"
                             >
                                 {showHint[exercise.exercise_id] 
-                                ? <img className='upload-icon' alt='... ...' src='/hide-hint.svg' />
-                                : <img className='upload-icon' alt='... ...' src='/show-hint.svg' />}
+                                ? <img className='upload-icon' alt='... ...' src='/hide-hint.svg'/>
+                                : <img className='upload-icon' alt='... ...' src='/show-hint.svg'/>}
                             </button>
                             {/* GPT feedback button if feedback response exists*/}
                             {gptResults[exercise.exercise_id] && (
                                 <button
                                     onClick={() => toggleGPTFeedback(exercise.exercise_id)}
-                                    className="mt-1 ml-3 px-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800  
+                                    className=" mt-1 ml-3 px-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800  
                                      hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 rounded-full text-white flex items-center"
                                 >
                                     {showGPTFeedback[exercise.exercise_id] 
@@ -787,7 +791,7 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                         </div>
                         {/* display hint from database */}
                         {showHint[exercise.exercise_id] && (
-                            <div className="mt-2 pb-1 pt-0 px-2 bg-gray-700 rounded">
+                            <div className="mt-0 pb-1 pt-0 px-2 bg-gray-700 rounded">
                                 <h3 className="text-md font-semibold mb-1">Hint:</h3>
                                 <div className="text-sm">{renderContent(exercise.hint)}</div>
                             </div>
@@ -801,8 +805,8 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                             </div>
                         )}
                         {isTyping && (
-                            <div className='mb-2 text-left'>
-                                <img className='typing-gif' alt='... ...' src='/loading2.1.gif' />
+                            <div className='flex items-center justify-center'>
+                                <img className='loading-gif' alt='... ...' src='/loading-ripple.svg'/>
                             </div>
                         )}
                     </div>

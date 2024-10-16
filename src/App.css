@@ -686,15 +686,20 @@ math-field:hover {
 
 /* Correct / Incorrect user solution text color */
 .correct-answer {
-    color: #0eb87f !important; /* Tailwind's green-500 */
+    color: #0eb87f !important;
 }
 
 .incorrect-answer {
-    color: #d31717 !important; /* Tailwind's red-500 */    
+    color: #d31717 !important; 
+    /* color: #0040ff */
+    /* color: #330D84; */
 }
 
 
-
+.loading-gif{
+    width: 60px;
+    height: 60px;
+}
 
 
 /* .triangle-btn {
