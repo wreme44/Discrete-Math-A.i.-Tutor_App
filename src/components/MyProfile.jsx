@@ -3,7 +3,6 @@ import { supabase } from '../supabaseClient.js';
 import { useNavigate, Link } from "react-router-dom";
 import './MyProfile.css'; // Import the CSS file
 
-
 const MyProfile = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);

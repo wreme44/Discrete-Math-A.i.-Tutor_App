@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../supabaseClient';
 
 const SignUp = () => {
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
@@ -12,40 +11,46 @@ const SignUp = () => {
 
     const handleSignUp = async (e) => {
         e.preventDefault();
-
         setNotification('');
 
         if (!email || !password || !name) {
-
-            setNotification('Please fill out all fields.')
+            setNotification('Please fill out all fields.');
             return;
         }
 
         try {
-            // Sign up the user with Supabase Auth
+            // Sign up the user with Supabase Auth and set display_name
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
+                options: {
+                    data: {
+                        full_name: name  // Store the name in the 'display_name' field
+                    }
+                }
             });
 
             if (error) {
-
                 console.error('Error signing up:', error.message);
-                // setNotification(`Error signing up: ${error.message}`)
             } else if (data.user) {
-                // After sign up, store additional details in the users table
+                // Insert user data into 'users' table AFTER authentication
                 const { error: insertError } = await supabase
                     .from('users')
-                    .insert([{ user_id: data.user.id, name, email }]);
+                    .insert([{
+                        user_id: data.user.id,
+                        name,  // Insert name from input
+                        email,
+                        role: 'student', // Add role or other initial values if needed
+                        current_level: 'beginner'
+                    }]);
 
                 if (insertError) {
                     console.error('Error inserting user data:', insertError.message);
                 } else {
-                    // Navigate to the login after successful signup
-                    setNotification('Please Verify Email Before Logging In.');
+                    setNotification('Please verify your email before logging in.');
                     setTimeout(() => {
                         navigate('/login');
-                    }, 10000) // after 10 seconds of showing verify info, navigating to login page
+                    }, 10000); // Redirect to login after 10 seconds
                 }
             }
         } catch (error) {
