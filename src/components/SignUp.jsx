@@ -15,7 +15,7 @@ const SignUp = () => {
 
         setNotification('');
 
-        if (!email || !password || !name){
+        if (!email || !password || !name) {
 
             setNotification('Please fill out all fields.')
             return;
