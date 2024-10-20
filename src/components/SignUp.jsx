@@ -7,7 +7,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [notification, setNotification] = useState('');
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -31,7 +31,13 @@ const SignUp = () => {
             });
 
             if (error) {
-                console.error('Error signing up:', error.message);
+                if(error.message === 'User already registered'){
+                    setNotification('This Email address is already registered. Please log in or use a different Email to sign up');
+                } else {
+                    // Handle any other signup errors
+                    console.error('Error signing up:', error.message);
+                    setNotification(`Error signing up: ${error.message}`);
+                }
             } else if (data.user) {
                 // Insert user data into 'users' table AFTER authentication
                 const { error: insertError } = await supabase
@@ -46,12 +52,12 @@ const SignUp = () => {
 
                 if (insertError) {
                     console.error('Error inserting user data:', insertError.message);
-                } else {
-                    setNotification('Please verify your email before logging in.');
-                    setTimeout(() => {
-                        navigate('/login');
-                    }, 10000); // Redirect to login after 10 seconds
-                }
+                } 
+                setNotification('Please check your inbox and verify your Email before logging in');
+                // setTimeout(() => {
+                //     navigate('/login');
+                // }, 10000) // after 10 seconds of showing verify info, navigating to login page
+                
             }
         } catch (error) {
             console.error('Signup error:', error.message);
@@ -93,7 +99,7 @@ const SignUp = () => {
                     <button className="signup-button" type="submit">Sign Up</button>
                     <p>Already have an Account?<Link className="link-to-login-signup" to="/login"> Login</Link></p>
                 </form>
-                {notification && <p className="notification">{notification}</p>}
+                {notification && <p className="signup-notification">{notification}</p>}
             </div>
         </div>
     );

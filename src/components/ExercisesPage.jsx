@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import {useLessonProgress} from './LessonProgressContext';
+// import {useLessonProgress} from './LessonProgressContext';
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient";
@@ -227,7 +227,7 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
         }
         const payload = {messages}
         // Log the payload to check
-        console.log("Sending payload:", payload);
+        // console.log("Sending payload:", payload);
         // store users submitted solution
         setSubmittedSolutions((prev) => ({
             ...prev,
@@ -658,16 +658,16 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
     // const isLessonCompleted = lessonComplete[currentLessonId];
 
     return (
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col h-full -mt-2">
             {currentLessonId && (
                 <h2 className="text-xl font-bold mb-1">Lesson {currentLessonIndex + 1}</h2>
             )}
-            <div className="flex-1 overflow-y-auto pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+            <div className="flex-1 overflow-y-auto pl-1 pb-1 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentExercises.map((exercise) => (
                     <div key={exercise.exercise_id} className="mb-36 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                         {renderContent(exercise.question)}                         
                         {/* MathLiveInput for the exercise */}
-                        <div className="relative mt-16 flex items-center space-x-1">
+                        <div className="relative mt-2 flex items-center space-x-1">
                             <MathLiveInput
                                 value={submittedSolutions[exercise.exercise_id] || ""}
                                 onChange={(value) => setSubmittedSolutions({
@@ -707,16 +707,15 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                             <div className="relative inline-block group">
                                 <button
                                     onClick={() =>
-                                        handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question, exercise.answer)
-                                    }
-                                    className="relative flex items-center justify-center w-full md:w-10/12 lg:w10/12 xl:w-11/12 h-10 ml-8 mr-1 px-0 py-0 bg-blue-900 outline-none 
-                                        focus:outline-none border-1 border-cyan-600 hover:border-teal-600 rounded-full transform  
+                                        handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question, exercise.answer)}
+                                    className="relative flex items-center justify-center w-full md:w-10/12 lg:w10/12 xl:w-10/12 h-10 ml-8 mr-1 px-0 py-0 bg-blue-900 outline-none 
+                                        focus:outline-none border-1 border-cyan-600 hover:border-cyan-600 rounded-full transform  
                                         transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                                         disabled={isTyping}
                                     >
                                     <div className="flex items-center">
-                                        <img className="upload-icon w-6 h-auto mr-0" alt="Submit" src="/submit3.svg" />
-                                        <span className="text-slate-100 font-serif ml-1 mr-1 text-lg">Submit</span>
+                                        <img className="upload-icon w-9 h-auto mr-0" alt="Submit" src="/submit4.svg"/>
+                                        <span className="text-slate-100 font-serif ml-0 mr-1 text-lg">Submit</span>
                                     </div>
                                 </button>
                                 {/* info message on hover */}
@@ -758,30 +757,48 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                         )}
                         {/* Display GPT Results validation for in/correct*/}
                         {correctAnswers[exercise.exercise_id] !== undefined && (
-                            <div className="mt-4 -mb-10">
-                                <h4 className={`text-md font-semibold ${correctAnswers[exercise.exercise_id] ? 'correct-answer' : 'incorrect-answer'}`}> 
-                                    {correctAnswers[exercise.exercise_id] ? 'Your solution is correct! Well Done.' : 'Your solution is incorrect.'}
+                            <div className="flex items-center -mt-10 -mb-5">
+                                <h4 className={`flex items-center justify-center text-md font-semibold ${correctAnswers[exercise.exercise_id] ? 'correct-answer' : 'incorrect-answer'}`}> 
+                                    {correctAnswers[exercise.exercise_id] 
+                                    ? <>
+                                        Your solution is correct! Well Done
+                                        <img className="ml-1 w-8" src="correct.svg"/>
+                                        {/* <img className="ml-1 w-10" src="correct2.svg"/>
+                                        <img className="ml-1 w-10" src="correct2copy.svg"/> */}
+                                    </> 
+                                    : <>
+                                        Your solution is incorrect.
+                                        <img className="ml-1 w-8" src="incorrect.svg"/>
+                                        {/* <img className="ml-1 w-10" src="incorrect2.svg"/> */}
+                                    </>}
                                 </h4>
                             </div>    
                         )}
                         {/* hint + feedback buttons */}
-                        <div className="flex items-center mt-1 -mb-14">
+                        <div className="flex items-center mt-5"> {/* -mb-14 */}
                             <button
                                 onClick={() => toggleHint(exercise.exercise_id)}
-                                className="w-24 h-auto ml-0 px-0 py-0 outline-none 
-                                    focus:outline-none border-none rounded-full transform  
-                                    transition duration-75 ease-in-out hover:scale-110 active:scale-90"
+                                className="flex items-center justify-center w-20 h-10 ml-0 px-0 py-0 bg-gray-900 outline-none 
+                                    focus:outline-none border-2 border-gray-500 hover:border-gray-500 rounded-full transform  
+                                    transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                             >
-                                {showHint[exercise.exercise_id] 
-                                ? <img className='upload-icon' alt='... ...' src='/hide-hint.svg'/>
-                                : <img className='upload-icon' alt='... ...' src='/show-hint.svg'/>}
+                                {showHint[exercise.exercise_id]
+                                    ? <div className="flex items-center justify-center">
+                                        <img className='upload-icon w-12 -ml-4' alt='... ...' src='/hide-hint.svg' />
+                                        <span className="text-slate-100 font-serif -ml-3 mr-1 text">Hint</span>
+                                    </div>
+                                    : <div className="flex items-center justify-center">
+                                        <img className='upload-icon w-12 -ml-4' alt='... ...' src='/show-hint.svg' />
+                                        <span className="text-slate-100 font-serif -ml-3 mr-1 text">Hint</span>
+                                    </div>
+                                }
                             </button>
                             {/* GPT feedback button if feedback response exists*/}
                             {gptResults[exercise.exercise_id] && (
                                 <button
                                     onClick={() => toggleGPTFeedback(exercise.exercise_id)}
-                                    className=" mt-1 ml-3 px-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800  
-                                     hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 rounded-full text-white flex items-center"
+                                    className=" flex items-center mt-1 ml-3 px-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800  
+                                     hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 rounded-full text-white"
                                 >
                                     {showGPTFeedback[exercise.exercise_id] 
                                     ? (<><XMarkIcon className="w-4 h-4 mr-1" />Tutor Feedback</>)
@@ -791,7 +808,7 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                         </div>
                         {/* display hint from database */}
                         {showHint[exercise.exercise_id] && (
-                            <div className="mt-0 pb-1 pt-0 px-2 bg-gray-700 rounded">
+                            <div className="mt-8 pb-1 pt-0 px-2 bg-gray-700 rounded">
                                 <h3 className="text-md font-semibold mb-1">Hint:</h3>
                                 <div className="text-sm">{renderContent(exercise.hint)}</div>
                             </div>
@@ -812,25 +829,28 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
                     </div>
                 ))}
             </div>
-            <div className="flex justify-between items-end">
+            <div className="flex justify-between items-end -mb-1">
+                <div className="relative flex mt-1 -mb-1">
                 <button
                     onClick={handlePrevious}
                     disabled={currentLessonIndex === 0}
-                    className={`rounded-full w-8 h-8 ${currentLessonIndex === 0
+                    className={`-mb-1 rounded-full w-8 h-8 ${currentLessonIndex === 0
                         ? "bg-blue-600 hover:bg-red-600" // cursor-not-allowed
                         : "bg-blue-500 hover:bg-blue-400"}`}
                 >
                     <img className='prev-page-icon' alt='... ...' src='/prev-page.svg' />
                 </button>
+                </div>
+                
                 <p className="text-sm text-gray-400">
                     Exercise {currentLessonIndex + 1} of {lessonsData.length}
                 </p>
                 {/* allCorrect check, prevent user from next page */}
-                <div className="relative group flex">
+                <div className="relative group flex mt-1 -mb-1">
                     <button
                         onClick={handleNext}
                         disabled={!isLessonCompleted || currentLessonIndex === lessonsData.length - 1}
-                        className={`mr-4 rounded-full w-8 h-8 ${currentLessonIndex === lessonsData.length - 1
+                        className={`mr-4 -mb-1 rounded-full w-8 h-8 ${currentLessonIndex === lessonsData.length - 1
                             ? "bg-blue-600 hover:bg-red-600" //cursor-not-allowed
                             : "bg-blue-500 hover:bg-blue-400"}`}
                     >

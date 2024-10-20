@@ -82,7 +82,7 @@
 
   /*----------------------------------------------------------------*/
 
-/* Login / sign up container */
+/* Login / Sign up Pages */
 .login-page {
     display: flex;
     justify-content: center;
@@ -231,7 +231,23 @@
     /* border-color: rgb(182, 182, 182); */
 }
 
-.notification{
+.login-notification{
+    border-radius: 10px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    margin-top: 25px;
+    /* margin-bottom: 5px; */
+    font-size: 17px;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: rgba(255, 1, 1, 0.409);
+    color:rgb(250, 250, 250);
+    white-space: pre-line;
+    /* opacity: 0.5; */
+    /* transition: border-color 0.25s; */
+}
+
+.signup-notification{
     border-radius: 10px;
     border: 1px solid transparent;
     padding: 0.6em 1.2em;
@@ -558,7 +574,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.11), rgba(0, 0, 0, 0.186)), url('/One Piece/IMG_0077.jpg');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.11), rgba(0, 0, 0, 0.186)), url('D.Mentor6.png');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     height: 100vh;
@@ -571,6 +587,32 @@
 
 .return404 {
     background-color: rgba(0, 0, 0, 0.218);
+    color:#0eb87f;
+    border-color: #00ff9922;
+}
+.return404 a:hover{
+    color: #2fe1a6;
+}
+
+/* ---------------------------------------------------------------- */
+
+/* Main Page with No User logged in */
+
+.main-page-no-user{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.11), rgba(0, 0, 0, 0.186)), url('D.Mentor6.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 /* ---------------------------------------------------------------- */
@@ -691,8 +733,16 @@ math-field:hover {
 
 .incorrect-answer {
     color: #d31717 !important; 
-    /* color: #0040ff */
-    /* color: #330D84; */
+    color: #2de089a7;
+    color: #14f4c7;
+    color: #00a2ff;
+    color: #6dd0fe;
+    color: #5932AE;
+    color: #8C7BFD;
+    color: #0e41ae9f;
+    color: #FFD000;
+    color: #FFE37B;
+    color: #1fb0dcd6;
 }
 
 

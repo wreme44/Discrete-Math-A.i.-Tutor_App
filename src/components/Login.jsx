@@ -25,10 +25,10 @@ const Login = () => {
         if (error) {
             
             if (error.message === 'Invalid login credentials'){
-                setNotification('The email or password is incorrect. Please try again or sign up.')
+                setNotification('The Email or Password is incorrect. Please try again or sign up')
             }
             else if (error.message === 'Email not confirmed'){
-                setNotification('Please verify your email and then log in.')
+                setNotification('Please verify your Email and then log in.')
             }
             else {
                 setNotification(`Error logging in: ${error.message}`)
@@ -54,7 +54,7 @@ const Login = () => {
                     <button className="login-button" type="submit">Login</button>
                     <p>Don't have an Account?<Link className="link-to-login-signup" to="/signup"> Sign Up</Link></p>
                 </form>
-                {notification && <p className="notification">{notification}</p>}
+                {notification && <p className="login-notification">{notification}</p>}
             </div>
         </div>
     )

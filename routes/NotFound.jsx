@@ -4,10 +4,10 @@ const NotFound = () => {
 
     return (
         <div className="notFound">
-            <div className="return404">
-                <p style={{color: "rgb(255, 102, 102)", fontSize: "2em"}}></p>
-                <Link style={{color: "whitesmoke", fontSize: "1.5em", textDecoration: "underlined"}} to="/">
-                    Return Home to DiscreteMentor
+            <div className="return404 text-xl border-2">
+                {/* <p style={{color: "rgb(255, 102, 102)", fontSize: "2em"}}></p> */}
+                <Link  to="/">
+                    Return Home to Your DiscreteMentor
                 </Link>
             </div>
         </div>
