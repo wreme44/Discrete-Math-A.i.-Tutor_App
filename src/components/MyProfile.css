@@ -85,13 +85,3 @@
   border: 1px solid #ccc;
   margin-bottom: 15px;
 }
-
-/* Link styling */
-.link-to-login-signup {
-  color: #fff;
-  text-decoration: underline;
-}
-
-.link-to-login-signup:hover {
-  color: #e6e6e6;
-}

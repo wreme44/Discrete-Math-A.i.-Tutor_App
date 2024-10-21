@@ -10,6 +10,7 @@ import { supabase } from '../supabaseClient';
 
 const MainPage = () => {
 
+    const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
     const [userId, setUserId] = useState(null);
     const [isChatVisible, setIsChatVisible] = useState(false);
@@ -28,6 +29,10 @@ const MainPage = () => {
     const resetLessonCompletion = useCallback(() => {
         setAllExercisesCompleted(false);
     })
+    // set prev lesson to completed when prev button clicked
+    const prevLessonCompleted = useCallback(() => {
+        setAllExercisesCompleted(true);
+    })
 
     // Update completedLessons with the full object from LessonsColumn
     // const handleLessonCompleted = useCallback((completed) => {
@@ -41,9 +46,11 @@ const MainPage = () => {
             const { data, error } = await supabase.auth.getUser();
             if (error) {
                 console.error("Error fetching user:", error);
+                setIsLoading(false);
             } else {
                 setUser(data.user);
                 setUserId(data.user?.id);
+                setIsLoading(false);
             }
         }
         fetchUser();
@@ -66,65 +73,9 @@ const MainPage = () => {
         return () => window.removeEventListener('resize', handleResize)
     }, [])
 
-    //     return (
-    //         <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-16 min-h-screen md:h-screen">
-    //             {userId ? (
-    //                 <>
-    //                     <div className="col-span-1 bg-gray-800 pl-3 pt-3 pb-2 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
-    //                         <LessonsColumn
-    //                             allCorrect={allExercisesCompleted}
-    //                             onLessonChange={resetLessonCompletion}
-    //                         // setLessonCompleted={handleLessonCompleted} // passing setter to LessonsColumn
-    //                         />
-    //                     </div>
-    //                     <div className="md:col-span-2 bg-gray-800 pl-3 pt-3 pb-2 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
-    //                         <button className={`fixed hidden md:inline-flex top-16 right-5 items-center bg-gradient-to-r
-    //                                  from-yellow-900 to-yellow-700 text-white px-1 py-0 rounded-full 
-    //                                  shadow-lg hover:border-yellow-500 hover:from-yellow-800 hover:to-yellow-600 focus:outline-none 
-    //                                  focus:ring-2 focus:ring-yellow-500 transition duration-300 ease-in-out`}
-    //                             onClick={toggleChatBox}
-    //                             aria-label={isChatVisible ? "Hide Tutor Chat" : "Message Tutor"}
-    //                         >
-    //                             {isChatVisible
-    //                                 ? (<><XMarkIcon className="w-4 h-4 mr-1" />Hide Tutor</>)
-    //                                 : (<><ChevronDownIcon className="w-4 h-4 mr-1" />Message Tutor</>)}
-    //                         </button>
-    //                         <ExercisesPage
-    //                             onExerciseCompletion={handleExercisesCompletion} // ={handleExercisesCompletion}
-    //                         // lessonComplete={completedLessons}
-    //                         />
-    //                     </div>
-    //                     <div className={`rounded overflow-y-auto ${isSmallScreen
-    //                         ? 'md:hidden col-span-1 max-h-full h-[500px]'
-    //                         : `md:absolute right-1 md:col-span-1 md:w-1/3 w-full z-10 border-2 border-amber-500 border-opacity-75 transition-all duration-1000 ease-in-out 
-    //                 ${isChatVisible ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}`}
-    //                         {...(!isSmallScreen && {
-    //                             style: { height: '85%', marginTop: '95px', pointerEvents: isChatVisible ? 'auto' : 'none' }
-    //                         })}
-    //                     >
-    //                         <ChatBox />
-    //                     </div>
-    //                 </>
-    //             ) : (
-    //                 <div className="main-page-no-user ">
-    //                     <div className="justify-center">
-    //                         <p className="text-xl text-white">Log in or Sign up to get started with your Discrete Mentor</p>
-    //                         <p><Link className="link-to-login-signup" to="/signup"> Sign Up</Link></p>
-    //                         <p><Link className="link-to-login-signup" to="/login"> Login</Link></p>
-    //                     </div>
-
-    //                 </div>
-    //             )}
-    //         </div>
-    //     );
-    // }
-
-    // export default MainPage;
-
-
-
-
-
+    if (isLoading) {
+        return <div className="flex items-center justify-center min-h-screen"><img src='/loading-ripple.svg' /></div>;
+    }
 
     return (
         <>
@@ -134,6 +85,7 @@ const MainPage = () => {
                         <LessonsColumn
                             allCorrect={allExercisesCompleted}
                             onLessonChange={resetLessonCompletion}
+                            onPrevLessonButton={prevLessonCompleted}
                         // setLessonCompleted={handleLessonCompleted} // passing setter to LessonsColumn
                         />
                     </div>

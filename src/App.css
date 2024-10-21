@@ -224,6 +224,7 @@
 
 .link-to-login-signup {
     color: rgb(255, 255, 255);
+    /* text-decoration: none; */
 }
 
 .link-to-login-signup:hover {
@@ -733,16 +734,16 @@ math-field:hover {
 
 .incorrect-answer {
     color: #d31717 !important; 
-    color: #2de089a7;
+    /* color: #2de089a7;
     color: #14f4c7;
     color: #00a2ff;
     color: #6dd0fe;
     color: #5932AE;
     color: #8C7BFD;
     color: #0e41ae9f;
-    color: #FFD000;
-    color: #FFE37B;
-    color: #1fb0dcd6;
+    color: #111827;
+    color: #111827;
+    color: #ffbf00; */
 }
 
 

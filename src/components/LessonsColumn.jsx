@@ -5,7 +5,7 @@ import { supabase } from "../supabaseClient";
 import LatexRenderer from "./LatexRenderer";
 import { useNavigate } from "react-router-dom";
 
-const LessonsColumn = ({ allCorrect, onLessonChange }) => {
+const LessonsColumn = ({ allCorrect, onLessonChange, onPrevLessonButton }) => {
     // State to hold lessons data fetched from the database
     const [lessonsData, setLessonsData] = useState([]);
     // State to keep track of current lesson index
@@ -107,6 +107,7 @@ const LessonsColumn = ({ allCorrect, onLessonChange }) => {
         const newIndex = currentLessonIndex - 1;
         setCurrentLessonIndex(newIndex);
         sessionStorage.setItem("currentLessonIndex", newIndex);
+        onPrevLessonButton(); // unlocking next page button again by setting prev lesson to completed 
     };
 
     const handleNext = () => {
@@ -150,7 +151,7 @@ const LessonsColumn = ({ allCorrect, onLessonChange }) => {
             {currentLesson && (
                 <h2 className="text-xl font-bold mb-1">{currentLesson.title}</h2>
             )}
-            <div className="flex-1 overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+            <div ref={scrollableContainerRef} className="flex-1 overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentLesson && <>{renderContent(currentLesson.content)}</>}
             </div>
             <div className="flex justify-between items-end -mb-1">
@@ -170,7 +171,7 @@ const LessonsColumn = ({ allCorrect, onLessonChange }) => {
                 <div className="relative group flex mt-1 -mb-1">
                     <button
                         onClick={handleNext}
-                        disabled={!isLessonCompleted || currentLessonIndex === lessonsData.length - 1}
+                        disabled={!(isLessonCompleted || allCorrect) || currentLessonIndex === lessonsData.length - 1}
                         className={`mr-4 -mb-1 rounded-full w-8 h-8 ${currentLessonIndex === lessonsData.length - 1
                                 ? "bg-blue-600 hover:bg-red-600"
                                 : "bg-blue-500 hover:bg-blue-400"
@@ -178,7 +179,7 @@ const LessonsColumn = ({ allCorrect, onLessonChange }) => {
                     >
                         <img className="next-page-icon" alt="..." src="/next-page.svg" />
                     </button>
-                    {!isLessonCompleted && (
+                    {!(isLessonCompleted || allCorrect) && (
                         <div className="absolute bottom-full left-auto transform -translate-x-1/2 mb-2 bg-teal-600 text-white text-xs rounded-lg py-2 pl-2 pr-0 w-24 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
                             Complete all questions first
                             <div className="absolute left-16 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>

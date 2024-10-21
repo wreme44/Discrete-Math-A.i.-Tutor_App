@@ -69,6 +69,8 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
 
     const [lessonsData, setLessonsData] = useState([]);
     const [lessonMarkedDone, setLessonMarkedDone] = useState({});
+    // ref to scroll to top at next/prev page
+    const scrollableContainerRef = useRef(null);
     // const [isLessonCompleted, setIsLessonCompleted] = useState(false);
 
     // fetching user info
@@ -620,6 +622,14 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
             // }
         }
     }, [allCorrect, currentLessonId, userId]);
+
+    // scroll to top of next/prev page
+    useEffect(() => {
+        if (scrollableContainerRef.current) {
+            scrollableContainerRef.current.scrollTop = 0;
+        }
+        // window.scrollTo(0, 0)
+    }, [currentLessonIndex])
     
     // handling navigation buttons
     const handlePrevious = () => {
@@ -662,7 +672,7 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
             {currentLessonId && (
                 <h2 className="text-xl font-bold mb-1">Lesson {currentLessonIndex + 1}</h2>
             )}
-            <div className="flex-1 overflow-y-auto pl-1 pb-1 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+            <div ref={scrollableContainerRef} className="flex-1 overflow-y-auto pl-1 pb-1 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentExercises.map((exercise) => (
                     <div key={exercise.exercise_id} className="mb-36 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                         {renderContent(exercise.question)}                         
