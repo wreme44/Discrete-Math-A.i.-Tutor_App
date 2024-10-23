@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from '../supabaseClient.js';
 import { useNavigate, Link } from "react-router-dom";
-import './MyProfile.css'; // Import the CSS file
 
 const MyProfile = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -147,23 +146,33 @@ const MyProfile = () => {
                         <span>Get started with your Discrete Mentor</span>
                     </div>
                 )}
-
                 {user ? (
-                    <>
+                    <>  {/* Check Progress Status */}
                         <div className="check-status-div">
                             <button className="check-status-button" onClick={handleCheckStatus}>
-                                Check Your Progress
+                                <div className="flex items-center justify-center">
+                                    <img className="w-5 h-auto mr-2" alt="Submit" src="/check-status.svg" />
+                                    <span className="text-slate-100 ml-0 mr-1">Check Your Progress</span>
+                                </div>
                             </button>
                         </div>
-
-                        {/* Toggle the update name form */}
+                        {/* EDIT - Toggle the update name form */}
                         <button className="edit-profile-button" onClick={handleEditProfile}>
-                            {isEditing ? "Cancel Edit" : "Edit Profile"}
+                            {isEditing ? (
+                                <div className="flex items-center justify-center">
+                                    <img className="w-5 h-auto mr-2" alt="Submit" src="/cancel-edit.svg" />
+                                    <span className="text-slate-100 ml-0 mr-1">Cancel Edit</span>
+                                </div>
+                            ) : (
+                                <div className="flex items-center justify-center">
+                                    <img className="w-5 h-auto mr-2" alt="Submit" src="/edit-profile.svg" />
+                                    <span className="text-slate-100 ml-0 mr-1">Edit Profile</span>
+                                </div>
+                            )}
                         </button>
-
                         {isEditing && (
                             <div className="update-profile">
-                                <label htmlFor="newName" className="input-label">Update Name:</label>
+                                <label htmlFor="newName" className="input-label">Update Name</label>
                                 <input
                                     id="newName"
                                     className="input-field"
@@ -171,20 +180,27 @@ const MyProfile = () => {
                                     value={newName}
                                     onChange={(e) => setNewName(e.target.value)}
                                 />
-                                <button className="check-status-button" onClick={handleUpdateProfile}>
+                                <button className="update-profile-button" onClick={handleUpdateProfile}>
                                     Update Profile
                                 </button>
                             </div>
                         )}
-
                         {/* Delete profile button */}
                         <div className="delete-profile-div">
-                            <button className="check-status-button" onClick={handleDeleteProfile}>
-                                Delete Profile
+                            <button className="delete-account-button" onClick={handleDeleteProfile}>
+                                <div className="flex items-center justify-center">
+                                    <img className="w-5 h-auto mr-2" alt="Submit" src="/delete-user.svg" />
+                                    <span className="text-slate-100 ml-0 mr-1">Delete Profile</span>
+                                </div>
                             </button>
                         </div>
-
-                        <button className="signout-button" onClick={handleSignOut}>Sign Out</button>
+                        {/* Sign out */}
+                        <button className="signout-button" onClick={handleSignOut}>
+                            <div className="flex items-center justify-center">
+                                <img className="w-5 h-auto mr-2" alt="Submit" src="/log-out.svg"/>
+                                <span className="text-slate-100 ml-0 mr-1">Sign Out</span>
+                            </div>
+                        </button>
                     </>
                 ) : (
                     <>

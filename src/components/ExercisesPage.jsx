@@ -725,7 +725,7 @@ const ExercisesPage = ({
                                         disabled={isTyping}
                                     >
                                     <div className="flex items-center">
-                                        <img className="upload-icon w-9 h-auto mr-0" alt="Submit" src="/submit4.svg"/>
+                                        <img className="upload-icon w-7 h-auto mr-1" alt="Submit" src="/submit3.svg"/>
                                         <span className="text-slate-100 font-serif ml-0 mr-1 text-lg">Submit</span>
                                     </div>
                                 </button>
@@ -789,20 +789,25 @@ const ExercisesPage = ({
                         <div className="flex items-center mt-5"> {/* -mb-14 */}
                             <button
                                 onClick={() => toggleHint(exercise.exercise_id)}
-                                className="flex items-center justify-center w-20 h-10 ml-0 px-0 py-0 bg-gray-900 outline-none 
-                                    focus:outline-none border-2 border-gray-500 hover:border-gray-500 rounded-full transform  
-                                    transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                className="flex items-center justify-center w-24 h-10 -ml-7 mt-2 px-0 py-0 outline-none 
+                                    focus:outline-none border-none rounded-full transform transition duration-75 ease-in-out hover:scale-110 active:scale-90"
+                                // className="flex items-center justify-center w-20 h-10 ml-0 px-0 py-0 bg-gray-900 outline-none 
+                                //     focus:outline-none border-2 border-gray-500 hover:border-gray-500 rounded-full transform  
+                                //     transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                             >
                                 {showHint[exercise.exercise_id]
-                                    ? <div className="flex items-center justify-center">
+                                    ? <img className='upload-icon' alt='... ...' src='/hide-hint.svg'/>
+                                    : <img className='upload-icon' alt='... ...' src='/show-hint.svg'/>
+
+                                }
+                                {/* ? <div className="flex items-center justify-center">
                                         <img className='upload-icon w-12 -ml-4' alt='... ...' src='/hide-hint.svg' />
                                         <span className="text-slate-100 font-serif -ml-3 mr-1 text">Hint</span>
                                     </div>
                                     : <div className="flex items-center justify-center">
                                         <img className='upload-icon w-12 -ml-4' alt='... ...' src='/show-hint.svg' />
                                         <span className="text-slate-100 font-serif -ml-3 mr-1 text">Hint</span>
-                                    </div>
-                                }
+                                    </div> */}
                             </button>
                             {/* GPT feedback button if feedback response exists*/}
                             {gptResults[exercise.exercise_id] && (

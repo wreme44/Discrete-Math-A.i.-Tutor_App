@@ -51,8 +51,14 @@ const Login = () => {
                     <div className="password">
                         <input type="password" placeholder="Password" onChange={(e) => setPassword(e.target.value)} required/>
                     </div>
-                    <button className="login-button" type="submit">Login</button>
+                    <button className="login-button" type="submit">
+                        <div className="flex items-center justify-center">
+                            <img className="w-5 h-auto mr-2 -ml-2" alt="Submit" src="/log-in.svg" />
+                            <span className="ml-0 -mr-1">Login</span>
+                        </div>
+                    </button>
                     <p>Don't have an Account?<Link className="link-to-login-signup" to="/signup"> Sign Up</Link></p>
+                    {/* <img className="upload-icon w-9 h-auto mr-0" alt="Submit" src="/submit3.svg"/> */}
                 </form>
                 {notification && <p className="login-notification">{notification}</p>}
             </div>

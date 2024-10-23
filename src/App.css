@@ -280,7 +280,11 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-color: rgba(255, 255, 255, 0);
+    background-color: #1d2733;
+
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('account-page.gif');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
 
     /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 12.png');
     background-repeat: no-repeat;
@@ -290,51 +294,51 @@
     opacity: 0.15; */
 }
 
-/* .logo-account{
-    position: absolute;
+/* .myAccount {
+    position: fixed;
     top: 0;
     left: 0;
-    padding-top: 65px;
-    padding-left: 10px;
-
-}
-
-.logo-profile{
-    width: 200px;
-    height: 200px;
-} */
-
-
-.myAccount-content{
-    /* display: flex;
+    right: 0;
+    bottom: 0; 
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('account-page.gif');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center; */
-    backdrop-filter: blur(5px);
-    border: 2px solid rgba(48, 122, 183, 0.768);
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 25px;
-    width: 400px;
-    height: 300px;
-    text-align: center;
-    background-color: rgb(48, 122, 183);
-    box-shadow: 0 4px 8px rgba(255, 255, 255, 0.226);
-    /* max-width: 400px; */
+    align-items: center;
+} */
+
+.profile-container {
+  background-color: #4a91e2c1;
+  /* backdrop-filter: blur(5px); */
+  padding: 20px;
+  /* border: 2px solid rgba(48, 122, 183, 0.768); */
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.226);
+  width: 400px;
+  /* color: #fff; */
 }
 
 .myAccount-title{
     color: rgb(255, 255, 255);
-    font-size: 30px;
+    font-size: 22px;
+    margin-bottom: 10px;
+    font-weight: 600;
     font-weight: bold;
     /* padding-bottom: 50px; */
     margin-bottom: 15px;
 }
 
 .username {
-    color: rgb(0, 0, 0);
-    font-size: 30px;
+    color: #000000;
+    font-size: 28px;
+    margin-bottom: 20px;
     font-weight: bold;
+    /* font-family: sans-serif; */
 }
 
 .non-user{
@@ -345,12 +349,132 @@
     margin-bottom: 80px;
 }
 
+.check-status-button {
+    margin-top: 20px;
+    background-color: #00c292;
+    color: white;
+    border: 1px solid transparent;
+    /* padding: 0.4em 1.2em; */
+    padding: 10px 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    transition: border-color 0.25s;
+    border-radius: 8px;
+    width: 80%;
+}
+
+.check-status-button:hover {
+  background-color: #009e73;
+}
+
+.edit-profile-button {
+  background-color: #00c292;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 10px 0;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 8px;
+  width: 80%;
+}
+
+.edit-profile-button:hover {
+  background-color: #009e73;
+}
+
+.update-profile {
+  /* margin: 20px 0; */
+  text-align: center;
+}
+
+.input-label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: white;
+}
+
+.input-field {
+  width: 80%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  margin-bottom: 15px;
+  color: #000000;
+}
+
+.update-profile-button {
+    margin-top: 20px;
+    background-color: #4e5c58;
+    color: white;
+    border: 1px solid transparent;
+    /* padding: 0.4em 1.2em; */
+    padding: 10px 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    transition: border-color 0.25s;
+    border-radius: 8px;
+    width: 80%;
+}
+
+.update-profile-button:hover {
+  background-color: #5a6966;
+}
+
+.delete-profile-div {
+    margin-top: 40px;
+}
+
+.delete-account-button {
+    margin-top: 20px;
+    background-color: #303635;
+    color: white;
+    border: 1px solid transparent;
+    /* padding: 0.4em 1.2em; */
+    padding: 10px 15px;
+    margin: 10px 0;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    font-family: inherit;
+    transition: border-color 0.25s;
+    border-radius: 8px;
+    width: 80%;
+}
+
+.delete-account-button:hover {
+    background-color: #3d4443;
+}
+
 .signout-button {
+  background-color: #d42f2f;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  margin: 15px 0;
+  cursor: pointer;
+  font-size: 16px;
+  border-radius: 8px;
+  width: 80%;
+}
+
+.signout-button:hover {
+  background-color: #ff3333;
+}
+
+/* .signout-button {
     border-radius: 10px;
     border: 1px solid transparent;
     padding: 0.6em 1.2em;
     margin-top: 25px;
-    /* margin-bottom: 10px; */
     font-size: 15px;
     font-weight: 700;
     font-family: inherit;
@@ -358,7 +482,7 @@
     color:rgb(0, 0, 0);
     cursor: pointer;
     transition: border-color 0.25s;
-}
+} */
 
 .myAccount-login-signup {
     color: rgb(255, 255, 255);
@@ -366,23 +490,9 @@
     /* margin-bottom: 10px; */
 }
 
-.check-status-button {
-    border-radius: 10px;
-    border: 1px solid transparent;
-    padding: 0.4em 1.2em;
-    margin-top: 20px;
-    /* margin-bottom: 10px; */
-    font-size: 15px;
-    font-weight: 700;
-    font-family: inherit;
-    background-color: rgb(4, 237, 186);
-    color:rgb(0, 0, 0);
-    cursor: pointer;
-    transition: border-color 0.25s;
-}
-
 
 /* ---------------------------------------------------------------- */
+
 /* header nav bar */
 .header-bar {
     position: fixed;
@@ -742,16 +852,16 @@ math-field:hover {
 
 .incorrect-answer {
     color: #d31717 !important; 
-    /* color: #2de089a7;
+    color: #006eff;
     color: #14f4c7;
     color: #00a2ff;
     color: #6dd0fe;
     color: #5932AE;
     color: #8C7BFD;
     color: #0e41ae9f;
+    color: #00a6ff;
     color: #111827;
-    color: #111827;
-    color: #ffbf00; */
+    color: #ffbf00;
 }
 
 
