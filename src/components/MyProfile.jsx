@@ -6,7 +6,14 @@ import './MyProfile.css'; // Import the CSS file
 const MyProfile = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
-    const [name, setName] = useState('');
+    const [userId, setUserId] = useState(() => {
+        const savedUserId = sessionStorage.getItem('userId');
+        return savedUserId ? JSON.parse(savedUserId) : (null);
+    })
+    const [name, setName] = useState(() => {
+        const savedName = sessionStorage.getItem('name');
+        return savedName ? JSON.parse(savedName) : '';
+    });
     const [newName, setNewName] = useState('');  // State to handle the updated name
     const [isEditing, setIsEditing] = useState(false);  // New state to handle showing the edit section
     const navigate = useNavigate();
@@ -14,11 +21,17 @@ const MyProfile = () => {
     // Fetching logged-in users' authentication details and check if a row exists
     useEffect(() => {
         const fetchUser = async () => {
-            const { data: { user } } = await supabase.auth.getUser();
-            setUser(user);
-            setIsLoading(false);
-
+            const { data: { user }, error } = await supabase.auth.getUser();
+            if (error) {
+                console.error("Error fetching user:", error);
+                setIsLoading(false);
+                return;
+            }
             if (user) {
+                setUser(user);
+                setUserId(user.id);
+                sessionStorage.setItem('userId', JSON.stringify(user.id));
+                setIsLoading(false);
                 try {
                     // Check if user already exists in the "users" table
                     const { data, error } = await supabase
@@ -38,11 +51,13 @@ const MyProfile = () => {
                         } else {
                             // Set the default name after inserting
                             setName(user.email.split('@')[0]);
+                            sessionStorage.setItem('name', JSON.stringify(user.email.split('@')[0]));
                             setNewName(user.email.split('@')[0]);
                         }
                     } else if (data) {
                         // If the user exists, set the name from the database
                         setName(data.name);
+                        sessionStorage.setItem('name', JSON.stringify(data.name));
                         setNewName(data.name);
                     } else {
                         console.error("Error fetching user data:", error);
@@ -76,6 +91,7 @@ const MyProfile = () => {
             console.error("Error updating profile:", error);
         } else {
             setName(newName);  // Update the displayed name after successful update
+            sessionStorage.setItem('name', JSON.stringify(newName));
             alert("Profile updated successfully!");
             setIsEditing(false);  // Close the edit section after the update
         }
@@ -107,6 +123,9 @@ const MyProfile = () => {
     const handleSignOut = async () => {
         const { error } = await supabase.auth.signOut();
         if (error) console.error(error);
+        // clearing session storage when user logs out (in able to trigger lesson / exercise fetching)
+        // sessionStorage.removeItem('hasFetchedData');
+        sessionStorage.clear(); // clearing entire storage of current session
         navigate('/login');
     };
 
@@ -117,8 +136,17 @@ const MyProfile = () => {
     return (
         <div className="myAccount">
             <div className="profile-container">
-                <h5 className="myAccount-title">Your DiscreteMentor Account</h5>
-                <h2 className="username">{user ? name : 'Sign up or Login below'}</h2>
+                {/* <h5 className="myAccount-title">Your DiscreteMentor Account</h5> */}
+                {user ? (
+                    <>
+                        <h5 className="myAccount-title">Your DiscreteMentor Account</h5>
+                        <h2 className="username">{name}</h2>
+                    </>
+                ) : (
+                    <div className="non-user">
+                        <span>Get started with your Discrete Mentor</span>
+                    </div>
+                )}
 
                 {user ? (
                     <>

@@ -37,13 +37,15 @@ const MathLiveInput = ({value, onChange, onFocus}) => {
     return <math-field ref={mathfieldRef} onFocus={onFocus}/>;
 }
 
-const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComplete
+const ExercisesPage = ({
+    onExerciseCompletion, userId, exercisesData, 
+    groupedExercises, lessonsData}) => {
 
-    const [user, setUser] = useState(null);
-    const [userId, setUserId] = useState(null);
+    // const [user, setUser] = useState(null);
+    // const [userId, setUserId] = useState(null);
     // State to hold exercises data fetched from the database
-    const [exercisesData, setExercisesData] = useState([]);
-    const [groupedExercises, setGroupedExercises] = useState({});
+    // const [exercisesData, setExercisesData] = useState([]);
+    // const [groupedExercises, setGroupedExercises] = useState({});
     // pre determined correct answers
     const [correctAnswers, setCorrectAnswers] = useState({});
     // State to keep track of current lesson index
@@ -55,8 +57,8 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
     const [showHint, setShowHint] = useState({});
     const [showGPTFeedback, setShowGPTFeedback] = useState({});
     // loading and error states
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(null);
     const [isTyping, setIsTyping] = useState(false);
 
     const [submittedSolutions, setSubmittedSolutions] = useState({});
@@ -67,70 +69,69 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
 
     const [userSolution, setUserSolution] = useState("");
 
-    const [lessonsData, setLessonsData] = useState([]);
+    // const [lessonsData, setLessonsData] = useState([]);
     const [lessonMarkedDone, setLessonMarkedDone] = useState({});
     // ref to scroll to top at next/prev page
     const scrollableContainerRef = useRef(null);
-    // const [isLessonCompleted, setIsLessonCompleted] = useState(false);
 
     // fetching user info
-    useEffect(() => {
-        const fetchUser = async () => {
-            const {data, error} = await supabase.auth.getUser()
-            if (error) {
-                console.error("Error fetching user:", error.message)
-            }
-            else {
-                setUser(data.user)
-                setUserId(data.user?.id);
-            }
-        }
-        fetchUser();
-    }, [])
+    // useEffect(() => {
+    //     const fetchUser = async () => {
+    //         const {data, error} = await supabase.auth.getUser()
+    //         if (error) {
+    //             console.error("Error fetching user:", error.message)
+    //         }
+    //         else {
+    //             setUser(data.user)
+    //             setUserId(data.user?.id);
+    //         }
+    //     }
+    //     fetchUser();
+    // }, [])
     // fetching exercise & lessons
-    useEffect(() => {
-        const fetchExercises = async () => {
-            const { data, error } = await supabase
-                .from("exercises") // ensure table name matches exactly
-                .select("*, answer") // added answer column, not sure if needed since * selects all ?
-                .order("exercise_id", { ascending: true }); // order by 'id' column in ascending order
+    // useEffect(() => {
+    //     const fetchExercises = async () => {
+    //         const { data, error } = await supabase
+    //             .from("exercises") // ensure table name matches exactly
+    //             .select("*, answer") // added answer column, not sure if needed since * selects all ?
+    //             .order("exercise_id", { ascending: true }); // order by 'id' column in ascending order
 
-            if (error) {
-                console.error("Error fetching exercises:", error.message);
-                setError(error.message);
-            } else {
-                // grouping exercises by lesson_id for easier access
-                const grouped = data.reduce((acc, exercise) => {
-                    if (!acc[exercise.lesson_id]) {
-                        acc[exercise.lesson_id] = [];
-                    }
-                    acc[exercise.lesson_id].push(exercise);
-                    return acc;
-                }, {});
+    //         if (error) {
+    //             console.error("Error fetching exercises:", error.message);
+    //             setError(error.message);
+    //         } else {
+    //             // grouping exercises by lesson_id for easier access
+    //             const grouped = data.reduce((acc, exercise) => {
+    //                 if (!acc[exercise.lesson_id]) {
+    //                     acc[exercise.lesson_id] = [];
+    //                 }
+    //                 acc[exercise.lesson_id].push(exercise);
+    //                 return acc;
+    //             }, {});
 
-                setGroupedExercises(grouped);
-                setExercisesData(data);
-                setLoading(false);
-            }
-        };
+    //             setGroupedExercises(grouped);
+    //             setExercisesData(data);
+    //             setLoading(false);
+    //         }
+    //     };
 
-        const fetchLessons = async () => {
-            const { data, error } = await supabase
-                .from("lessons")
-                .select("*")
-                .order("lesson_id", { ascending: true });
+    //     const fetchLessons = async () => {
+    //         const { data, error } = await supabase
+    //             .from("lessons")
+    //             .select("*")
+    //             .order("lesson_id", { ascending: true });
 
-            if (error) {
-                console.error("Error fetching lessons:", error.message);
-                setError(error.message);
-            } else {
-                setLessonsData(data);
-            }
-        };
+    //         if (error) {
+    //             console.error("Error fetching lessons:", error.message);
+    //             setError(error.message);
+    //         } else {
+    //             setLessonsData(data);
+    //         }
+    //     };
 
-        fetchExercises();
-        fetchLessons();
-    }, []);
+    //     fetchExercises();
+    //     fetchLessons();
+    // }, []);
 
     // determine current lesson and exercises
 
@@ -659,8 +660,8 @@ const ExercisesPage = ({onExerciseCompletion}) => { //currentLessonId lessonComp
         }));
     };
     // render component
-    if (loading) return <p>Loading exercises...</p>;
-    if (error) return <p>{error}</p>;
+    // if (loading) return <p>Loading exercises...</p>;
+    // if (error) return <p>{error}</p>;
     // const currentExercise = exercisesData[currentExerciseIndex];
 
     const currentLesson = lessonsData[currentLessonIndex];

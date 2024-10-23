@@ -337,6 +337,14 @@
     font-weight: bold;
 }
 
+.non-user{
+    color: rgb(0, 0, 0);
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 80px;
+}
+
 .signout-button {
     border-radius: 10px;
     border: 1px solid transparent;
@@ -354,8 +362,8 @@
 
 .myAccount-login-signup {
     color: rgb(255, 255, 255);
-    margin-top: 50px;
-    margin-bottom: 10px;
+    /* margin-top: 120px; */
+    /* margin-bottom: 10px; */
 }
 
 .check-status-button {
@@ -574,8 +582,8 @@
     top: 0;
     left: 0;
     right: 0;
-    bottom: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.11), rgba(0, 0, 0, 0.186)), url('D.Mentor6.png');
+    bottom: 0; 
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('not-found.gif');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     height: 100vh;
@@ -588,7 +596,7 @@
 
 .return404 {
     background-color: rgba(0, 0, 0, 0.218);
-    color:#0eb87f;
+    color:#00fba7;
     border-color: #00ff9922;
 }
 .return404 a:hover{
@@ -605,7 +613,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.11), rgba(0, 0, 0, 0.186)), url('D.Mentor6.png');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.498), rgba(0, 0, 0, 0.498)), url('landing-page.gif');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     height: 100vh;

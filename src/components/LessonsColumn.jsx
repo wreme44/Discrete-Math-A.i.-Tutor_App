@@ -3,27 +3,29 @@ import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient";
 import LatexRenderer from "./LatexRenderer";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
-const LessonsColumn = ({ allCorrect, onLessonChange, onPrevLessonButton }) => {
+const LessonsColumn = ({
+    allCorrect, onLessonChange, onPrevLessonButton,
+    lessonsData, completedLessons}) => {
     // State to hold lessons data fetched from the database
-    const [lessonsData, setLessonsData] = useState([]);
+    // const [lessonsData, setLessonsData] = useState([]);
     // State to keep track of current lesson index
     const [currentLessonIndex, setCurrentLessonIndex] = useState(() => {
         const savedIndex = sessionStorage.getItem("currentLessonIndex");
         return savedIndex ? parseInt(savedIndex, 10) : 0;
     });
     // Loading and error states
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    // const [loading, setLoading] = useState(true);
+    // const [error, setError] = useState(null);
     // State to manage user ID
-    const [userId, setUserId] = useState(null);
+    // const [userId, setUserId] = useState(null);
     // State to hold completed lessons
-    const [completedLessons, setCompletedLessons] = useState({}); // { lesson_id: true/false }
+    // const [completedLessons, setCompletedLessons] = useState({}); // { lesson_id: true/false }
     // ref to scroll to top at next/prev page
     const scrollableContainerRef = useRef(null);
 
-    const navigate = useNavigate();
+    // const navigate = useNavigate();
 
     // Check for user authentication on page load
     // useEffect(() => {
@@ -41,58 +43,37 @@ const LessonsColumn = ({ allCorrect, onLessonChange, onPrevLessonButton }) => {
     // }, [navigate]);
 
     // Fetch lessons and user progress after checking authentication
-    useEffect(() => {
-        const fetchLessons = async () => {
-            const { data, error } = await supabase
-                .from("lessons") // Ensure the table name matches exactly
-                .select("*")
-                .order("lesson_id", { ascending: true }); // Order by 'lesson_id' column in ascending order
+    // useEffect(() => {
 
-            if (error) {
-                console.error("Error fetching lessons:", error.message);
-                setError(error.message);
-            } else {
-                setLessonsData(data);
-                setLoading(false);
-            }
-        };
+    //     if (userId) return;
 
-        const fetchUserProgress = async () => {
-            const { data: userData, error: userError } = await supabase.auth.getUser();
-            const user = userData.user;
-            if (userError) {
-                console.error("Error fetching user:", userError);
-                setUserId(null);
-                return;
-            }
+    //     const fetchUserProgress = async () => {
 
-            setUserId(user ? user.id : null);
+    //         if (userId) {
+    //             const { data: progressData, error: progressError } = await supabase
+    //                 .from("userprogress")
+    //                 .select("lesson_id, completed")
+    //                 .eq("user_id", userId)
+    //                 .order("completed_at", { ascending: false });
 
-            if (user) {
-                const { data: progressData, error: progressError } = await supabase
-                    .from("userprogress")
-                    .select("lesson_id, completed")
-                    .eq("user_id", user.id)
-                    .order("completed_at", { ascending: false });
+    //             if (progressError) {
+    //                 console.error("Error fetching user progress:", progressError.message);
+    //             } else {
+    //                 const completedMap = {};
+    //                 progressData.forEach((progress) => {
+    //                     completedMap[progress.lesson_id] = progress.completed;
+    //                 });
+    //                 setCompletedLessons(completedMap);
+    //             }
+    //         } else {
+    //             // For non-logged-in users
+    //             const completed = JSON.parse(sessionStorage.getItem("completedLessons")) || {};
+    //             setCompletedLessons(completed);
+    //         }
+    //     };
 
-                if (progressError) {
-                    console.error("Error fetching user progress:", progressError.message);
-                } else {
-                    const completedMap = {};
-                    progressData.forEach((progress) => {
-                        completedMap[progress.lesson_id] = progress.completed;
-                    });
-                    setCompletedLessons(completedMap);
-                }
-            } else {
-                // For non-logged-in users
-                const completed = JSON.parse(sessionStorage.getItem("completedLessons")) || {};
-                setCompletedLessons(completed);
-            }
-        };
-
-        fetchLessons().then(fetchUserProgress);
-    }, []);
+    //     fetchUserProgress();
+    // }, []);
 
     // scroll to top of next/prev page
     useEffect(() => {
@@ -117,8 +98,8 @@ const LessonsColumn = ({ allCorrect, onLessonChange, onPrevLessonButton }) => {
         onLessonChange(); // Resetting exercise completion
     };
 
-    if (loading) return <p>Loading lessons...</p>;
-    if (error) return <p>{error}</p>;
+    // if (loading) return <p>Loading lessons...</p>;
+    // if (error) return <p>{error}</p>;
 
     const currentLesson = lessonsData[currentLessonIndex];
 

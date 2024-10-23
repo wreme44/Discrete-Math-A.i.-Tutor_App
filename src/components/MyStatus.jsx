@@ -3,23 +3,22 @@ import { supabase } from "../supabaseClient";
 
 const UserProgress = () => {
   const [userProgress, setUserProgress] = useState([]);
-  const [userId, setUserId] = useState(null);
+  const [userId, setUserId] = useState(() => {
+    const savedUserId = sessionStorage.getItem('userId');
+    return savedUserId ? JSON.parse(savedUserId) : (null);
+})
 
   useEffect(() => {
     const fetchUserProgress = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      setUserId(user?.id);
-
-      if (user) {
+      if (userId) {
         const { data, error } = await supabase
           .from("userprogress")
           .select(`
             lesson_id,
             completed,
             completed_at,
-            lessons (title)
-          `) // Join with lessons table to get the lesson title
-          .eq("user_id", user.id);
+            lessons (title)`) // Join with lessons table to get the lesson title
+          .eq("user_id", userId);
 
         if (error) {
           console.error("Error fetching user progress:", error);
