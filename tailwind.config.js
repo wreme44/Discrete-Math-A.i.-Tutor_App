@@ -25,6 +25,17 @@ module.exports = {
               strong: { color: theme('colors.white') },
               code: { color: theme('colors.white') },
               figcaption: { color: theme('colors.gray.400') },
+              ul: {
+                listStyleType: 'disc',
+                color: theme('colors.gray.400'), // Style for bullet points
+              },
+              ol: {
+                listStyleType: 'decimal',
+                color: theme('colors.gray.400'), // Style for numbered lists
+              },
+              li: {
+                color: theme('colors.gray.400'), // Style for list items
+              },
             },
           },
           dark: {
@@ -45,6 +56,17 @@ module.exports = {
               strong: { color: theme('colors.white') },
               code: { color: theme('colors.white') },
               figcaption: { color: theme('colors.gray.400') },
+              ul: {
+                listStyleType: 'disc',
+                color: theme('colors.gray.400'), // Style for bullet points
+              },
+              ol: {
+                listStyleType: 'decimal',
+                color: theme('colors.gray.400'), // Style for numbered lists
+              },
+              li: {
+                color: theme('colors.gray.400'), // Style for list items
+              },
             },
           },
         }),
