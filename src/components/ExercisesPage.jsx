@@ -74,65 +74,6 @@ const ExercisesPage = ({
     // ref to scroll to top at next/prev page
     const scrollableContainerRef = useRef(null);
 
-    // fetching user info
-    // useEffect(() => {
-    //     const fetchUser = async () => {
-    //         const {data, error} = await supabase.auth.getUser()
-    //         if (error) {
-    //             console.error("Error fetching user:", error.message)
-    //         }
-    //         else {
-    //             setUser(data.user)
-    //             setUserId(data.user?.id);
-    //         }
-    //     }
-    //     fetchUser();
-    // }, [])
-    // fetching exercise & lessons
-    // useEffect(() => {
-    //     const fetchExercises = async () => {
-    //         const { data, error } = await supabase
-    //             .from("exercises") // ensure table name matches exactly
-    //             .select("*, answer") // added answer column, not sure if needed since * selects all ?
-    //             .order("exercise_id", { ascending: true }); // order by 'id' column in ascending order
-
-    //         if (error) {
-    //             console.error("Error fetching exercises:", error.message);
-    //             setError(error.message);
-    //         } else {
-    //             // grouping exercises by lesson_id for easier access
-    //             const grouped = data.reduce((acc, exercise) => {
-    //                 if (!acc[exercise.lesson_id]) {
-    //                     acc[exercise.lesson_id] = [];
-    //                 }
-    //                 acc[exercise.lesson_id].push(exercise);
-    //                 return acc;
-    //             }, {});
-
-    //             setGroupedExercises(grouped);
-    //             setExercisesData(data);
-    //             setLoading(false);
-    //         }
-    //     };
-
-    //     const fetchLessons = async () => {
-    //         const { data, error } = await supabase
-    //             .from("lessons")
-    //             .select("*")
-    //             .order("lesson_id", { ascending: true });
-
-    //         if (error) {
-    //             console.error("Error fetching lessons:", error.message);
-    //             setError(error.message);
-    //         } else {
-    //             setLessonsData(data);
-    //         }
-    //     };
-
-    //     fetchExercises();
-    //     fetchLessons();
-    // }, []);
-
     // determine current lesson and exercises
 
     // get all unique lesson Ids
@@ -237,7 +178,8 @@ const ExercisesPage = ({
             [exerciseId]: userSolution,
         }));
         // while processing / validating
-        setIsTyping(true); 
+        // setIsTyping((prev) => ({...prev, [exerciseId]: true}));
+        setIsTyping(true)
 
         try {
             // standard api call instead of streaming api
@@ -270,7 +212,8 @@ const ExercisesPage = ({
                 [exerciseId]: feedback,
             }));
 
-            setIsTyping(false);
+            // setIsTyping((prev) => ({...prev, [exerciseId]: false}));
+            setIsTyping(false)
 
         } catch (error) {
             if (error.message) {
@@ -286,7 +229,8 @@ const ExercisesPage = ({
                     [exerciseId]: 'An unknown error occurred while validating the solution.'
                 }));
             }
-            setIsTyping(false);
+            // setIsTyping((prev) => ({...prev, [exerciseId]: false}));
+            setIsTyping(false)
         } finally {
             // Resetting image state after submission
             setUploadedImage(prev => ({
@@ -631,6 +575,36 @@ const ExercisesPage = ({
         }
         // window.scrollTo(0, 0)
     }, [currentLessonIndex])
+
+    // enlarge user uploaded images
+    useEffect(() => {
+        const modal = document.getElementById("imageModal");
+        const modalImage = modal.querySelector("img");
+
+        const images = Array.from(document.querySelectorAll(".IMGs-user-upload"));
+        images.forEach((image) => {
+            image.classList.add("zoomable-image");
+            image.addEventListener("click", () => {
+                modal.classList.add("active");
+                modalImage.src = image.src;
+            })
+        })
+
+        const closeModal = () => modal.classList.remove("active");
+        modal.addEventListener("click", closeModal);
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeModal();
+        })
+
+        return () => {
+            images.forEach((image) => image.removeEventListener("click", () => {}));
+            modal.removeEventListener("click", closeModal);
+            document.removeEventListener("keydown", (e) => {
+                if (e.key === "Escape") closeModal();
+            })
+        }
+    }, [imagesDisplay])
+
     
     // handling navigation buttons
     const handlePrevious = () => {
@@ -762,7 +736,7 @@ const ExercisesPage = ({
                                 <img
                                     src={imagesDisplay[exercise.exercise_id]}
                                     alt="Uploaded solution preview"
-                                    className="w-2/3 h-auto border-2 border-gray-600 rounded mt-2"
+                                    className="IMGs-user-upload w-2/3 h-auto border-2 border-gray-600 rounded mt-2"
                                 />
                             </div>
                         )}
@@ -779,7 +753,7 @@ const ExercisesPage = ({
                                     </> 
                                     : <>
                                         Your solution is incorrect.
-                                        <img className="ml-1 w-8" src="incorrect.svg"/>
+                                        <img className="ml-1 w-6" src="incorrect.svg"/>
                                         {/* <img className="ml-1 w-10" src="incorrect2.svg"/> */}
                                     </>}
                                 </h4>
@@ -796,8 +770,8 @@ const ExercisesPage = ({
                                 //     transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                             >
                                 {showHint[exercise.exercise_id]
-                                    ? <img className='upload-icon' alt='... ...' src='/hide-hint.svg'/>
-                                    : <img className='upload-icon' alt='... ...' src='/show-hint.svg'/>
+                                    ? <img className='upload-icon' alt='hide hint' src='/hide-hint.svg'/>
+                                    : <img className='upload-icon' alt='show hint' src='/show-hint.svg'/>
 
                                 }
                                 {/* ? <div className="flex items-center justify-center">
@@ -824,7 +798,7 @@ const ExercisesPage = ({
                         </div>
                         {/* display hint from database */}
                         {showHint[exercise.exercise_id] && (
-                            <div className="mt-8 pb-1 pt-0 px-2 bg-gray-700 rounded">
+                            <div className="mt-8 pb-1 pt-0 pl-2 pr-2 bg-gray-700 rounded w-max max-w-full">
                                 <h3 className="text-md font-semibold mb-1">Hint:</h3>
                                 <div className="text-sm">{renderContent(exercise.hint)}</div>
                             </div>
@@ -836,7 +810,7 @@ const ExercisesPage = ({
                                 {renderGptContent(gptResults[exercise.exercise_id])}
                                 {/* <LatexRenderer content={gptResults[exercise.exercise_id]} /> */}
                             </div>
-                        )}
+                        )} {/* [exercise.exercise_id] */}
                         {isTyping && (
                             <div className='flex items-center justify-center'>
                                 <img className='loading-gif' alt='... ...' src='/loading-ripple.svg'/>
@@ -847,17 +821,16 @@ const ExercisesPage = ({
             </div>
             <div className="flex justify-between items-end -mb-1">
                 <div className="relative flex mt-1 -mb-1">
-                <button
-                    onClick={handlePrevious}
-                    disabled={currentLessonIndex === 0}
-                    className={`-mb-1 rounded-full w-8 h-8 ${currentLessonIndex === 0
-                        ? "bg-blue-600 hover:bg-red-600" // cursor-not-allowed
-                        : "bg-blue-500 hover:bg-blue-400"}`}
-                >
-                    <img className='prev-page-icon' alt='... ...' src='/prev-page.svg' />
-                </button>
+                    <button
+                        onClick={handlePrevious}
+                        disabled={currentLessonIndex === 0}
+                        className={`-mb-1 rounded-full w-8 h-8 ${currentLessonIndex === 0
+                            ? "bg-blue-600 hover:bg-red-600" // cursor-not-allowed
+                            : "bg-blue-500 hover:bg-blue-400"}`}
+                    >
+                        <img className='prev-page-icon' alt='... ...' src='/prev-page.svg' />
+                    </button>
                 </div>
-                
                 <p className="text-sm text-gray-400">
                     Exercise {currentLessonIndex + 1} of {lessonsData.length}
                 </p>
