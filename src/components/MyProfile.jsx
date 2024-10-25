@@ -143,7 +143,7 @@ const MyProfile = () => {
                     </>
                 ) : (
                     <div className="non-user">
-                        <span>Get started with your Discrete Mentor</span>
+                        <span>Welcome to your Discrete Mentor</span>
                     </div>
                 )}
                 {user ? (
