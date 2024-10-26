@@ -83,6 +83,7 @@ const LessonsColumn = ({
         const modalImage = modal.querySelector("img");
 
         // either useRef or unique classname to prevent Zoom applying across web app (to icon buttons etc.)
+        
         // if (lessonContainerRef.current) {
         //     const images = lessonContainerRef.current.querySelectorAll("img");
         //     images.forEach((image) => {
@@ -131,7 +132,7 @@ const LessonsColumn = ({
                 if (e.key === "Escape") closeModal();
             })
         }
-    }, [currentLesson.content])
+    }, [currentLesson])
 
     return (
         <div className="flex flex-col h-full -mt-2">
