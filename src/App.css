@@ -361,11 +361,11 @@
     /* backdrop-filter: blur(5px); */
     /* padding: 20px; */
     /* border: 1px solid rgb(23, 40, 54); */
-    border-radius: 10px;
+    /* border-radius: 10px; */
     text-align: center;
     /*horizontal pos, vertical pos, blur radius, spread radius */
-    box-shadow: 0px 3px 5px 0px rgba(43, 93, 162, 0.913); 
-    width: 410px;
+    /* box-shadow: 0px 3px 5px 0px rgba(43, 93, 162, 0.913);  */
+    /* width: 170px; */
     /* height: 330px; */
     /* color: #fff; */
     margin-top: 590px;

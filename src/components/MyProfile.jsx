@@ -301,15 +301,24 @@ const MyProfile = () => {
                     </Modal>
                 </div>
             ) : (
+                // <div className="no-account">
+                //     <div className="non-profile-container">
+                //         {/* <div className="non-user"> */}
+                //         {/* <span>Welcome to your</span> */}
+                //         {/* <img className="user-icon" alt="home button" src='/D.Mentor5.png' /> */}
+                //         {/* </div> */}
+                //         {/* <div className="myAccount-login-signup">
+                //             <p>Don't have an Account?<Link className="no-account-login-signup" to="/signup"> Sign Up</Link></p>
+                //             <p>Have an Account?<Link className="no-account-login-signup" to="/login"> Login</Link></p>
+                //         </div> */}
+                //     </div>
+                // </div>
                 <div className="no-account">
-                    <div className="non-profile-container">
-                        {/* <div className="non-user"> */}
-                        {/* <span>Welcome to your</span> */}
-                        {/* <img className="user-icon" alt="home button" src='/D.Mentor5.png' /> */}
-                        {/* </div> */}
-                        <div className="myAccount-login-signup">
-                            <p>Don't have an Account?<Link className="no-account-login-signup" to="/signup"> Sign Up</Link></p>
-                            <p>Have an Account?<Link className="no-account-login-signup" to="/login"> Login</Link></p>
+                    <div className="non-profile-container ">
+                        <div className="flex items-center justify-items-center mt-6 space-x-4">
+                            <Link className="no-account-login-signup text-xl font-bold" to="/login">Login</Link>
+                            <p className='font-bold'>|</p>
+                            <Link className="no-account-login-signup text-xl font-bold" to="/signup">Sign Up</Link>
                         </div>
                     </div>
                 </div>
