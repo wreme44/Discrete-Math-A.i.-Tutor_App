@@ -86,11 +86,13 @@ const MyProfile = () => {
         if (toastActive) return;
         if (!newName || newName === name) {
             setToastActive(true);
-            toast.error("Please enter a new name to update", 
-                {position: "top-center",
+            toast.error("Please enter a new name to update",
+                {
+                    position: "top-center",
                     autoClose: 4000,
                     theme: "colored",
-                    onClose: () => setToastActive(false)});
+                    onClose: () => setToastActive(false)
+                });
             return;
         }
 
@@ -101,19 +103,23 @@ const MyProfile = () => {
 
         if (error) {
             console.error("Error updating profile:", error);
-            toast.error("Error updating username. Please try again", 
-                {position: "top-center",
+            toast.error("Error updating username. Please try again",
+                {
+                    position: "top-center",
                     autoClose: 4000,
                     theme: "colored",
-                    onClose: () => setToastActive(false)});
+                    onClose: () => setToastActive(false)
+                });
         } else {
             setName(newName);  // Update the displayed name after successful update
             sessionStorage.setItem('name', JSON.stringify(newName));
-            toast.success("Profile updated successfully!", 
-                {position: "top-center",
-                autoClose: 4000,
-                theme: "colored",
-                onClose: () => setToastActive(false)});
+            toast.success("Profile updated successfully!",
+                {
+                    position: "top-center",
+                    autoClose: 4000,
+                    theme: "colored",
+                    onClose: () => setToastActive(false)
+                });
             setIsEditing(false);  // Close the edit section after the update
         }
     };
@@ -138,11 +144,13 @@ const MyProfile = () => {
         if (error) {
             console.error("Error deleting profile:", error);
         } else {
-            toast.success("Profile deleted successfully!", 
-                {position: "top-center",
-                autoClose: 4000,
-                theme: "colored",
-                onClose: () => setToastActive(false)});
+            toast.success("Profile deleted successfully!",
+                {
+                    position: "top-center",
+                    autoClose: 4000,
+                    theme: "colored",
+                    onClose: () => setToastActive(false)
+                });
             await supabase.auth.signOut();  // Sign out the user after deletion
             navigate('/signup');  // Redirect to the signup page
         }
@@ -167,11 +175,11 @@ const MyProfile = () => {
     };
 
     return (
-        <div className="myAccount">
-            <div className="profile-container">
-                {/* <h5 className="myAccount-title">Your DiscreteMentor Account</h5> */}
-                {user ? (
-                    <>
+        <>
+            {user ? (
+                <div className="myAccount">
+                    <div className="profile-container">
+                        {/* <h5 className="myAccount-title">Your DiscreteMentor Account</h5> */}
                         {/* <img className="user-icon" alt="home button" src='/D.Mentor5.png' /> */}
                         <div className="username">{name}</div>
                         {/* <div><ToastContainer/></div> */}
@@ -180,14 +188,7 @@ const MyProfile = () => {
                                 <span className="mt-1">{name}</span>
                             </div>
                         </div> */}
-                    </>
-                ) : (
-                    <div className="non-user">
-                        <span>Welcome to your Discrete Mentor</span>
-                    </div>
-                )}
-                {user ? (
-                    <>  {/* Check Progress Status */}
+                        {/* Check Progress Status */}
                         <div className="check-status-div">
                             <button className="check-status-button" onClick={handleCheckStatus}>
                                 <div className="flex items-center justify-center">
@@ -225,7 +226,7 @@ const MyProfile = () => {
                                         <img className="w-5 h-auto mr-2" alt="Submit" src="/feather.svg" />
                                         <span className="ml-0 mr-1">Update Username</span>
                                     </div>
-                                    
+
                                 </button>
                             </div>
                         )}
@@ -243,73 +244,77 @@ const MyProfile = () => {
                                 <span className="ml-0 mr-1">Sign Out</span>
                             </div>
                         </button>
-                    </>
-                ) : (
-                    <>
-                        <div className="myAccount-login-signup">
-                            <p>Don't have an Account?<Link className="link-to-login-signup" to="/signup"> Sign Up</Link></p>
-                            <p>Have an Account?<Link className="link-to-login-signup" to="/login"> Login</Link></p>
-                        </div>
-                    </>
-                )}
-            </div>
-            <ToastContainer 
-            pauseOnFocusLoss={false}
-            limit={1}
-            />
-            <Modal
-                isOpen={isModalOpen}
-                onRequestClose={() => setIsModalOpen(false)}
-                contentLabel="Confirm Delete Profile"
-                style={{
-                    content: {
-                        top: '50%',
-                        left: '50%',
-                        right: 'auto',
-                        bottom: 'auto',
-                        // marginRight: '-50%',
-                        transform: 'translate(-50%, -50%)',
-                        // color: 'black',
-                        background: 'rgba(70, 102, 133, 0.97)',
-                        borderRadius: '20px',       
-                        textAlign: 'center',        
-                        boxShadow: '0px 0px 30px 1px rgba(255, 255, 255, 0.4)', 
-                        padding: '20px',              
-                        // minWidth: '350px',
-                        // minHeight: '400px',
-                        maxHeight: '400px',
-                        maxWidth: '400px',
-                        margin: 'auto',
-                    },
-                    overlay: {
-                        backgroundColor: 'rgba(255, 255, 255, 0.3)' // Optional overlay style for backdrop
-                    }
-                }}
-                // className="modal"
-                // overlayClassName="modal-overlay"
-            >
-                <div className="flex items-center justify-center">
-                    {/* <h2 className="del-profile-title">Confirm Delete Profile</h2> */}
-                    <span className="del-profile-text">{`Are you sure? \n\nDeleting your profile cannot be undone!`}</span>
-                </div>
-                
-                <div className="flex items-center justify-center">
-                    <button className="del-profile-button" onClick={confirmDeleteProfile}>
-                        <div className="flex items-center justify-center">
-                            {/* <img className="w-5 h-auto mr-2" alt="Submit" src="/confirm-delete.svg" /> */}
-                            <span className="ml-0 mr-1">Confirm Deletion</span>
-                        </div>
-                    </button>
-                    <button className="cancel-del-button" onClick={() => setIsModalOpen(false)}>
-                        <div className="flex items-center justify-center">
-                            {/* <img className="w-5 h-auto mr-2" alt="Submit" src="/cancel-edit.svg" /> */}
-                            <span className="ml-0 mr-1">Cancel</span>
-                        </div>
-                    </button>
-                </div>
+                    </div>
 
-            </Modal>
-        </div>
+                    <ToastContainer
+                        pauseOnFocusLoss={false}
+                        limit={1}
+                    />
+                    <Modal
+                        isOpen={isModalOpen}
+                        onRequestClose={() => setIsModalOpen(false)}
+                        contentLabel="Confirm Delete Profile"
+                        style={{
+                            content: {
+                                top: '50%',
+                                left: '50%',
+                                right: 'auto',
+                                bottom: 'auto',
+                                // marginRight: '-50%',
+                                transform: 'translate(-50%, -50%)',
+                                // color: 'black',
+                                background: 'rgba(70, 102, 133, 0.97)',
+                                borderRadius: '20px',
+                                textAlign: 'center',
+                                boxShadow: '0px 0px 30px 1px rgba(255, 255, 255, 0.4)',
+                                padding: '20px',
+                                // minWidth: '350px',
+                                // minHeight: '400px',
+                                maxHeight: '400px',
+                                maxWidth: '400px',
+                                margin: 'auto',
+                            },
+                            overlay: {
+                                backgroundColor: 'rgba(255, 255, 255, 0.3)' // Optional overlay style for backdrop
+                            }
+                        }}
+                    >
+                        <div className="flex items-center justify-center">
+                            {/* <h2 className="del-profile-title">Confirm Delete Profile</h2> */}
+                            <span className="del-profile-text">{`Are you sure? \n\nDeleting your profile cannot be undone!`}</span>
+                        </div>
+
+                        <div className="flex items-center justify-center">
+                            <button className="del-profile-button" onClick={confirmDeleteProfile}>
+                                <div className="flex items-center justify-center">
+                                    {/* <img className="w-5 h-auto mr-2" alt="Submit" src="/confirm-delete.svg" /> */}
+                                    <span className="ml-0 mr-1">Confirm Deletion</span>
+                                </div>
+                            </button>
+                            <button className="cancel-del-button" onClick={() => setIsModalOpen(false)}>
+                                <div className="flex items-center justify-center">
+                                    {/* <img className="w-5 h-auto mr-2" alt="Submit" src="/cancel-edit.svg" /> */}
+                                    <span className="ml-0 mr-1">Cancel</span>
+                                </div>
+                            </button>
+                        </div>
+                    </Modal>
+                </div>
+            ) : (
+                <div className="no-account">
+                    <div className="non-profile-container">
+                        {/* <div className="non-user"> */}
+                        {/* <span>Welcome to your</span> */}
+                        {/* <img className="user-icon" alt="home button" src='/D.Mentor5.png' /> */}
+                        {/* </div> */}
+                        <div className="myAccount-login-signup">
+                            <p>Don't have an Account?<Link className="no-account-login-signup" to="/signup"> Sign Up</Link></p>
+                            <p>Have an Account?<Link className="no-account-login-signup" to="/login"> Login</Link></p>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </>
     );
 };
 

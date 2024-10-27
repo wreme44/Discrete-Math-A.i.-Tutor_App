@@ -296,23 +296,6 @@
     opacity: 0.15; */
 }
 
-/* .myAccount {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0; 
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('account-page.gif');
-    background-repeat: no-repeat;
-    background-size: 100% 100%;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-} */
-
 .profile-container {
   background-color: #4a91e245;
   /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('D.Mentor5.png'); */
@@ -327,8 +310,104 @@
   text-align: center;
   box-shadow: 0px 0px 30px 1px rgba(0, 157, 255, 0.777); /* horizontal pos, vertical pos, blur radius, spread radius*/
   width: 350px;
+  /* height: 350px; */
   /* color: #fff; */
 }
+
+.no-account{
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    /* height: calc(100vh - 40px); #171717*/
+    background-color: #171717;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('D.Mentor9.PNG');
+    background-repeat: no-repeat;
+    background-size: 50vw 70vh;
+    background-position: center 100px;
+    /* padding-top: 60px; */
+    z-index: 0;
+
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 12.png');
+    background-repeat: no-repeat;
+    background-size: 105% 95%;
+    background-position: center;
+    margin: 0;
+    opacity: 0.15; */   
+}
+
+.no-account::before {
+    content: '';
+    position: absolute;
+    top: 100px; /* Align with background image position */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50vw; /* Match background image width */
+    height: 70vh; /* Match background image height */
+    box-shadow: 0px 0px 30px 5px rgba(43, 93, 162, 0.913); /* Visible box shadow */
+    z-index: -1; /* Place behind the content */
+    background-color: transparent; /* Ensure it's transparent */
+    border-radius: 10px; /* Optional for rounded edges */
+}
+
+.non-profile-container{
+    /* background-color: #1c2c3d5e; */
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('D.Mentor5.png'); */
+    /* background-repeat: no-repeat;
+    background-size: 80% 80%;
+    background-position: center 10px; */
+    /* opacity: 70%; */
+    /* backdrop-filter: blur(5px); */
+    /* padding: 20px; */
+    /* border: 1px solid rgb(23, 40, 54); */
+    border-radius: 10px;
+    text-align: center;
+    /*horizontal pos, vertical pos, blur radius, spread radius */
+    box-shadow: 0px 3px 5px 0px rgba(43, 93, 162, 0.913); 
+    width: 410px;
+    /* height: 330px; */
+    /* color: #fff; */
+    margin-top: 590px;
+}
+
+.user-icon{
+    width: 100%;
+    height: auto;
+    /* opacity: 100%; */
+    margin-left: auto;
+    margin-right: auto; 
+}
+
+.myAccount-login-signup {
+    color: rgb(255, 255, 255);
+    font-size: larger;
+    font-weight: 400;
+    /* margin-top: 120px; */
+    /* margin-bottom: 10px; */
+}
+
+.no-account-login-signup {
+    color: rgb(255, 255, 255);
+    /* text-decoration: none; */
+}
+
+.no-account-login-signup:hover {
+    color:#b2bbd4;
+    /* border-color: rgb(182, 182, 182); */
+}
+
+/* .non-user{
+    color: rgb(255, 255, 255);
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('accountPage.gif');
+    background-repeat: no-repeat;
+    background-size: 200px 200px;
+    background-position: center 10px;
+    margin-bottom: 80px;
+} */
 
 /* .myAccount-title{
     color: rgb(255, 255, 255);
@@ -380,6 +459,7 @@
     animation: fadeIn 3s ease-in-out;
     /* animation: backgroundMove 5s linear infinite; */
     background: linear-gradient(90deg, #f6fafa, #c1ffff, #70ffff);
+    background-clip: text; 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     width: 80%;
@@ -389,7 +469,6 @@
     margin-left: auto;
     margin-right: auto;
     text-align: center;
-    
 }
 /* notifications */
 /* .toast-success {
@@ -399,22 +478,6 @@
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   } */
-
-/* .user-icon{
-    width: 80px;
-    height: 70px;
-    opacity: 50%;
-    margin-left: auto;
-    margin-right: auto;
-} */
-
-.non-user{
-    color: rgb(255, 255, 255);
-    font-size: 30px;
-    font-weight: bold;
-    margin-top: 20px;
-    margin-bottom: 80px;
-}
 
 .check-status-button {
     margin-top: 20px;
@@ -604,12 +667,6 @@
     cursor: pointer;
     transition: border-color 0.25s;
 } */
-
-.myAccount-login-signup {
-    color: rgb(255, 255, 255);
-    /* margin-top: 120px; */
-    /* margin-bottom: 10px; */
-}
 
 
 /* ---------------------------------------------------------------- */
