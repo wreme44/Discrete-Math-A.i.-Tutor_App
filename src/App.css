@@ -110,22 +110,17 @@
 }
 
 .login-container {
-    /* display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center; */
-    /* backdrop-filter: blur(5px); */
     border: 2px solid rgba(48, 122, 183, 0.768);
     border-radius: 20px;
     padding: 20px;
-    margin-bottom: 25px;
-    width: 400px;
-    height: 300px;
+    /* margin-bottom: 25px; */
+    /* width: 100%; */
+    /* max-width: 400px; */
+    /* height: 300px; */
     text-align: center;
     background-color: rgba(48, 122, 183, 0.444);
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.226);
-    /* opacity: 0.9; */
-    /* max-width: 400px; */
+
 }
 
 .signup-container {
@@ -137,9 +132,9 @@
     border: 2px solid rgba(48, 122, 183, 0.768);
     border-radius: 20px;
     padding: 20px;
-    margin-bottom: 25px;
+    /* margin-bottom: 25px;
     width: 400px;
-    height: 300px;
+    height: 300px; */
     text-align: center;
     background-color: rgba(48, 122, 183, 0.444);
     box-shadow: 0 4px 8px rgba(255, 255, 255, 0.226);
@@ -149,18 +144,18 @@
 
 .login-title {
     color: rgb(255, 255, 255);
-    font-size: 30px;
+    /* font-size: 30px; */
     font-weight: bold;
     /* padding-bottom: 50px; */
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 .signup-title {
     color: rgb(255, 255, 255);
-    font-size: 30px;
+    /* font-size: 30px; */
     font-weight: bold;
     /* padding-bottom: 50px; */
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
 }
 
 .name {
@@ -176,7 +171,7 @@
 }
 
 .email input, .password input, .name input{
-    width: 100%;
+    /* width: 100%; */
     padding: 10px;
     color:#000000;
     border-radius: 10px;
@@ -187,10 +182,10 @@
 .login-button {
     border-radius: 10px;
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    margin-top: 70px;
+    /* padding: 0.6em 1.2em; */
+    /* margin-top: 70px; */
     margin-bottom: 5px;
-    font-size: 15px;
+    /* font-size: 15px; */
     font-weight: 700;
     font-family: inherit;
     background-color: rgb(255, 255, 255);
@@ -202,10 +197,10 @@
 .signup-button {
     border-radius: 10px;
     border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    margin-top: 20px;
+    /* padding: 0.6em 1.2em; */
+    /* margin-top: 20px; */
     margin-bottom: 5px;
-    font-size: 15px;
+    /* font-size: 15px; */
     font-weight: 700;
     font-family: inherit;
     background-color: rgb(255, 255, 255);
@@ -216,6 +211,7 @@
 
 .login-button:hover, .signup-button:hover {
     border-color: rgb(182, 182, 182);
+    background-color: rgb(217, 234, 247);
 }
 
 .login-button:active, .signup-button:avtive {
@@ -238,7 +234,7 @@
     padding: 0.6em 1.2em;
     margin-top: 25px;
     /* margin-bottom: 5px; */
-    font-size: 17px;
+    /* font-size: 17px; */
     font-weight: 500;
     font-family: inherit;
     background-color: rgba(255, 1, 1, 0.409);
@@ -254,7 +250,7 @@
     padding: 0.6em 1.2em;
     margin-top: 25px;
     /* margin-bottom: 5px; */
-    font-size: 17px;
+    /* font-size: 17px; */
     font-weight: 500;
     font-family: inherit;
     background-color: rgba(255, 1, 1, 0.409);
@@ -282,10 +278,10 @@
     height: 100vh;
     /* height: calc(100vh - 40px); */
     background-color: #1d2733;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('accountPage.gif');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('account-page1.gif');
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
-    background-position: center 10px;
+    background-position: center 20px;
     padding-top: 60px;
 
     /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 12.png');
@@ -309,7 +305,7 @@
   border-radius: 20px;
   text-align: center;
   box-shadow: 0px 0px 30px 1px rgba(0, 157, 255, 0.777); /* horizontal pos, vertical pos, blur radius, spread radius*/
-  width: 350px;
+  /* width: 350px; */
   /* height: 350px; */
   /* color: #fff; */
 }
@@ -321,13 +317,14 @@
     align-items: center;
     height: 100vh;
     /* height: calc(100vh - 40px); #171717*/
-    background-color: #171717;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('D.Mentor9.PNG');
-    background-repeat: no-repeat;
-    background-size: 50vw 70vh;
-    background-position: center 100px;
-    /* padding-top: 60px; */
-    z-index: 0;
+    background-color: #201f1f;
+    /* box-shadow: 0px 0px 30px 5px rgba(43, 93, 162, 0.913); */
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('D.Mentor9.PNG'); */
+    /* background-repeat: no-repeat; */
+    /* background-size: 50vw 70vh; */
+    /* background-position: center 100px; */
+    /* padding-top: 1%; */
+    /* z-index: 0; */
 
     /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 12.png');
     background-repeat: no-repeat;
@@ -337,19 +334,26 @@
     opacity: 0.15; */   
 }
 
-.no-account::before {
-    content: '';
-    position: absolute;
-    top: 100px; /* Align with background image position */
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50vw; /* Match background image width */
-    height: 70vh; /* Match background image height */
-    box-shadow: 0px 0px 30px 5px rgba(43, 93, 162, 0.913); /* Visible box shadow */
-    z-index: -1; /* Place behind the content */
-    background-color: transparent; /* Ensure it's transparent */
-    border-radius: 10px; /* Optional for rounded edges */
+.no-account-image {
+    box-shadow: 0px 0px 35px 15px rgba(43, 93, 162, 0.913);
+    border-radius: 20px;
+    /* background-color: transparent; */
+    /* transform: translateX(-50%); */
 }
+
+/* .no-account::before { */
+    /* content: ''; */
+    /* position: absolute; */
+    /* top: 100px; Align with background image position */
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    /* width: 50vw; Match background image width */
+    /* height: 70vh; Match background image height */
+    /* box-shadow: 0px 0px 30px 5px rgba(43, 93, 162, 0.913); Visible box shadow */
+    /* z-index: -1; Place behind the content */
+    /* background-color: transparent; Ensure it's transparent */
+    /* border-radius: 10px; Optional for rounded edges */
+/* } */
 
 .non-profile-container{
     /* background-color: #1c2c3d5e; */
@@ -368,7 +372,7 @@
     /* width: 170px; */
     /* height: 330px; */
     /* color: #fff; */
-    margin-top: 590px;
+    /* margin-top: 590px; */
 }
 
 .user-icon{
@@ -449,9 +453,9 @@
     border-radius: 8px;
     margin-left: auto;
     margin-right: auto; */
-    font-size: 28px;
-    margin-bottom: 20px;
-    margin-top: 20px;
+    /* font-size: 28px; */
+    /* margin-bottom: 20px; */
+    /* margin-top: 20px; */
     font-weight: 700;
     /* text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.247); */
     /* neon glow text shadow */
@@ -480,20 +484,20 @@
   } */
 
 .check-status-button {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     background-color: #e6f8ff;
     color: rgb(0, 0, 0);
     border: 1px solid transparent;
     /* padding: 0.4em 1.2em; */
     padding: 10px 15px;
-    margin: 10px 0;
+    /* margin: 10px 0; */
     cursor: pointer;
-    font-size: 16px;
+    /* font-size: 16px; */
     font-weight: 700;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
-    width: 70%;
+    /* width: 70%; */
 }
 
 .check-status-button:hover {
@@ -505,12 +509,12 @@
   color: rgb(0, 0, 0);
   border: none;
   padding: 10px 15px;
-  margin: 10px 0;
+  /* margin: 10px 0; */
   cursor: pointer;
-  font-size: 16px;
+  /* font-size: 16px; */
   font-weight: 500;
   border-radius: 8px;
-  width: 70%;
+  /* width: 70%; */
 }
 
 .edit-profile-button:hover {
@@ -524,39 +528,39 @@
 
 .input-label {
   display: block;
-  margin-bottom: 5px;
-  font-size: 16px;
+  /* margin-bottom: 5px;
+  font-size: 16px; */
   font-weight: 600;
   color: #e6f8ff;
 }
 
 .input-field {
-  width: 70%;
+  /* width: 70%; */
   padding: 8px;
   border-radius: 4px;
   border: 1px solid #ccc;
-  margin-bottom: 15px;
+  /* margin-bottom: 15px; */
   color: #000000;
-  font-size: 18px;
+  /* font-size: 18px; */
   font-weight: 500;
   background-color: #ffffff;
 }
 
 .update-profile-button {
-    margin-top: 20px;
+    /* margin-top: 20px; */
     background-color: #dbf4fe;
     color: rgb(0, 0, 0);
     border: 1px solid transparent;
     /* padding: 0.4em 1.2em; */
     padding: 10px 15px;
-    margin: 10px 0;
+    /* margin: 10px 0; */
     cursor: pointer;
-    font-size: 16px;
+    /* font-size: 16px; */
     font-weight: 500;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
-    width: 70%;
+    /* width: 70%; */
 }
 
 .update-profile-button:hover {
@@ -568,7 +572,7 @@
 } */
 
 .delete-account-button {
-    margin-top: 40px;
+    /* margin-top: 40px; */
     background-color: #cd1212;
     color: white;
     border: 1px solid transparent;
@@ -576,12 +580,12 @@
     padding: 10px 15px;
     /* margin: 10px 0; */
     cursor: pointer;
-    font-size: 16px;
+    /* font-size: 16px; */
     font-weight: 500;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
-    width: 70%;
+    /* width: 70%; */
 }
 
 .delete-account-button:hover {
@@ -589,22 +593,22 @@
 }
 
 .del-profile-text{
-    font-size: 22px;
+    /* font-size: 22px; */
     font-weight: 500;
     white-space: pre-line;
     color: #ffffff;
 }
 
 .del-profile-button {
-    margin-top: 40px;
+    /* margin-top: 40px; */
     background-color: #cd1212;
     color: white;
     border: 1px solid transparent;
     /* padding: 0.4em 1.2em; */
     padding: 10px 7px;
-    margin-right: 10px;
+    /* margin-right: 10px; */
     cursor: pointer;
-    font-size: 16px;
+    /* font-size: 16px; */
     font-weight: 500;
     font-family: inherit;
     transition: border-color 0.25s;
@@ -617,7 +621,7 @@
 }
 
 .cancel-del-button{
-    margin-top: 40px;
+    /* margin-top: 40px; */
     background-color: rgb(233, 233, 233);
     color: rgb(0, 0, 0);
     border: 1px solid transparent;
@@ -625,7 +629,7 @@
     padding: 10px 10px;
     /* margin: 10px 0; */
     cursor: pointer;
-    font-size: 16px;
+    /* font-size: 16px; */
     font-weight: 500;
     font-family: inherit;
     transition: border-color 0.25s;
@@ -642,12 +646,12 @@
   color: white;
   border: none;
   padding: 10px 15px;
-  margin: 15px 0;
+  /* margin: 15px 0; */
   cursor: pointer;
-  font-size: 16px;
+  /* font-size: 16px; */
   font-weight: 500;
   border-radius: 8px;
-  width: 70%;
+  /* width: 70%; */
 }
 
 .signout-button:hover {
@@ -969,17 +973,27 @@ pre {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: 110px;
+    /* gap: 110px; */
     /* height: 100%; */
 }
 
 .d-mentor-box h3{
     font-size: larger;
+    /* font-weight: lighter; */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    animation: fadeIn 15s ease-in-out;
+    /* animation: backgroundMove 5s linear infinite; */
+    background: linear-gradient(90deg, #fdb530, #ffc559, #fdcd74);
+    background-clip: text; 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.8;
 }
 .d-mentor{
-    width: 333px;
-    height: 333px;
+    /* width: 333px;
+    height: 333px; */
     opacity: 0.3;
+    border-radius: 10px;
 }
 
 .typing-gif {

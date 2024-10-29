@@ -645,7 +645,7 @@ const ExercisesPage = ({
     return (
         <div className="flex flex-col h-full -mt-2">
             {currentLessonId && (
-                <h2 className="text-xl font-bold mb-1">Lesson {currentLessonIndex + 1}</h2>
+                <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[18px] lg:text-[20px] xl:text-[20px] font-bold mb-1">Lesson {currentLessonIndex + 1}</h2>
             )}
             <div ref={scrollableContainerRef} className="flex-1 overflow-y-auto pl-1 pb-1 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentExercises.map((exercise) => (
@@ -674,14 +674,16 @@ const ExercisesPage = ({
                                 <button
                                     type="button"
                                     onClick={() => document.getElementById(`fileInput-${exercise.exercise_id}`).click()}
-                                    className="relative flex items-center ml-2 w-6 h-6 focus:outline-none
+                                    className="relative flex items-center ml-2 focus:outline-none
                                         outline-none border-none rounded-full transform transition
-                                        duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                        duration-75 ease-in-out hover:scale-105 active:scale-95
+                                        xsm:w-[16px] sm:w-[20px] md:w-[20px] lg:w-[24px] xl:w-[24px]"
                                 >
-                                    <img className='upload-icon' alt='... ...' src='/image-upload.svg' />
+                                    <img className='upload-user-image' alt='upload image' src='/image-upload.svg' />
                                 </button>
-                                <div className="absolute bottom-7 left-1/2 transform -translate-x-1/2 mb-2 bg-teal-600
-                                        text-white text-xs rounded-lg py-1 pl-1 pr-0 w-20 opacity-0 group-hover:opacity-100 
+                                <div className="absolute xsm:bottom-11 sm:bottom-14 md:bottom-14 lg:bottom-16 xl:bottom-16 
+                                        left-1/2 transform -translate-x-1/2 mb-2 bg-teal-600 text-white
+                                        text-xs rounded-lg py-1 pl-1 pr-0 w-20 opacity-0 group-hover:opacity-100 
                                         transition-opacity duration-500 z-10">
                                     {/* "absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1" */}
                                     Upload Image
@@ -693,18 +695,23 @@ const ExercisesPage = ({
                                 <button
                                     onClick={() =>
                                         handleSubmitSolution(exercise.exercise_id, submittedSolutions[exercise.exercise_id], exercise.question, exercise.answer)}
-                                    className="relative flex items-center justify-center w-full md:w-10/12 lg:w10/12 xl:w-10/12 h-10 ml-8 mr-1 px-0 py-0 bg-blue-900 outline-none 
-                                        focus:outline-none border-1 border-cyan-600 hover:border-cyan-600 rounded-full transform  
-                                        transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                    className="relative flex items-center justify-center mr-[4px] px-0 py-0
+                                        xsm:ml-[25px] sm:ml-[30px] md:ml-[35px] lg:ml-[40px] xl:ml-[40px]
+                                        xsm:w-[70px] sm:w-[90px] md:w-[90px] lg:w-[110px] xl:w-[110px]
+                                        xsm:h-[25px] sm:h-[35px] md:h-[35px] lg:h-[40px] xl:h-[40px] bg-blue-900 outline-none
+                                        focus:outline-none border-1 border-cyan-600 hover:border-cyan-600 
+                                        rounded-full transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                                         disabled={isTyping}
                                     >
                                     <div className="flex items-center">
-                                        <img className="upload-icon w-7 h-auto mr-1" alt="Submit" src="/submit3.svg"/>
-                                        <span className="text-slate-100 font-serif ml-0 mr-1 text-lg">Submit</span>
+                                        <img className="xsm:w-[16px] sm:w-[24px] md:w-[24px] lg:w-[28px] xl:w-[28px] 
+                                                        h-auto mr-1" alt="Submit" src="/submit3.svg"/>
+                                        <span className="text-slate-100 font-serif ml-0 mr-1 
+                                        xsm:text-[12px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">Submit</span>
                                     </div>
                                 </button>
                                 {/* info message on hover */}
-                                <div className="absolute bottom-full left-2/3 transform -translate-x-1/2 mb-2 bg-teal-600
+                                <div className="absolute bottom-full left-[60%] transform -translate-x-1/2 mb-2 bg-teal-600
                                         text-white text-xs rounded-lg py-1 pl-1 pr-0 w-24 opacity-0 group-hover:opacity-100 
                                         transition-opacity duration-500 z-10">
                                     {/* "absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1" */}
@@ -713,7 +720,10 @@ const ExercisesPage = ({
                                 {/* info alert message when input empty */}
                                 </div>
                                 {inputAlert[exercise.exercise_id] && (
-                                    <div className="absolute bottom-12 right-52 mb-2 mt-1 bg-teal-600 text-white text-xs rounded py-1 px-2 w-60 z-10">
+                                    <div className="absolute xsm:right-[150px] sm:right-[220px] md:right-[200px] lg:right-[300px] xl:right-[360px] 
+                                        xsm:bottom-[48px] sm:bottom-[56px] md:bottom-[57px] lg:bottom-[62px] xl:bottom-[62px]
+                                        w-full xsm:w-[235px] sm:w-[235px] md:w-[235px] lg:w-[235px] xl:w-[235px]
+                                        mt-1 bg-teal-600 text-white text-xs rounded py-1 px-2 z-10">
                                         Please enter a solution before submitting
                                         <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                                     </div>
@@ -747,7 +757,7 @@ const ExercisesPage = ({
                                     {correctAnswers[exercise.exercise_id] 
                                     ? <>
                                         Your solution is correct! Well Done
-                                        <img className="ml-1 w-8" src="correct.svg"/>
+                                        <img className="ml-1 w-6" src="correct.svg"/>
                                         {/* <img className="ml-1 w-10" src="correct2.svg"/>
                                         <img className="ml-1 w-10" src="correct2copy.svg"/> */}
                                     </> 
@@ -763,23 +773,27 @@ const ExercisesPage = ({
                         <div className="flex items-center mt-5"> {/* -mb-14 */}
                             <button
                                 onClick={() => toggleHint(exercise.exercise_id)}
-                                className="flex items-center justify-center w-24 h-10 -ml-7 mt-2 px-0 py-0 outline-none 
-                                    focus:outline-none border-none rounded-full transform transition duration-75 ease-in-out hover:scale-110 active:scale-90"
+                                className="flex items-center justify-center mt-2 px-0 py-0 outline-none 
+                                    focus:outline-none border-none rounded-full transform transition duration-75 ease-in-out hover:scale-110 active:scale-90
+                                    xsm:ml-[-18px] sm:ml-[-20px] md:ml-[-28px] lg:ml-[-28px] xl:ml-[-28px]
+                                    xsm:mt-[2px] sm:mt-[2px] md:mt-[2px] lg:mt-[2px] xl:mt-[8px]
+                                    xsm:w-[60px] sm:w-[75px] md:w-[80px] lg:w-[96px] xl:w-[96px]
+                                    xsm:h-[15px] sm:h-[25px] md:h-[30px] lg:h-[40px] xl:h-[40px]"
                                 // className="flex items-center justify-center w-20 h-10 ml-0 px-0 py-0 bg-gray-900 outline-none 
                                 //     focus:outline-none border-2 border-gray-500 hover:border-gray-500 rounded-full transform  
                                 //     transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                             >
                                 {showHint[exercise.exercise_id]
-                                    ? <img className='upload-icon' alt='hide hint' src='/hide-hint.svg'/>
-                                    : <img className='upload-icon' alt='show hint' src='/show-hint.svg'/>
+                                    ? <img className='' alt='hide hint' src='/hide-hint.svg'/>
+                                    : <img className='' alt='show hint' src='/show-hint.svg'/>
 
                                 }
                                 {/* ? <div className="flex items-center justify-center">
-                                        <img className='upload-icon w-12 -ml-4' alt='... ...' src='/hide-hint.svg' />
+                                        <img className=' w-12 -ml-4' alt='... ...' src='/hide-hint.svg' />
                                         <span className="text-slate-100 font-serif -ml-3 mr-1 text">Hint</span>
                                     </div>
                                     : <div className="flex items-center justify-center">
-                                        <img className='upload-icon w-12 -ml-4' alt='... ...' src='/show-hint.svg' />
+                                        <img className='' w-12 -ml-4' alt='... ...' src='/show-hint.svg' />
                                         <span className="text-slate-100 font-serif -ml-3 mr-1 text">Hint</span>
                                     </div> */}
                             </button>
@@ -787,12 +801,18 @@ const ExercisesPage = ({
                             {gptResults[exercise.exercise_id] && (
                                 <button
                                     onClick={() => toggleGPTFeedback(exercise.exercise_id)}
-                                    className=" flex items-center mt-1 ml-3 px-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800  
-                                     hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 rounded-full text-white"
+                                    className="flex items-center mt-1 ml-3 px-1 bg-gradient-to-r from-yellow-900 to-yellow-700 hover:from-yellow-800  
+                                     hover:to-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-600 rounded-full text-white
+                                     xsm:w-[100px] sm:w-[140px] md:w-[140px] lg:w-[158px] xl:w-[158px]
+                                     xsm:h-[22px] sm:h-[27px] md:h-[27px] lg:h-[30px] xl:h-[30px]"
                                 >
                                     {showGPTFeedback[exercise.exercise_id] 
-                                    ? (<><XMarkIcon className="w-4 h-4 mr-1" />Tutor Feedback</>)
-                                    : (<><ChevronDownIcon className="w-4 h-4 mr-1" />Tutor Feedback</>)}
+                                    ? (<><XMarkIcon className="xsm:w-[12px] sm:w-[14px] md:w-[14px] lg:w-[16px] xl:w-[16px] mr-1" />
+                                    <span className="xsm:text-[10px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
+                                        Tutor Feedback</span></>)
+                                    : (<><ChevronDownIcon className="xsm:w-[12px] sm:w-[14px] md:w-[14px] lg:w-[16px] xl:w-[16px] mr-1" />
+                                    <span className="xsm:text-[10px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
+                                        Tutor Feedback</span></>)}
                                 </button>
                             )}
                         </div>

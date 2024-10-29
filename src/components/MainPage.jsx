@@ -240,11 +240,15 @@ const MainPage = () => {
                 </div>
             ) : (
                 <div className="main-page-no-user ">
-                    <p className="text-3xl font-bold text-white mb-8">Get started with your Discrete Mentor</p>
-                    <div className="flex items-center justify-items-center mt-6 space-x-4">
-                        <Link className="link-to-login-signup text-xl font-bold" to="/login">Login</Link>
+                    <p className="font-bold text-white
+                    xsm:mb-[10px] sm:mb-[20px] md:mb-[28px] lg:mb-[32px] xl:mb-[32px]
+                    xsm:text-[14px] sm:text-[20px] md:text-[25px] lg:text-[30px] xl:text-[30px]">Get started with your Discrete Mentor</p>
+                    <div className="flex items-center justify-items-center space-x-4
+                    xsm:text-[10px] sm:text-[14px] md:text-[18px] lg:text-[20px] xl:text-[20px]
+                    xsm:mt-[10px] sm:mt-[15px] md:mt-[20px] lg:mt-[24px] xl:mt-[24px]">
+                        <Link className="link-to-login-signup font-bold" to="/login">Login</Link>
                         <p className='font-bold'>|</p>
-                        <Link className="link-to-login-signup text-xl font-bold" to="/signup">Sign Up</Link>
+                        <Link className="link-to-login-signup font-bold" to="/signup">Sign Up</Link>
                     </div>
                 </div>
             )}

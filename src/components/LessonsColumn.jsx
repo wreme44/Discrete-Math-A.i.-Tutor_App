@@ -137,7 +137,7 @@ const LessonsColumn = ({
     return (
         <div className="flex flex-col h-full -mt-2">
             {currentLesson && (
-                <h2 className="text-xl font-bold mb-1">{currentLesson.title}</h2>
+                <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[16px] lg:text-[18px] xl:text-[20px] font-bold mb-1">{currentLesson.title}</h2>
             )} {/* ref={lessonContainerRef} */}
             <div ref={scrollableContainerRef} className="IMGs-lessons flex-1 overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width"> 
                 {currentLesson && <>{renderContent(currentLesson.content)}</>}

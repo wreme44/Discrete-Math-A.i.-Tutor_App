@@ -29,14 +29,14 @@ const NavBar = () => {
                         </div>
                     </Link>
                     <Link to="/">
-                        <div className="header-title">
+                        <div className="header-title text-base sm:text-lg md:text-xl lg:text-2xl xl:text-2xl">
                             Discrete Mentor
                         </div>
                     </Link>
                     <div className="header-right">
-                        <Link className="header-account" to="/myProfile">My Account</Link>
-                        <p>|</p>
-                        <Link className="header-login" to="/login">Log In</Link>
+                        <Link className="header-account xsm:text-xs sm:text-sm md:text-base lg:text-lg xl:text-lg" to="/myProfile">My Account</Link>
+                        <p className="xsm:text-xs sm:text-sm md:text-base lg:text-lg xl:text-lg">|</p>
+                        <Link className="header-login xsm:text-xs sm:text-sm md:text-base lg:text-lg xl:text-lg" to="/login">Log In</Link>
                     </div>
                 </nav>
             </header>
