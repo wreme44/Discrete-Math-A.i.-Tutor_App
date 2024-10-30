@@ -6,5 +6,8 @@ export default defineConfig({
   plugins: [react()],
   optimizeDeps: {
     include: ['mathlive']
-  }
+  },
+  define: {
+    'process.env': {},
+  },
 })

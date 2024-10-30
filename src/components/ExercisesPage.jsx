@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-// import {useLessonProgress} from './LessonProgressContext';
+import { Excalidraw } from "@excalidraw/excalidraw";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
 import { supabase } from "../supabaseClient";
@@ -16,7 +16,7 @@ import 'highlight.js/styles/atom-one-dark.css';
 import remarkGfm from 'remark-gfm'
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
 
-const MathLiveInput = ({value, onChange, onFocus}) => {
+const MathLiveInput = ({ value, onChange, onFocus }) => {
 
     const mathfieldRef = useRef(null);
 
@@ -34,12 +34,12 @@ const MathLiveInput = ({value, onChange, onFocus}) => {
         }
     }, [value, onChange]);
 
-    return <math-field ref={mathfieldRef} onFocus={onFocus}/>;
+    return <math-field ref={mathfieldRef} onFocus={onFocus} />;
 }
 
 const ExercisesPage = ({
-    onExerciseCompletion, userId, exercisesData, 
-    groupedExercises, lessonsData}) => {
+    onExerciseCompletion, userId, exercisesData,
+    groupedExercises, lessonsData }) => {
 
     // const [user, setUser] = useState(null);
     // const [userId, setUserId] = useState(null);
@@ -68,6 +68,13 @@ const ExercisesPage = ({
     const [gptResults, setGptResults] = useState({});
 
     const [userSolution, setUserSolution] = useState("");
+
+    const [excalidrawData, setExcalidrawData] = useState(() => {
+        const savedExcalidrawData = sessionStorage.getItem('excalidrawData');
+        return savedExcalidrawData ? JSON.parse(savedExcalidrawData) : {};
+    });
+
+    const [isDrawing, setIsDrawing] = useState({});
 
     // const [lessonsData, setLessonsData] = useState([]);
     const [lessonMarkedDone, setLessonMarkedDone] = useState({});
@@ -112,17 +119,34 @@ const ExercisesPage = ({
             .trim();
     };
 
+    // displaying excalidraw
+    const displayExcalidraw = (exerciseId) => {
+        setIsDrawing((prevState) => ({
+            ...prevState, [exerciseId]: !isDrawing[exerciseId],
+        }));
+    }
+
+    // excalidraw
+    const handleExcalidrawChange = (elements, state) => {
+        setExcalidrawData((prevData) => {
+            if (JSON.stringify(prevData.elements) !== JSON.stringify(elements)) {
+                return { elements, state };
+            }
+            return prevData;
+        });
+    }
+
     // image handler for user uploads
     const handleImageUpload = (event, exerciseId) => {
 
         const file = event.target.files[0];
-        if(file){
+        if (file) {
             if (file.size > 2000000) { // 10mb limit for now
                 alert("The image size must be less than 20 MB.")
                 return;
             }
             const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
-            if (!allowedTypes.includes(file.type)){
+            if (!allowedTypes.includes(file.type)) {
                 alert("Only JPEG, JPG, PNG, GIF, or WEBP image types allowed.")
                 return;
             }
@@ -139,17 +163,17 @@ const ExercisesPage = ({
     const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion, correctAnswer) => {
 
         if ((!userSolution || userSolution.trim() === "") && !uploadedImage[exerciseId]) {
-            setInputAlert((prev) => ({...prev, [exerciseId]: true}));
+            setInputAlert((prev) => ({ ...prev, [exerciseId]: true }));
             return;
         }
-        setInputAlert((prev) => ({...prev, [exerciseId]: false})); // clear if valid input
+        setInputAlert((prev) => ({ ...prev, [exerciseId]: false })); // clear if valid input
 
         let cleanedSolution = null;
         let base64Image = null;
 
         let messages = [
-            {type: "text", text: `Exercise Question: ${exerciseQuestion}`}, 
-            {type: "text", text: `Correct Answer: ${correctAnswer}`}
+            { type: "text", text: `Exercise Question: ${exerciseQuestion}` },
+            { type: "text", text: `Correct Answer: ${correctAnswer}` }
         ];
 
         if (userSolution && userSolution.trim() !== "") {
@@ -159,7 +183,7 @@ const ExercisesPage = ({
                 text: `User solution: ${cleanedSolution}`
             });
         }
-        
+
         if (uploadedImage && uploadedImage[exerciseId]) {
             const file = uploadedImage[exerciseId];
             base64Image = await convertToBase64(file);
@@ -169,7 +193,7 @@ const ExercisesPage = ({
                 image_url: `data:image/png;base64,${base64Image.split(',')[1]}` // Remove the data prefix as backend expects it
             });
         }
-        const payload = {messages}
+        const payload = { messages }
         // Log the payload to check
         // console.log("Sending payload:", payload);
         // store users submitted solution
@@ -185,7 +209,7 @@ const ExercisesPage = ({
             // standard api call instead of streaming api
             const response = await fetch('http://localhost:5000/api/validate-solution', {
                 method: 'POST',
-                headers: {'Content-Type': 'application/json',},
+                headers: { 'Content-Type': 'application/json', },
                 body: JSON.stringify(payload),
             });
             // check if the response is ok
@@ -198,7 +222,7 @@ const ExercisesPage = ({
             // console.log("Received from backend:", result);
 
             // extract the 'correct' flag and 'feedback' from the result
-            const {correct, feedback} = result;
+            const { correct, feedback } = result;
 
             // update the state for correctness flag
             setCorrectAnswers((prev) => ({
@@ -309,10 +333,32 @@ const ExercisesPage = ({
                 completedExercises[exerciseId] = true;
                 sessionStorage.setItem('completedExercises', JSON.stringify(completedExercises));
             }
-        } catch (error){
+        } catch (error) {
             console.error("Error updating exercise progress:", error)
         }
     }
+
+    const renderExerciseQuestion = (content) => {
+        // Regex to detect LaTeX code between $...$ or $$...$$
+        const latexRegex = /\$\$(.*?)\$\$|\$(.*?)\$/g;
+
+        // Check if content contains LaTeX
+        const hasLatex = latexRegex.test(content);
+
+        if (hasLatex) {
+            // If LaTeX is detected, use LatexRenderer for LaTeX content
+            return <LatexRenderer content={content} />;
+        } else {
+            // Render non-LaTeX content as plain HTML
+            return (
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(marked(content)),
+                    }}
+                />
+            );
+        }
+    };
 
     const renderContent = (question) => {
 
@@ -335,17 +381,17 @@ const ExercisesPage = ({
                 // console.log(wrappedLatex)
                 return (
                     <div className="math-block overflow-x-auto">
-                    <ReactMarkdown
-                        children={wrappedLatex}
-                        remarkPlugins={[remarkMath, remarkGfm]}
-                        rehypePlugins={[rehypeKatex]}
-                        className="prose prose-sm sm:prose lg:prose-lg dark:prose-invert max-w-full break-words"
-                    />
+                        <ReactMarkdown
+                            children={wrappedLatex}
+                            remarkPlugins={[remarkMath, remarkGfm]}
+                            rehypePlugins={[rehypeKatex]}
+                            className="prose prose-sm sm:prose lg:prose-lg dark:prose-invert max-w-full break-words"
+                        />
                     </div>
                 )
             }
             else if (hasLatex) {
-                return <LatexRenderer question={question}/>
+                return <LatexRenderer question={question} />
             }
         }
         else {
@@ -368,7 +414,7 @@ const ExercisesPage = ({
         const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|neg|land|lor|to|times|infty|leq|geq|neq|approx|forall|exists|subseteq|supseteq|cup|cap|nabla|partial|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|not|[A-Za-z]+)\b/g;
         // regex to find other LaTeX wrappings such as \(...\) or \[...\]
         const unwantedLatexWrappings = /\\\(|\\\)|\\\[|\\\]/g;
-        
+
         // Function to wrap raw LaTeX commands in $$ if not already wrapped
         const wrapLatex = (text) => {
             // removing unwanted latex wrappers
@@ -388,17 +434,17 @@ const ExercisesPage = ({
                 // console.log("Wrapped: ", wrappedLatex)
                 return (
                     <div className="math-block overflow-x-auto">
-                    <ReactMarkdown
-                        children={wrappedLatex}
-                        remarkPlugins={[remarkMath, remarkGfm]}
-                        rehypePlugins={[rehypeKatex]}
-                        className="prose prose-sm sm:prose lg:prose-lg dark:prose-invert max-w-full break-words"
-                    />
+                        <ReactMarkdown
+                            children={wrappedLatex}
+                            remarkPlugins={[remarkMath, remarkGfm]}
+                            rehypePlugins={[rehypeKatex]}
+                            className="prose prose-sm sm:prose lg:prose-lg dark:prose-invert max-w-full break-words"
+                        />
                     </div>
                 )
             }
             else if (hasLatex) {
-                return <LatexRenderer content={content}/>
+                return <LatexRenderer content={content} />
             }
         }
         else {
@@ -429,10 +475,10 @@ const ExercisesPage = ({
 
     // notifying main page / lessons page if all exercises completed
     useEffect(() => {
-        if (onExerciseCompletion){ 
+        if (onExerciseCompletion) {
             onExerciseCompletion(allCorrect)
         }
-    }, [allCorrect, onExerciseCompletion]) 
+    }, [allCorrect, onExerciseCompletion])
 
     // checking completion status 
     useEffect(() => {
@@ -449,13 +495,13 @@ const ExercisesPage = ({
 
             if (userId) {
                 // logged in users - checking completion in supabase
-                const {data, error} = await supabase
+                const { data, error } = await supabase
                     .from("user_exercise_progress")
                     .select("exercise_id, completed")
                     .eq("user_id", userId)
                     .in("exercise_id", currentExercises.map(ex => ex.exercise_id)); // Filter by the current exercise IDs
-                    // .eq("lesson_id", currentLessonId)
-                    // .single();
+                // .eq("lesson_id", currentLessonId)
+                // .single();
                 if (error) {
                     if (error.code === 'PGRST116') { // no data found
                         // not completed - do nothing
@@ -543,8 +589,8 @@ const ExercisesPage = ({
                         console.error("Error completing the lesson:", error);
                     }
                 };
-                markLessonCompleted();             
-            } 
+                markLessonCompleted();
+            }
             else {
                 // non logged in users - updating sessionStorage
                 const completedLessons = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
@@ -556,7 +602,7 @@ const ExercisesPage = ({
             //     const completedLessons = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
             //     const isLessonCompleted = !!completedLessons[currentLessonId];
             //     setCompletedLessons(prev => ({ ...prev, [currentLessonId]: isLessonCompleted }));
-    
+
             //     if (!isLessonCompleted) {
             //         completedLessons[currentLessonId] = true;
             //         sessionStorage.setItem('completedLessons', JSON.stringify(completedLessons));
@@ -597,7 +643,7 @@ const ExercisesPage = ({
         })
 
         return () => {
-            images.forEach((image) => image.removeEventListener("click", () => {}));
+            images.forEach((image) => image.removeEventListener("click", () => { }));
             modal.removeEventListener("click", closeModal);
             document.removeEventListener("keydown", (e) => {
                 if (e.key === "Escape") closeModal();
@@ -605,7 +651,18 @@ const ExercisesPage = ({
         }
     }, [imagesDisplay])
 
-    
+    // saving excalidraw
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            if (excalidrawData) {
+                sessionStorage.setItem('excalidrawData', JSON.stringify(excalidrawData))
+            }
+        }, 500);
+        return () => clearTimeout(timeout);
+
+    }, [excalidrawData])
+
+
     // handling navigation buttons
     const handlePrevious = () => {
         const newIndex = currentExerciseIndex - 1;
@@ -616,7 +673,7 @@ const ExercisesPage = ({
 
     const handleNext = () => {
         // const lessonId = lessonsData[currentLessonIndex].lesson_id;
-        const newIndex = currentExerciseIndex + 1;    
+        const newIndex = currentExerciseIndex + 1;
         setcurrentExerciseIndex(newIndex);
         sessionStorage.setItem("currentExerciseIndex", newIndex);
         setUserSolution("");
@@ -650,7 +707,7 @@ const ExercisesPage = ({
             <div ref={scrollableContainerRef} className="flex-1 overflow-y-auto pl-1 pb-1 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentExercises.map((exercise) => (
                     <div key={exercise.exercise_id} className="mb-36 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
-                        {renderContent(exercise.question)}                         
+                        {renderExerciseQuestion(exercise.question)}
                         {/* MathLiveInput for the exercise */}
                         <div className="relative mt-2 flex items-center space-x-1">
                             <MathLiveInput
@@ -690,6 +747,25 @@ const ExercisesPage = ({
                                     <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                                 </div>
                             </div>
+                            {/* Excalidraw BUTTON */}
+                            <button
+                                type="button"
+                                onClick={() => displayExcalidraw(exercise.exercise_id)}
+                                className="relative flex items-center ml-2 focus:outline-none
+                                        outline-none border-none rounded-full transform transition
+                                        duration-75 ease-in-out hover:scale-105 active:scale-95
+                                        xsm:w-[16px] sm:w-[20px] md:w-[20px] lg:w-[24px] xl:w-[24px]"
+                            >
+                                <img className='upload-user-image' alt='upload image' src='/image-upload.svg' />
+                            </button>
+                            <div className="absolute xsm:bottom-11 sm:bottom-14 md:bottom-14 lg:bottom-16 xl:bottom-16 
+                                        left-1/2 transform -translate-x-1/2 mb-2 bg-teal-600 text-white
+                                        text-xs rounded-lg py-1 pl-1 pr-0 w-20 opacity-0 group-hover:opacity-100 
+                                        transition-opacity duration-500 z-10">
+                                {/* "absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1" */}
+                                Excalidraw Drawing Tool
+                                <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                            </div>
                             {/* Submit Solution */}
                             <div className="relative inline-block group">
                                 <button
@@ -701,11 +777,11 @@ const ExercisesPage = ({
                                         xsm:h-[25px] sm:h-[35px] md:h-[35px] lg:h-[40px] xl:h-[40px] bg-blue-900 outline-none
                                         focus:outline-none border-1 border-cyan-600 hover:border-cyan-600 
                                         rounded-full transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
-                                        disabled={isTyping}
-                                    >
+                                    disabled={isTyping}
+                                >
                                     <div className="flex items-center">
                                         <img className="xsm:w-[16px] sm:w-[24px] md:w-[24px] lg:w-[28px] xl:w-[28px] 
-                                                        h-auto mr-1" alt="Submit" src="/submit3.svg"/>
+                                                        h-auto mr-1" alt="Submit" src="/submit3.svg" />
                                         <span className="text-slate-100 font-serif ml-0 mr-1 
                                         xsm:text-[12px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">Submit</span>
                                     </div>
@@ -717,7 +793,7 @@ const ExercisesPage = ({
                                     {/* "absolute bottom-full mb-1 hidden group-hover:block bg-gray-800 text-white text-xs rounded px-2 py-1" */}
                                     Submit Solution
                                     <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
-                                {/* info alert message when input empty */}
+                                    {/* info alert message when input empty */}
                                 </div>
                                 {inputAlert[exercise.exercise_id] && (
                                     <div className="absolute xsm:right-[150px] sm:right-[220px] md:right-[200px] lg:right-[300px] xl:right-[360px] 
@@ -753,21 +829,33 @@ const ExercisesPage = ({
                         {/* Display GPT Results validation for in/correct*/}
                         {correctAnswers[exercise.exercise_id] !== undefined && (
                             <div className="flex items-center -mt-10 -mb-5">
-                                <h4 className={`flex items-center justify-center text-md font-semibold ${correctAnswers[exercise.exercise_id] ? 'correct-answer' : 'incorrect-answer'}`}> 
-                                    {correctAnswers[exercise.exercise_id] 
-                                    ? <>
-                                        Your solution is correct! Well Done
-                                        <img className="ml-1 w-6" src="correct.svg"/>
-                                        {/* <img className="ml-1 w-10" src="correct2.svg"/>
+                                <h4 className={`flex items-center justify-center text-md font-semibold ${correctAnswers[exercise.exercise_id] ? 'correct-answer' : 'incorrect-answer'}`}>
+                                    {correctAnswers[exercise.exercise_id]
+                                        ? <>
+                                            Your solution is correct! Well Done
+                                            <img className="ml-1 w-6" src="correct.svg" />
+                                            {/* <img className="ml-1 w-10" src="correct2.svg"/>
                                         <img className="ml-1 w-10" src="correct2copy.svg"/> */}
-                                    </> 
-                                    : <>
-                                        Your solution is incorrect.
-                                        <img className="ml-1 w-6" src="incorrect.svg"/>
-                                        {/* <img className="ml-1 w-10" src="incorrect2.svg"/> */}
-                                    </>}
+                                        </>
+                                        : <>
+                                            Your solution is incorrect.
+                                            <img className="ml-1 w-6" src="incorrect.svg" />
+                                            {/* <img className="ml-1 w-10" src="incorrect2.svg"/> */}
+                                        </>}
                                 </h4>
-                            </div>    
+                            </div>
+                        )}
+                        {/* Excalidraw TOOL */}
+                        {isDrawing[exercise.exercise_id] && (
+                            <>
+                                <span className="">Drawing Tool</span>
+                                <div className="excalidraw-container">
+                                    <Excalidraw
+                                        initialData={excalidrawData}
+                                        onChange={handleExcalidrawChange}
+                                    />
+                                </div>
+                            </>
                         )}
                         {/* hint + feedback buttons */}
                         <div className="flex items-center mt-5"> {/* -mb-14 */}
@@ -779,13 +867,13 @@ const ExercisesPage = ({
                                     xsm:mt-[2px] sm:mt-[2px] md:mt-[2px] lg:mt-[2px] xl:mt-[8px]
                                     xsm:w-[60px] sm:w-[75px] md:w-[80px] lg:w-[96px] xl:w-[96px]
                                     xsm:h-[15px] sm:h-[25px] md:h-[30px] lg:h-[40px] xl:h-[40px]"
-                                // className="flex items-center justify-center w-20 h-10 ml-0 px-0 py-0 bg-gray-900 outline-none 
-                                //     focus:outline-none border-2 border-gray-500 hover:border-gray-500 rounded-full transform  
-                                //     transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                            // className="flex items-center justify-center w-20 h-10 ml-0 px-0 py-0 bg-gray-900 outline-none 
+                            //     focus:outline-none border-2 border-gray-500 hover:border-gray-500 rounded-full transform  
+                            //     transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                             >
                                 {showHint[exercise.exercise_id]
-                                    ? <img className='' alt='hide hint' src='/hide-hint.svg'/>
-                                    : <img className='' alt='show hint' src='/show-hint.svg'/>
+                                    ? <img className='' alt='hide hint' src='/hide-hint.svg' />
+                                    : <img className='' alt='show hint' src='/show-hint.svg' />
 
                                 }
                                 {/* ? <div className="flex items-center justify-center">
@@ -806,13 +894,13 @@ const ExercisesPage = ({
                                      xsm:w-[100px] sm:w-[140px] md:w-[140px] lg:w-[158px] xl:w-[158px]
                                      xsm:h-[22px] sm:h-[27px] md:h-[27px] lg:h-[30px] xl:h-[30px]"
                                 >
-                                    {showGPTFeedback[exercise.exercise_id] 
-                                    ? (<><XMarkIcon className="xsm:w-[12px] sm:w-[14px] md:w-[14px] lg:w-[16px] xl:w-[16px] mr-1" />
-                                    <span className="xsm:text-[10px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
-                                        Tutor Feedback</span></>)
-                                    : (<><ChevronDownIcon className="xsm:w-[12px] sm:w-[14px] md:w-[14px] lg:w-[16px] xl:w-[16px] mr-1" />
-                                    <span className="xsm:text-[10px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
-                                        Tutor Feedback</span></>)}
+                                    {showGPTFeedback[exercise.exercise_id]
+                                        ? (<><XMarkIcon className="xsm:w-[12px] sm:w-[14px] md:w-[14px] lg:w-[16px] xl:w-[16px] mr-1" />
+                                            <span className="xsm:text-[10px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
+                                                Tutor Feedback</span></>)
+                                        : (<><ChevronDownIcon className="xsm:w-[12px] sm:w-[14px] md:w-[14px] lg:w-[16px] xl:w-[16px] mr-1" />
+                                            <span className="xsm:text-[10px] sm:text-[16px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
+                                                Tutor Feedback</span></>)}
                                 </button>
                             )}
                         </div>
@@ -820,7 +908,7 @@ const ExercisesPage = ({
                         {showHint[exercise.exercise_id] && (
                             <div className="mt-8 pb-1 pt-0 pl-2 pr-2 bg-gray-700 rounded w-max max-w-full">
                                 <h3 className="text-md font-semibold mb-1">Hint:</h3>
-                                <div className="text-sm">{renderContent(exercise.hint)}</div>
+                                <div className="text-sm">{renderExerciseQuestion(exercise.hint)}</div>
                             </div>
                         )}
                         {/* display GPT feedback when the button is clicked */}
@@ -833,7 +921,7 @@ const ExercisesPage = ({
                         )} {/* [exercise.exercise_id] */}
                         {isTyping && (
                             <div className='flex items-center justify-center'>
-                                <img className='loading-gif' alt='... ...' src='/loading-ripple.svg'/>
+                                <img className='loading-gif' alt='... ...' src='/loading-ripple.svg' />
                             </div>
                         )}
                     </div>
@@ -858,7 +946,7 @@ const ExercisesPage = ({
                 <div className="relative group flex mt-1 -mb-1">
                     <button
                         onClick={handleNext}
-                        disabled={!isLessonCompleted || currentLessonIndex === lessonsData.length - 1}
+                        disabled={!isLessonCompleted || currentLessonIndex === lessonsData.length - 1} 
                         className={`mr-4 -mb-1 rounded-full w-8 h-8 ${currentLessonIndex === lessonsData.length - 1
                             ? "bg-blue-600 hover:bg-red-600" //cursor-not-allowed
                             : "bg-blue-500 hover:bg-blue-400"}`}
@@ -878,3 +966,4 @@ const ExercisesPage = ({
 };
 
 export default ExercisesPage;
+// !isLessonCompleted ||

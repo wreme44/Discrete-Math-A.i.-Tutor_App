@@ -185,3 +185,5 @@ const LessonsColumn = ({
 };
 
 export default LessonsColumn;
+
+// !(isLessonCompleted || allCorrect) ||

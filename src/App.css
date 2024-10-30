@@ -1098,4 +1098,16 @@ math-field:hover {
 
 .modal.active {
     display: flex;
-  }
+}
+
+/* -------------------------------------------------------------- */
+
+/* Excalidraw Drawing Tool */
+
+.excalidraw-container {
+    width: 100%;
+    height: 650px;
+    border: 1px solid #adadad;
+    /* margin-top: 10px; */
+    /* margin-bottom: 40px; */
+}
