@@ -87,6 +87,39 @@ const LessonsColumn = ({
         const modal = document.getElementById("imageModal");
         const modalImage = modal.querySelector("img");
 
+
+        // either useRef or unique classname to prevent Zoom applying across web app (to icon buttons etc.)
+
+        // if (lessonContainerRef.current) {
+        //     const images = lessonContainerRef.current.querySelectorAll("img");
+        //     images.forEach((image) => {
+        //         image.classList.add("zoomable-image");
+        //         image.addEventListener("click", () => {
+        //             modal.classList.add("active");
+        //             modalImage.src = image.src;
+        //         });
+        //     });
+
+        //     const closeModal = () => modal.classList.remove("active");
+        //     modal.addEventListener("click", closeModal);
+        //     document.addEventListener("keydown", (e) => {
+        //         if (e.key === "Escape") closeModal();
+        //     });
+
+        //     return () => {
+        //         images.forEach((image) =>
+        //             image.removeEventListener("click", () => {})
+        //         );
+        //         modal.removeEventListener("click", closeModal);
+        //         document.removeEventListener("keydown", (e) => {
+        //             if (e.key === "Escape") closeModal();
+        //         });
+        //     };
+        // }
+
+
+
+
         const images = document.querySelectorAll(".IMGs-lessons img");
         images.forEach((image) => {
             image.classList.add("zoomable-image");
