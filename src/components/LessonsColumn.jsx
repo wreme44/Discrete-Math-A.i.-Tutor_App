@@ -1,13 +1,12 @@
 import React, { useEffect, useState, useRef } from "react";
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-// import { supabase } from "../supabaseClient";
 import LatexRenderer from "./LatexRenderer";
-// import { useNavigate } from "react-router-dom";
 
 const LessonsColumn = ({
     allCorrect, onLessonChange, onPrevLessonButton,
-    lessonsData, completedLessons}) => {
+    lessonsData, completedLessons
+}) => {
     // State to hold lessons data fetched from the database
     // const [lessonsData, setLessonsData] = useState([]);
     // State to keep track of current lesson index
@@ -24,7 +23,9 @@ const LessonsColumn = ({
     // const [completedLessons, setCompletedLessons] = useState({}); // { lesson_id: true/false }
     // ref to scroll to top at next/prev page
     const scrollableContainerRef = useRef(null);
-    // const lessonContainerRef = useRef(null); // annother way to enlarge images
+    // const lessonContainerRef = useRef(null); // another way to enlarge images
+
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false); // State for dropdown list visibility
 
     // scroll to top of next/prev page
     useEffect(() => {
@@ -32,7 +33,7 @@ const LessonsColumn = ({
             scrollableContainerRef.current.scrollTop = 0;
         }
         // window.scrollTo(0, 0)
-    }, [currentLessonIndex])
+    }, [currentLessonIndex]);
 
     // Previous and Next buttons
     const handlePrevious = () => {
@@ -49,8 +50,12 @@ const LessonsColumn = ({
         onLessonChange(); // Resetting exercise completion
     };
 
-    // if (loading) return <p>Loading lessons...</p>;
-    // if (error) return <p>{error}</p>;
+    const navigateToLesson = (lessonIndex) => {
+        setCurrentLessonIndex(lessonIndex);
+        sessionStorage.setItem("currentLessonIndex", lessonIndex);
+        setIsDropdownOpen(false); // Close dropdown after selection
+        onLessonChange(); // Resetting exercise completion for the new lesson
+    };
 
     const currentLesson = lessonsData[currentLessonIndex];
 
@@ -82,68 +87,71 @@ const LessonsColumn = ({
         const modal = document.getElementById("imageModal");
         const modalImage = modal.querySelector("img");
 
-        // either useRef or unique classname to prevent Zoom applying across web app (to icon buttons etc.)
-        
-        // if (lessonContainerRef.current) {
-        //     const images = lessonContainerRef.current.querySelectorAll("img");
-        //     images.forEach((image) => {
-        //         image.classList.add("zoomable-image");
-        //         image.addEventListener("click", () => {
-        //             modal.classList.add("active");
-        //             modalImage.src = image.src;
-        //         });
-        //     });
-    
-        //     const closeModal = () => modal.classList.remove("active");
-        //     modal.addEventListener("click", closeModal);
-        //     document.addEventListener("keydown", (e) => {
-        //         if (e.key === "Escape") closeModal();
-        //     });
-    
-        //     return () => {
-        //         images.forEach((image) =>
-        //             image.removeEventListener("click", () => {})
-        //         );
-        //         modal.removeEventListener("click", closeModal);
-        //         document.removeEventListener("keydown", (e) => {
-        //             if (e.key === "Escape") closeModal();
-        //         });
-        //     };
-        // }
         const images = document.querySelectorAll(".IMGs-lessons img");
         images.forEach((image) => {
             image.classList.add("zoomable-image");
             image.addEventListener("click", () => {
                 modal.classList.add("active");
                 modalImage.src = image.src;
-            })
-        })
+            });
+        });
 
         const closeModal = () => modal.classList.remove("active");
         modal.addEventListener("click", closeModal);
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") closeModal();
-        })
+        });
 
         return () => {
-            images.forEach((image) => image.removeEventListener("click", () => {}));
+            images.forEach((image) => image.removeEventListener("click", () => { }));
             modal.removeEventListener("click", closeModal);
             document.removeEventListener("keydown", (e) => {
                 if (e.key === "Escape") closeModal();
-            })
-        }
-    }, [currentLesson])
+            });
+        };
+    }, [currentLesson]);
 
     return (
         <div className="flex flex-col h-full -mt-2">
             {currentLesson && (
                 <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[16px] lg:text-[18px] xl:text-[20px] font-bold mb-1">{currentLesson.title}</h2>
-            )} {/* ref={lessonContainerRef} */}
-            <div ref={scrollableContainerRef} className="IMGs-lessons flex-1 overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width"> 
+            )}
+
+            {/* Dropdown for Completed Lessons */}
+            {Object.keys(completedLessons).length > 0 && (
+                <div className="relative mb-2">
+                    <button
+                        onClick={() => setIsDropdownOpen((prev) => !prev)}
+                        className="bg-teal-500 text-white px-4 py-2 rounded-full hover:bg-teal-400"
+                    >
+                        Navigate to Completed Lesson
+                    </button>
+                    {isDropdownOpen && (
+                        <div className="absolute mt-2 right-0 w-48 bg-gray-800 text-white rounded-lg shadow-lg z-10 p-2">
+                            {Object.keys(completedLessons).map((lessonId) => {
+                                const lessonIndex = lessonsData.findIndex(lesson => lesson.lesson_id === parseInt(lessonId));
+                                return (
+                                    lessonIndex >= 0 && (
+                                        <button
+                                            key={lessonId}
+                                            onClick={() => navigateToLesson(lessonIndex)}
+                                            className="w-full text-left px-2 py-1 hover:bg-gray-700 rounded"
+                                        >
+                                            {lessonsData[lessonIndex]?.title || `Lesson ${lessonIndex + 1}`}
+                                        </button>
+                                    )
+                                );
+                            })}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            <div ref={scrollableContainerRef} className="IMGs-lessons flex-1 overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentLesson && <>{renderContent(currentLesson.content)}</>}
             </div>
             <div className="modal" id="imageModal">
-                <img alt="Zoomed view"/>
+                <img alt="Zoomed view" />
             </div>
             <div className="flex justify-between items-end -mb-1">
                 <div className="relative flex mt-1 -mb-1">
@@ -166,8 +174,8 @@ const LessonsColumn = ({
                         onClick={handleNext}
                         disabled={!(isLessonCompleted || allCorrect) || currentLessonIndex === lessonsData.length - 1}
                         className={`mr-4 -mb-1 rounded-full w-8 h-8 ${currentLessonIndex === lessonsData.length - 1
-                                ? "bg-blue-600 hover:bg-red-600"
-                                : "bg-blue-500 hover:bg-blue-400"
+                            ? "bg-blue-600 hover:bg-red-600"
+                            : "bg-blue-500 hover:bg-blue-400"
                             }`}
                     >
                         <img className="next-page-icon" alt="..." src="/next-page.svg" />
