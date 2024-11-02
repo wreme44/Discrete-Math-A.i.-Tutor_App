@@ -9,7 +9,9 @@ import NotFound from '../routes/NotFound.jsx';
 import SignUpRoute from '../routes/SignUpRoute.jsx';
 import LoginRoute from '../routes/LoginRoute.jsx';
 import Profile from '../routes/Profile.jsx';
-import MyStatus from './components/MyStatus.jsx'; // Import the new status component
+import MyStatus from './components/MyStatus.jsx';
+import ResetPassword from "./components/ResetPassword";
+
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -22,6 +24,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route index={false} path="/login" element={<LoginRoute />} />
                     <Route index={false} path="/myProfile" element={<Profile />} />
                     <Route path="/myStatus" element={<MyStatus />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
             </Routes>
