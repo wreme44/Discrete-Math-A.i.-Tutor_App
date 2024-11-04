@@ -33,6 +33,7 @@
 
 .read-the-docs {
   color: #888;
+  color: rgba(3, 78, 144, 0.8);
 }
 
 /* -------------------------------------------------------------------- */
@@ -228,6 +229,18 @@
     /* border-color: rgb(182, 182, 182); */
 }
 
+.reset-password-link:focus,
+.reset-password-link:hover {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+button.reset-password-link:focus,
+button.reset-password-link:hover {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
 .login-notification{
     border-radius: 10px;
     border: 1px solid transparent;
@@ -278,7 +291,7 @@
     height: 100vh;
     /* height: calc(100vh - 40px); */
     background-color: #1d2733;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('account-page1.gif');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('accountPage.gif');
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
     background-position: center 20px;
@@ -676,6 +689,18 @@
 /* ---------------------------------------------------------------- */
 
 /* header nav bar */
+/* @keyframes shine {
+    0% {
+        left: -150%;
+    }
+    50% {
+        left: 50%;
+    }
+    100% {
+        left: 150%;
+    }
+} */
+
 .header-bar {
     position: fixed;
     top: 0;
@@ -688,11 +713,22 @@
     z-index: 1000;
 }
 
+/* .header-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%;
+    width: 300%;
+    height: 100%;
+    background: linear-gradient(120deg, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 70%);
+    animation: shine 5s infinite;
+} */
+
 .header-nav {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 5px 30px; 
+    padding: 5px 5px; 
 }
 
 .header-nav button {
@@ -718,8 +754,6 @@
 }
 
 .home-icon {
-    width: 60px;
-    height: 50px;
     cursor: pointer;
     filter: drop-shadow(0 0 2em rgba(38, 9, 225, 0.566));
 }
@@ -1045,16 +1079,16 @@ math-field:hover {
 
 .incorrect-answer {
     color: #d31717 !important; 
-    /* color: #006eff;
+    color: #cdbc00;
     color: #14f4c7;
-    color: #00a2ff;
-    color: #9ca3af;
-    color: #6b7280;
-    color: #8C7BFD;
+    color: #0074b7;
+    color: #1fb0dc;
+    color: #369074;
+    color: #fb4777;
     color: #0e41ae9f;
-    color: #00a6ff;
-    color: #111827;
-    color: #ffbf00; */
+    color: #22d79e;
+    color: #3D5A80;
+    color: #00336a;
 }
 
 .loading-gif{
@@ -1105,9 +1139,24 @@ math-field:hover {
 /* Excalidraw Drawing Tool */
 
 .excalidraw-container {
-    width: 100%;
-    height: 650px;
     border: 1px solid #adadad;
-    /* margin-top: 10px; */
-    /* margin-bottom: 40px; */
 }
+
+.excalidraw-title {
+    margin-left: 36%;
+    font-weight: 700;
+    animation: fadeIn 1s ease-in-out;
+    background: linear-gradient(90deg, #1fb0dc, #22d1d7, #22d79e);
+    background-clip: text; 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.excalidraw-title span{
+    animation: fadeIn 1s ease-in-out;
+    background: linear-gradient(90deg, #1fb0dc, #22d1d7, #22d79e);
+    background-clip: text; 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+

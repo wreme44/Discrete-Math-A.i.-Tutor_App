@@ -194,7 +194,7 @@ const MainPage = () => {
             {isLoading ? (
                 <div className="flex items-center justify-center min-h-screen"><img src='/loading-ripple.svg' /></div>
             ) : userId ? (
-                <div className="relative grid grid-cols-1 md:grid-cols-3 gap-4 p-4 pt-16 min-h-screen md:h-screen">
+                <div className="relative grid grid-cols-1 md:grid-cols-3 gap-2 p-2 pt-16 min-h-screen md:h-screen">
                     <div className="col-span-1 bg-gray-800 pl-3 pt-3 pb-2 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
                         <LessonsColumn
                             allCorrect={allExercisesCompleted}
@@ -241,11 +241,12 @@ const MainPage = () => {
             ) : (
                 <div className="main-page-no-user ">
                     <p className="font-bold text-white
-                    xsm:mb-[10px] sm:mb-[20px] md:mb-[28px] lg:mb-[32px] xl:mb-[32px]
-                    xsm:text-[14px] sm:text-[20px] md:text-[25px] lg:text-[30px] xl:text-[30px]">Get started with your Discrete Mentor</p>
-                    <div className="flex items-center justify-items-center space-x-4
-                    xsm:text-[10px] sm:text-[14px] md:text-[18px] lg:text-[20px] xl:text-[20px]
-                    xsm:mt-[10px] sm:mt-[15px] md:mt-[20px] lg:mt-[24px] xl:mt-[24px]">
+                    xxxsm:mb-[6px] xxsm:mb-[8px] xsm:mb-[10px] sm:mb-[20px] md:mb-[28px] lg:mb-[32px] xl:mb-[32px]
+                    xxxsm:text-[9px] xxsm:text-[11px] xsm:text-[14px] sm:text-[20px] md:text-[25px] lg:text-[30px] xl:text-[30px]">Get started with your Discrete Mentor</p>
+                    <div className="flex items-center justify-items-center
+                    xxxsm:space-x-[6px] xxsm:space-x-[8px] xsm:space-x-[14px] sm:space-x-[16px] md:space-x-[16px] lg:space-x-[16px] xl:space-x-[16px]
+                    xxxsm:text-[7px] xxsm:text-[8px] xsm:text-[10px] sm:text-[14px] md:text-[18px] lg:text-[20px] xl:text-[20px]
+                    xxxsm:mt-[6px] xxsm:mt-[8px] xsm:mt-[10px] sm:mt-[15px] md:mt-[20px] lg:mt-[24px] xl:mt-[24px]">
                         <Link className="link-to-login-signup font-bold" to="/login">Login</Link>
                         <p className='font-bold'>|</p>
                         <Link className="link-to-login-signup font-bold" to="/signup">Sign Up</Link>

@@ -218,10 +218,10 @@ const ChatBox = () => {
                         </span>
                     </div>
                 ))) : (
-                    <div className='d-mentor-box xsm:gap-10 sm:gap-10 md:gap-28 lg:gap-24 xl:gap-28'>
+                    <div className='d-mentor-box xxxsm:gap-12 xxsm:gap-10 xsm:gap-10 sm:gap-10 md:gap-28 lg:gap-24 xl:gap-28'>
                         <h3>DiscreteMentor</h3>
-                        <img className="d-mentor xsm:w-[266px] sm:w-[300px] md:w-[266px] lg:w-[333px] xl:w-[333px]
-                                        xsm:h-[266px] sm:h-[300px] md:h-[266px] lg:h-[333px] xl:h-[333px]" 
+                        <img className="d-mentor xxxsm:w-[200px] xxsm:w-[266px] xsm:w-[266px] sm:w-[300px] md:w-[266px] lg:w-[333px] xl:w-[333px]
+                                        xxxsm:h-[200px] xxsm:h-[266px] xsm:h-[266px] sm:h-[300px] md:h-[266px] lg:h-[333px] xl:h-[333px]" 
                                         src='/D.Mentor1.png'/>
                         {/* <img className='typing-gif' alt='... ...' src='/loading2.1.gif'/> */}
                     </div>
@@ -264,7 +264,7 @@ const ChatBox = () => {
                         disabled={isTyping}
                     >
                         {/* <img src="/send-button.png" alt="Send" style={{width: '100%', height: '100%'}} /> */}
-                        <img className="w-10 h-auto xsm:w-[35px] sm:w-[37px] md:w-[37px] lg:w-[40px] xl:w-[40px] mr-0"
+                        <img className="w-10 h-auto xxxsm:w-[30px] xxsm:w-[33px] xsm:w-[35px] sm:w-[37px] md:w-[37px] lg:w-[40px] xl:w-[40px] mr-0"
                          alt="Submit" src="/submit2.svg" />
                     </button>
                 </div>

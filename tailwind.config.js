@@ -10,12 +10,6 @@ module.exports = {
                 DEFAULT: {
                     css: {
                         color: theme('colors.white'),
-                        a: {
-                            color: theme('colors.blue.400'),
-                            '&:hover': {
-                                color: theme('colors.blue.600'),
-                            },
-                        },
                         h1: { color: theme('colors.white') },
                         h2: { color: theme('colors.white') },
                         h3: { color: theme('colors.white') },
@@ -30,12 +24,6 @@ module.exports = {
                 dark: {
                     css: {
                         color: theme('colors.white'),
-                        a: {
-                            color: theme('colors.blue.400'),
-                            '&:hover': {
-                                color: theme('colors.blue.600'),
-                            },
-                        },
                         h1: { color: theme('colors.white') },
                         h2: { color: theme('colors.white') },
                         h3: { color: theme('colors.white') },
@@ -50,6 +38,8 @@ module.exports = {
             }),
         },
         screens: {
+            'xxxsm': '240px',
+            'xxsm': '320px',
             'xsm': '480px',
             'sm': '640px',
             'md': '768px',
