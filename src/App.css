@@ -1044,7 +1044,7 @@ pre {
 math-field {
     box-sizing: border-box;
     padding: 0.35em;
-    width: 66%;
+    width: 86%;
     /* height: 60px; */
     font-size: 1.5em;
     border-radius: 18px;
@@ -1082,19 +1082,48 @@ math-field:hover {
     color: #cdbc00;
     color: #14f4c7;
     color: #0074b7;
-    color: #1fb0dc;
+    color: #b4d7ea;
     color: #369074;
     color: #fb4777;
     color: #0e41ae9f;
-    color: #22d79e;
+    color: #111827;
     color: #3D5A80;
     color: #00336a;
+    color: rgba(227, 226, 226, 0.888)
 }
 
 .loading-gif{
     width: 60px;
     height: 60px;
 }
+
+/* Excalidraw Drawing Tool */
+
+.excalidraw-container {
+    border: 1px solid #adadad;
+}
+
+.excalidraw-title {
+    margin-left: 45%;
+    /* margin-top: 55px;
+    margin-bottom: 115px; */
+    /* font-size: large; */
+    font-weight: 700;
+    animation: fadeIn 1s ease-in-out;
+    background: linear-gradient(90deg, #1fb0dc, #22d1d7, #22d79e);
+    background-clip: text; 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* .excalidraw-title span{
+    
+    animation: fadeIn 1s ease-in-out;
+    background: linear-gradient(90deg, #1fb0dc, #22d1d7, #22d79e);
+    background-clip: text; 
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+} */
 
 
 /* ---------------------------------------------------------------- */
@@ -1136,27 +1165,5 @@ math-field:hover {
 
 /* -------------------------------------------------------------- */
 
-/* Excalidraw Drawing Tool */
 
-.excalidraw-container {
-    border: 1px solid #adadad;
-}
-
-.excalidraw-title {
-    margin-left: 36%;
-    font-weight: 700;
-    animation: fadeIn 1s ease-in-out;
-    background: linear-gradient(90deg, #1fb0dc, #22d1d7, #22d79e);
-    background-clip: text; 
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
-.excalidraw-title span{
-    animation: fadeIn 1s ease-in-out;
-    background: linear-gradient(90deg, #1fb0dc, #22d1d7, #22d79e);
-    background-clip: text; 
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
 

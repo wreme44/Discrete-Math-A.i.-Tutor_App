@@ -10,6 +10,7 @@ import { supabase } from '../supabaseClient';
 
 const MainPage = () => {
 
+    const [isRowView, setIsRowView] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
     // session storage:
@@ -43,9 +44,10 @@ const MainPage = () => {
         return sessionStorage.getItem('hasFetchedData') === 'true';
     });
 
-    const toggleChatBox = () => {
-        setIsChatVisible(!isChatVisible)
-    }
+    // Toggle between column and row view
+    const toggleView = () => setIsRowView((prev) => !prev);
+
+    const toggleChatBox = () => { setIsChatVisible(!isChatVisible) }
     // callback to handle the completion of exercises
     const handleExercisesCompletion = useCallback((isCompleted) => {
         setAllExercisesCompleted(isCompleted)
@@ -194,8 +196,8 @@ const MainPage = () => {
             {isLoading ? (
                 <div className="flex items-center justify-center min-h-screen"><img src='/loading-ripple.svg' /></div>
             ) : userId ? (
-                <div className="relative grid grid-cols-1 md:grid-cols-3 gap-2 p-2 pt-16 min-h-screen md:h-screen">
-                    <div className="col-span-1 bg-gray-800 pl-3 pt-3 pb-2 rounded md:overflow-y-auto md:max-h-full md:h-auto h-[500px]">
+                <div className={`relative grid ${isRowView ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-3'} gap-2 p-2 pt-16 min-h-screen md:h-screen overflow-y-auto`}>
+                    <div className={`col-span-1 bg-gray-800 pl-3 pt-3 pb-2 rounded ${isRowView ? 'overflow-y-auto max-h-full xxxsm:h-[450px] xxsm:h-[500px] xsm:h-[550px] sm:h-[600px] md:h-[600px] lg:h-[625px] xl:h-[650px]' : 'md:overflow-y-auto md:max-h-full md:h-auto xxxsm:h-[450px] xxsm:h-[500px] xsm:h-[550px] sm:h-[600px]'}`}>
                         <LessonsColumn
                             allCorrect={allExercisesCompleted}
                             onLessonChange={resetLessonCompletion}
@@ -205,11 +207,24 @@ const MainPage = () => {
                             completedLessons={completedLessons}
                         />
                     </div>
-                    <div className="md:col-span-2 bg-gray-800 pl-3 pt-3 pb-2 rounded overflow-y-auto max-h-full md:h-auto h-[500px]">
+                    <div className={`md:col-span-2 bg-gray-800 pl-3 pt-3 pb-2 rounded overflow-y-auto max-h-full  ${isRowView ? 'overflow-y-auto max-h-full xxxsm:h-[450px] xxsm:h-[500px] xsm:h-[550px] sm:h-[600px] md:h-[600px] lg:h-[625px] xl:h-[650px]' : 'md:h-auto xxxsm:h-[450px] xxsm:h-[500px] xsm:h-[550px] sm:h-[600px]'}`}>
+                        {/* ROW / COLUMN view button */}
+                        <button
+                            onClick={toggleView}
+                            className="fixed hidden md:inline-flex top-16 right-[170px] items-center bg-gradient-to-r
+                             from-[rgba(0,0,0,0)] to-[rgba(0,0,0,0)] px-0 py-0 
+                             shadow-lg hover:border-[rgba(0,0,0,0.1)] hover:from-[rgba(0,0,0,0.81)] hover:to-[rgba(0,0,0,0.21)] focus:outline-none 
+                             focus:ring-0 transition duration-300 ease-in-out"
+                        >
+                            {isRowView 
+                            ? <img className="w-[35px] h-auto" alt="Column" src="/column-view-icon.svg" /> 
+                            : <img className="w-[35px] h-auto" alt="Row" src="/row-view-icon.svg" />}
+                        </button>
+                        {/* TUTOR button */}
                         <button className={`fixed hidden md:inline-flex top-16 right-5 items-center bg-gradient-to-r
                              from-yellow-900 to-yellow-700 text-white px-1 py-0 rounded-full 
                              shadow-lg hover:border-yellow-500 hover:from-yellow-800 hover:to-yellow-600 focus:outline-none 
-                             focus:ring-2 focus:ring-yellow-500 transition duration-300 ease-in-out`}
+                             focus:ring-[1px] focus:ring-yellow-500 transition duration-300 ease-in-out`}
                             onClick={toggleChatBox}
                             aria-label={isChatVisible ? "Hide Tutor Chat" : "Message Tutor"}
                         >
@@ -227,12 +242,13 @@ const MainPage = () => {
                         // error={error}
                         />
                     </div>
-                    <div className={`rounded overflow-y-auto ${isSmallScreen
-                        ? 'md:hidden col-span-1 max-h-full h-[500px]'
-                        : `md:absolute right-1 md:col-span-1 md:w-1/3 w-full z-10 border-2 border-amber-500 border-opacity-75 transition-all duration-1000 ease-in-out 
+                    <div className={`rounded overflow-y-auto 
+                        ${isSmallScreen
+                            ? 'md:hidden col-span-1 max-h-full h-[600px]'
+                            : `md:fixed right-1 md:col-span-1 md:w-1/3 w-full z-10 border-[1px] border-amber-500 border-opacity-75 transition-all duration-1000 ease-in-out 
                             ${isChatVisible ? 'max-h-[900px] opacity-100' : 'max-h-0 opacity-0'}`}`}
                         {...(!isSmallScreen && {
-                            style: { height: '85%', marginTop: '95px', pointerEvents: isChatVisible ? 'auto' : 'none' }
+                            style: { height: '81%', marginTop: '95px', pointerEvents: isChatVisible ? 'auto' : 'none' }
                         })}
                     >
                         <ChatBox />

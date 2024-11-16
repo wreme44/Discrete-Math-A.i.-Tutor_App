@@ -199,12 +199,12 @@ const ChatBox = () => {
     }, [])
 
     return (
-        <div className='bg-gray-800 border-2 border-amber-500 border-opacity-50 p-4 rounded h-full flex flex-col'>
+        <div className='bg-gray-800 border-[2px] border-amber-500 border-opacity-50 p-4 rounded h-full flex flex-col'>
             <div className='chatbox-content flex-1 overflow-y-auto mb-4 overflow-x-hidden'>
                 {messages.length > 0 ? (messages.map((msg, index) => (
                     <div key={index} className={`mb-2 ${msg.role === 'user' ? 'text-right' : 'text-left'}`}>
                         <span className={`latex-container inline-block p-2 rounded ${msg.role === 'user' ? 
-                        'bg-blue-900 text-white' : 'bg-gray-800'} 
+                        'bg-[rgba(65,86,129,0.43)] text-white' : 'bg-[rgba(53,57,66,0)]'} 
                         break-words max-w-full whitespace-normal`}>
                             {msg.role === 'assistant' ? (
                                 <>
@@ -241,7 +241,7 @@ const ChatBox = () => {
                         placeholder='Message Tutor'
                         ref={textareaRef}
                         className="flex-1 p-2 rounded-2xl bg-gray-700 focus:outline-none 
-                                 focus:ring-1 focus:ring-amber-500 resize-none break-words"
+                                 focus:ring-1 focus:ring-amber-500 resize-none overflow-y-auto break-words"
                         value={userInput}
                         onChange={(e) => setUserInput(e.target.value)}
                         onKeyDown={(e) => {
@@ -251,7 +251,7 @@ const ChatBox = () => {
                             }
                         }}
                         rows={1}
-                        style={{ overflow: 'hidden' }}
+                        style={{ maxHeight: '400px' }}
                     />
                     <button 
                         className="ml-1 px-0 py-0 outline-none 

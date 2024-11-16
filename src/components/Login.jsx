@@ -109,7 +109,6 @@ const Login = () => {
                     Forgot Password?
                 </button>
             </div>
-
             {/* Password Reset Modal */}
             <Modal
                 isOpen={isResetModalOpen}
@@ -122,7 +121,7 @@ const Login = () => {
                         right: 'auto',
                         bottom: 'auto',
                         transform: 'translate(-50%, -50%)',
-                        background: 'rgba(3, 78, 144, 0.8)',
+                        background: 'rgba(3, 78, 144, 0.95)',
                         borderRadius: '10px',
                         padding: '20px',
                         maxWidth: '400px',

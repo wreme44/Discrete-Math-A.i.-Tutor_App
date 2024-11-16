@@ -282,7 +282,7 @@ const MyProfile = () => {
                                 right: 'auto',
                                 bottom: 'auto',
                                 transform: 'translate(-50%, -50%)',
-                                background: 'rgba(70, 102, 133, 0.97)',
+                                background: 'rgba(3, 78, 144, 0.95)',
                                 borderRadius: '20px',
                                 textAlign: 'center',
                                 boxShadow: '0px 0px 30px 1px rgba(255, 255, 255, 0.4)',
@@ -292,7 +292,7 @@ const MyProfile = () => {
                                 margin: 'auto',
                             },
                             overlay: {
-                                backgroundColor: 'rgba(255, 255, 255, 0.3)'
+                                backgroundColor: 'rgba(0, 0, 0, 0.5)'
                             }
                         }}
                     >

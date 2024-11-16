@@ -305,6 +305,10 @@ const ExercisesPage = ({
                 ...prev,
                 [exerciseId]: null,
             }));
+            setImagesDisplay(prev => ({
+                ...prev,
+                [exerciseId]: null,
+            }));
         }
     };
 
@@ -752,7 +756,7 @@ const ExercisesPage = ({
             )}
             <div ref={scrollableContainerRef} className="flex-1 overflow-y-auto pl-1 pb-1 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentExercises.map((exercise) => (
-                    <div key={exercise.exercise_id} className="mb-36 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+                    <div key={exercise.exercise_id} className="mb-20 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                         {renderExerciseQuestion(exercise.question)}
                         {/* MathLiveInput for the exercise */}
                         <div className="relative mt-2 flex items-center space-x-1">
@@ -896,7 +900,9 @@ const ExercisesPage = ({
                         {/* Excalidraw TOOL */}
                         {isDrawing[exercise.exercise_id] && (
                             <>
-                                <div className="-mt-4 -mb-6">
+                                <span className="excalidraw-title xxxsm:text-[10px] xxsm:text-[13px] xsm:text-[16px] sm:text-[18px] md:text-[20px] lg:text-[20px] xl:text-[24px]">
+                                    Solution Canvas</span>
+                                {/* <div className=" ">
                                     <div className="relative inline-block group align-middle">
                                         <button
                                             type="button"
@@ -917,8 +923,8 @@ const ExercisesPage = ({
                                         </div>
                                     </div>
                                     <span className="excalidraw-title">Solution Canvas</span>
-                                </div>
-                                <div className="excalidraw-container
+                                </div> */}
+                                <div className="excalidraw-container mt-2
                                 w-full xxxsm:h-[400px] xxsm:h-[475px] xsm:h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] xl:h-[700px]">
                                     <Excalidraw
                                         initialData={excalidrawData[exercise.exercise_id] || { elements: [], state: {} }}
@@ -994,6 +1000,8 @@ const ExercisesPage = ({
                                 <img className='loading-gif' alt='... ...' src='/loading-ripple.svg' />
                             </div>
                         )}
+                        <div className="mt-16 -mb-10 border-0 border-t border-gray-600 border-opacity-100 w-[80%] mx-auto"></div>
+                        <hr className="border-0 border-t border-gray-600 border-opacity-50 w-[70%] mx-auto" />
                     </div>
                 ))}
             </div>
