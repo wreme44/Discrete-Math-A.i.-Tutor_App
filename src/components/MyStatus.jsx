@@ -210,6 +210,7 @@ const UserProgress = () => {
                     data-fill-background="#0d214b" 
                     data-type="fill"
                     data-img="/cupcake.svg"
+                    data-fill-dir="ttb"
                     // xxxsm:w-[60px] xxsm:w-[70px] xsm:w-[80px] sm:w-[90px] md:w-[00px] lg:w-[300px] xl:w-[200px]
                     // data-preset="rainbow"
                     // data-preset="energy"
