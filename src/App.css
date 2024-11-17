@@ -1079,17 +1079,17 @@ math-field:hover {
 
 .incorrect-answer {
     color: #d31717 !important; 
-    color: #cdbc00;
+    /* color: #cdbc009b;
     color: #14f4c7;
     color: #0074b7;
     color: #b4d7ea;
-    color: #369074;
-    color: #fb4777;
-    color: #0e41ae9f;
-    color: #111827;
-    color: #3D5A80;
+    color: #ff00a627;
+    color: #2e649a;
+    color: #ba21829c;
+    color: #0d214b;
+    color: #107227;
     color: #00336a;
-    color: rgba(227, 226, 226, 0.888)
+    color: rgba(180, 29, 29, 0.651) */
 }
 
 .loading-gif{
@@ -1104,7 +1104,7 @@ math-field:hover {
 }
 
 .excalidraw-title {
-    margin-left: 45%;
+    margin-left: 40%;
     /* margin-top: 55px;
     margin-bottom: 115px; */
     /* font-size: large; */
@@ -1165,5 +1165,47 @@ math-field:hover {
 
 /* -------------------------------------------------------------- */
 
+/* My STATUS / Userprogress page */
+
+.ldBar-label {
+    /* font-size: 1.5em; */
+    color: #ffffff; 
+    font-weight: 400;
+    position: absolute;
+    /* top: 30.0%;
+    left: 30%; */
+    pointer-events: none; 
+}
+
+.ldBar-label:after {
+    content: "%";
+}
+
+/* .label-center .ldBar-label {
+    @apply absolute top-[30%] left-[30%] text-black text-opacity-80 font-medium pointer-events-none;
+
+    @apply xxxsm:text-[10px] xxsm:text-[15px] xsm:text-[19px] sm:text-[22px] md:text-[24px] lg:text-[24px] xl:text-[24px];
+} */
+
+.progress-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* .progress-label {
+    position: absolute; 
+    top: 20.0%;
+    left: 28%;
+    font-size: 1.3em; 
+    font-weight: 500;
+    color: #457fb1; 
+    pointer-events: none; 
+} */
+
+/* .progress-label:after {
+    content: "%";
+} */
 
 

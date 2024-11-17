@@ -137,20 +137,20 @@ const ExercisesPage = ({
         }));
     }
 
-    const toggleSaveImage = (exerciseId, elements, state) => {
-        setSaveDrawingClicked(true);
-        setExcalidrawData((prevData) => {
-            const currentData = prevData[exerciseId] || {};
-            if (JSON.stringify(currentData.elements) !== JSON.stringify(elements)) {
-                // Save updated drawing data
-                const newData = { ...prevData, [exerciseId]: { elements, state } };
-                sessionStorage.setItem('excalidrawData', JSON.stringify(newData));
-                return newData;
-            }
-            return prevData;
-        });
-        setSaveDrawingClicked(false);
-    };
+    // const toggleSaveImage = (exerciseId, elements, state) => {
+    //     setSaveDrawingClicked(true);
+    //     setExcalidrawData((prevData) => {
+    //         const currentData = prevData[exerciseId] || {};
+    //         if (JSON.stringify(currentData.elements) !== JSON.stringify(elements)) {
+    //             // Save updated drawing data
+    //             const newData = { ...prevData, [exerciseId]: { elements, state } };
+    //             sessionStorage.setItem('excalidrawData', JSON.stringify(newData));
+    //             return newData;
+    //         }
+    //         return prevData;
+    //     });
+    //     setSaveDrawingClicked(false);
+    // };
 
     // excalidraw
     // const handleExcalidrawChange = debounce((exerciseId, elements, state) => {
@@ -1001,7 +1001,7 @@ const ExercisesPage = ({
                             </div>
                         )}
                         <div className="mt-16 -mb-10 border-0 border-t border-gray-600 border-opacity-100 w-[80%] mx-auto"></div>
-                        <hr className="border-0 border-t border-gray-600 border-opacity-50 w-[70%] mx-auto" />
+                        {/* <hr className="border-0 border-t border-gray-600 border-opacity-50 w-[70%] mx-auto" /> */}
                     </div>
                 ))}
             </div>
