@@ -186,13 +186,14 @@ const UserProgress = () => {
     }, [allData])
 
     return (
-        <div className="pt-[64px] px-[20px] bg-gray-900 rounded shadow-lg">
+        <div className="pt-[64px] px-[20px] bg-gray-900 rounded">
             <h3 className="xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[24px] lg:text-[24px] xl:text-[24px]
-            xxxsm:mb-[10px] xxsm:mb-[20px] xsm:mb-[15px] sm:mb-[20px] md:mb-[20px] lg:mb-[20px] xl:mb-[10px] 
+            xxxsm:mb-[10px] xxsm:mb-[20px] xsm:mb-[25px] sm:mb-[25px] md:mb-[20px] lg:mb-[20px] xl:mb-[10px]
+            xxxsm:mt-[35px] xxsm:mt-[30px] xsm:mt-[25px] sm:mt-[20px] md:mt-[10px] lg:mt-[0px] xl:mt-[0px] 
             font-bold text-white flex justify-center">Progress Status</h3>
             {/* Progress Bar */}
-            <div className="mb-4 progress-container 
-            xxxsm:mb-[80px] xxsm:mb-[70px] xsm:mb-[70px] sm:mb-[60px] md:mb-[40px] lg:mb-[20px] xl:mb-[0px]" 
+            <div className="progress-container 
+            xxxsm:mb-[50px] xxsm:mb-[55px] xsm:mb-[55px] sm:mb-[60px] md:mb-[50px] lg:mb-[40px] xl:mb-[20px]" 
             style={{ position: "relative", width: "auto", height: "auto" }}>
                 <div className="text-white font-semibold mr-2
                 xxxsm:text-[8px] xxsm:text-[10px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[20px]
@@ -203,8 +204,12 @@ const UserProgress = () => {
                     id="lesson-bar"
                     className="ldBar progress-container label-center h-auto"
                     style={{ width: "10%", height: "auto" }}
-                    data-preset="bubble"
-                    data-fill-background="#ba21829c"
+                    // data-preset="bubble"
+                    // data-fill-background="#ba21829c"
+                    data-fill="data:ldbar/res,bubble(#ff00a6,#00336a,50,1)"
+                    data-fill-background="#0d214b" 
+                    data-type="fill"
+                    data-img="/cupcake.svg"
                     // xxxsm:w-[60px] xxsm:w-[70px] xsm:w-[80px] sm:w-[90px] md:w-[00px] lg:w-[300px] xl:w-[200px]
                     // data-preset="rainbow"
                     // data-preset="energy"
@@ -237,6 +242,9 @@ const UserProgress = () => {
                     // data-fill="data:ldbar/res,gradient(0,1, rgba(100, 10, 100, 0.7), rgba(150, 50, 150, 0.5))"
                     data-fill="data:ldbar/res,bubble(#ff00a6,#00336a,50,1)"
                     data-fill-background="#0d214b" 
+                    // data-type="fill"
+                    // data-img="/cupcake.svg"
+                    // data-path="M50 10 C20 10, 0 40, 50 70 C100 40, 80 10, 50 10 Z"
                     // data-fill-background-extrude="5" 
                     // data-fill=""
                     // stroke="red"
@@ -295,10 +303,10 @@ const UserProgress = () => {
                     style={{ width: `${completionPercentage}%` }}
                 ></div>
             </div> */}
-            <div className="overflow-y-auto max-h-[470px] relative">
+            <div className="overflow-y-auto max-h-[450px] relative"> {/* absolute bottom-[20px] left-[40px] right-[40px] */}
                 <table className="table-auto w-full text-white">
                     <thead className="sticky top-0">
-                        <tr className="bg-gray-700">
+                        <tr className="bg-gray-600">
                             <th className="px-0 py-1
                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[13px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
                                 Lesson Title</th>
@@ -315,7 +323,7 @@ const UserProgress = () => {
                                 //     (lesson) => lesson.lesson_id === progress.lesson_id
                                 // );
                                 // return (
-                                <tr key={progress.lesson_id} className="bg-gray-600">
+                                <tr key={progress.lesson_id} className="bg-gray-800">
                                     <td className="border px-2 py-1
                                     xxxsm:text-[10px] xxsm:text-[11px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
                                         {progress.title}</td>
@@ -342,7 +350,7 @@ const UserProgress = () => {
                                                 : "0%"}
                                         </div>
                                     </td>
-                                    <td className="border px-2 py-1
+                                    <td className="border px-2 py-1 text-center
                                     xxxsm:text-[10px] xxsm:text-[11px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
                                         {progress.completed_at
                                             ? new Date(progress.completed_at).toLocaleString(undefined, {

@@ -1082,12 +1082,12 @@ math-field:hover {
     /* color: #cdbc009b;
     color: #14f4c7;
     color: #0074b7;
-    color: #b4d7ea;
+    color: #83c7ec33;
     color: #ff00a627;
     color: #2e649a;
     color: #ba21829c;
     color: #0d214b;
-    color: #107227;
+    color: #0d214b;
     color: #00336a;
     color: rgba(180, 29, 29, 0.651) */
 }
@@ -1175,6 +1175,7 @@ math-field:hover {
     /* top: 30.0%;
     left: 30%; */
     pointer-events: none; 
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
 }
 
 .ldBar-label:after {
