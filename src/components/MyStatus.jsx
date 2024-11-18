@@ -200,17 +200,17 @@ const UserProgress = () => {
     }, [allData])
 
     return (
-        <div className="pt-[64px] px-[20px] bg-gray-900 rounded">
+        <div className="pt-[64px] xxxsm:px-[20px] xxsm:px-[30px] xsm:px-[40px] sm:px-[50px] md:px-[60px] lg:px-[70px] xl:px-[80px]
+            bg-gray-900 rounded">
             <div className="flex justify-center items-center">
-                <h3 className="xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[24px] lg:text-[24px] xl:text-[24px]
+                <h3 className="progress-title xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[24px] lg:text-[24px] xl:text-[24px]
                     xxxsm:mb-[10px] xxsm:mb-[20px] xsm:mb-[25px] sm:mb-[25px] md:mb-[20px] lg:mb-[20px] xl:mb-[10px]
                     xxxsm:mt-[35px] xxsm:mt-[30px] xsm:mt-[25px] sm:mt-[20px] md:mt-[10px] lg:mt-[0px] xl:mt-[0px] 
                     font-semibold text-white flex justify-center">
                         Progress Status
                 </h3>
-                <img className="w-6 ml-3" alt="status" src="/progress-icon.svg" />
+                {/* <img className="w-6 ml-3" alt="status" src="/progress-icon.svg" /> */}
             </div>
-            
             {/* Progress Bar */}
             <div className="progress-container 
             xxxsm:mb-[50px] xxsm:mb-[55px] xsm:mb-[55px] sm:mb-[60px] md:mb-[50px] lg:mb-[40px] xl:mb-[20px]" 
@@ -226,10 +226,12 @@ const UserProgress = () => {
                     style={{ width: "10%", height: "auto" }}
                     // data-preset="bubble"
                     // data-fill-background="#ba21829c"
-                    data-fill="data:ldbar/res,bubble(#ff00a6,#00336a,50,1)"
-                    data-fill-background="#0d214b" 
+                    data-fill="data:ldbar/res,bubble(#ffbb00,#00336a,30,5)"
+                    data-fill-background="#2c62d780" 
+                    // data-path="M10 10L90 10L90 90L10 90Z"
                     data-type="fill"
                     data-img="/cupcake.svg"
+                    // data-fill-dir="ltr"
                     data-fill-dir="ttb"
                     // xxxsm:w-[60px] xxsm:w-[70px] xsm:w-[80px] sm:w-[90px] md:w-[00px] lg:w-[300px] xl:w-[200px]
                     // data-preset="rainbow"
@@ -241,7 +243,7 @@ const UserProgress = () => {
                     // stroke="red"
                     data-stroke-width="10"
                     data-duration="6"
-                    data-pattern-size="33"
+                    data-pattern-size="63"
                 // data-label="false"
                 // data-value={completionPercentage}
                 // data-unit="%"

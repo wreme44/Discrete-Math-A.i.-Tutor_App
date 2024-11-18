@@ -65,6 +65,7 @@ const ExercisesPage = ({
     const [submittedSolutions, setSubmittedSolutions] = useState({});
     const [uploadedImage, setUploadedImage] = useState({});
     const [imagesDisplay, setImagesDisplay] = useState({});
+    const [excaliDisplay, setExcaliDisplay] = useState({});
     const [inputAlert, setInputAlert] = useState({});
     const [gptResults, setGptResults] = useState({});
 
@@ -125,10 +126,24 @@ const ExercisesPage = ({
             .trim();
     };
 
-    // const toggleSaveImage = () => {
-    //     setSaveDrawingClicked(true);
-    //     // setSaveDrawingClicked(prevState => !prevState);
-    // }
+    // clear any user input (images)
+    const clearImageInput = (exerciseId) => {
+        setUploadedImage(prev => ({
+            ...prev,
+            [exerciseId]: null,
+        }));
+        setImagesDisplay(prev => ({
+            ...prev,
+            [exerciseId]: null,
+        }));
+    }
+
+    const clearDrawingInput = (exerciseId) => {
+        setExcaliDisplay(prev => ({
+            ...prev,
+            [exerciseId]: null,
+        }));
+    }
 
     // displaying excalidraw
     const displayExcalidraw = (exerciseId) => {
@@ -179,6 +194,29 @@ const ExercisesPage = ({
         });
     }, 500);
 
+    const exportExcalidrawToBase64 = async (exerciseId) => {
+        if (!excalidrawData[exerciseId]) return null;
+        const excalidrawRef = document.querySelector(".excalidraw-container canvas");
+        if (!excalidrawRef) return null;
+        return excalidrawRef.toDataURL("image/png");
+    }
+
+    const handleExcalidrawSubmit = async (exerciseId) => {
+        try {
+            const base64image = await exportExcalidrawToBase64(exerciseId);
+            if (base64image) {
+                setExcaliDisplay((prevImages) => ({
+                    ...prevImages, [exerciseId]: base64image,
+                }))
+
+            } else {
+                alert("error: could not generate image from drawing.")
+            }
+        } catch (error) {
+            console.error("error exporting excalidraw:", error)
+            alert("error occured preparing solution, please try again.")
+        }
+    }
 
     // image handler for user uploads
     const handleImageUpload = (event, exerciseId) => {
@@ -203,10 +241,20 @@ const ExercisesPage = ({
         }
     }
 
+    // converting image to base64
+    const convertToBase64 = (file) => {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = (error) => reject(error);
+        })
+    }
+
     // GPT api call as Math validator
     const handleSubmitSolution = async (exerciseId, userSolution, exerciseQuestion, correctAnswer) => {
 
-        if ((!userSolution || userSolution.trim() === "") && !uploadedImage[exerciseId]) {
+        if ((!userSolution || userSolution.trim() === "") && !uploadedImage[exerciseId] && !excaliDisplay[exerciseId]) {
             setInputAlert((prev) => ({ ...prev, [exerciseId]: true }));
             return;
         }
@@ -214,6 +262,7 @@ const ExercisesPage = ({
 
         let cleanedSolution = null;
         let base64Image = null;
+        let excalidrawBase64 = null;
 
         let messages = [
             { type: "text", text: `Exercise Question: ${exerciseQuestion}` },
@@ -234,11 +283,27 @@ const ExercisesPage = ({
             messages.push({
                 type: "image_url",
                 // image_url: `data:image/png;base64,${base64Image}`
-                image_url: `data:image/png;base64,${base64Image.split(',')[1]}` // Remove the data prefix as backend expects it
+                image_url: `data:image/png;base64,${base64Image.split(',')[1]}` // remove data prefix as backend expects it
             });
         }
-        const payload = { messages }
-        // Log the payload to check
+
+        if (excaliDisplay[exerciseId]) {
+            messages.push({
+                type: "image_url",
+                image_url: `data:image/png;base64,${excaliDisplay[exerciseId].split(',')[1]}`
+            })
+        } 
+        // else if (excalidrawData[exerciseId]) {
+        //     excalidrawBase64 = await exportExcalidrawToBase64(exerciseId);
+        //     if (excalidrawBase64) {
+        //         messages.push({
+        //             type: "image_url",
+        //             image_url: `data:image/png;base64,${excalidrawBase64.split(',')[1]}`
+        //         })
+        //     }
+        // }
+
+        const payload = {messages}
         // console.log("Sending payload:", payload);
         // store users submitted solution
         setSubmittedSolutions((prev) => ({
@@ -309,18 +374,12 @@ const ExercisesPage = ({
                 ...prev,
                 [exerciseId]: null,
             }));
+            setExcaliDisplay(prev => ({
+                ...prev,
+                [exerciseId]: null,
+            }));
         }
     };
-
-    // converting image to base64
-    const convertToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        })
-    }
 
     useEffect(() => {
         // Loop through correctAnswers and trigger progress update for the correct ones
@@ -699,7 +758,7 @@ const ExercisesPage = ({
                 if (e.key === "Escape") closeModal();
             })
         }
-    }, [imagesDisplay])
+    }, [imagesDisplay, excaliDisplay])
 
     // saving excalidraw
     useEffect(() => {
@@ -858,26 +917,6 @@ const ExercisesPage = ({
                                 )}
                             </div>
                         </div>
-                        {/* Show user's solution */}
-                        {submittedSolutions[exercise.exercise_id] && (
-                            <div className="mt-4">
-                                <h4 className="text-md font-semibold">Your Input Solution:</h4>
-                                <div className="mb-4">
-                                    {renderContent(submittedSolutions[exercise.exercise_id])}
-                                </div>
-                            </div>
-                        )}
-                        {/* Show user's IMAGE solution */}
-                        {imagesDisplay[exercise.exercise_id] && (
-                            <div className="mt-4">
-                                <h4 className="text-md font-semibold">Your Image Solution:</h4>
-                                <img
-                                    src={imagesDisplay[exercise.exercise_id]}
-                                    alt="Uploaded solution preview"
-                                    className="IMGs-user-upload w-2/3 h-auto border-2 border-gray-600 rounded mt-2"
-                                />
-                            </div>
-                        )}
                         {/* Display GPT Results validation for in/correct*/}
                         {correctAnswers[exercise.exercise_id] !== undefined && (
                             <div className="flex items-center -mt-10 -mb-5">
@@ -897,34 +936,128 @@ const ExercisesPage = ({
                                 </h4>
                             </div>
                         )}
-                        {/* Excalidraw TOOL */}
-                        {isDrawing[exercise.exercise_id] && (
+                        {/* Show user's TEXT solution */}
+                        {submittedSolutions[exercise.exercise_id] && (
+                            <div className="mt-4">
+                                <h4 className="text-md font-semibold">Your Input Solution:</h4>
+                                <div className="mb-4">
+                                    {renderContent(submittedSolutions[exercise.exercise_id])}
+                                </div>
+                            </div>
+                        )}
+                        {/* Show user's IMAGE solution */}
+                        {imagesDisplay[exercise.exercise_id] && (
                             <>
-                                <span className="excalidraw-title xxxsm:text-[10px] xxsm:text-[13px] xsm:text-[16px] sm:text-[18px] md:text-[20px] lg:text-[20px] xl:text-[24px]">
-                                    Solution Canvas</span>
-                                {/* <div className=" ">
+                                <div className="mt-1 -mb-0">
+                                    <span className="text-md font-semibold">Your Image Solution:</span>
+                                    {/* CLEAR user INPUT */}
                                     <div className="relative inline-block group align-middle">
                                         <button
                                             type="button"
-                                            // onClick={() => toggleSaveImage(exercise.exercise_id, currentElements, currentState)}
-                                            className="relative flex items-center align-middle ml-0 focus:outline-none
+                                            onClick={() => clearImageInput(exercise.exercise_id)}
+                                            className="relative flex items-center align-middle ml-5 focus:outline-none
                                         outline-none border-none rounded-full transform transition
                                         duration-75 ease-in-out hover:scale-105 active:scale-95
-                                        xxxsm:w-[14px] xxsm:w-[16px] xsm:w-[24px] sm:w-[28px] md:w-[28px] lg:w-[32px] xl:w-[32px]"
+                                        border-1 bg-[rgba(172,172,184,0)] hover:from-cyan-500 hover:to-cyan-700
+                                        xxxsm:h-[12px] xxsm:h-[14px] xsm:h-[16px] sm:h-[18px] md:h-[20px] lg:h-[20px] xl:h-[20px]
+                                        xxxsm:w-[12px] xxsm:w-[14px] xsm:w-[16px] sm:w-[18px] md:w-[20px] lg:w-[20px] xl:w-[20px]"
                                         >
-                                            <img className='drawing-icon' alt='drawing tool' src='/save-image.svg' />
+                                            <img className='clear-img xxxsm:w-[12px] xxsm:w-[14px] xsm:w-[16px] sm:w-[18px] md:w-[20px] lg:w-[22px] xl:w-[22px]' 
+                                            alt='clear img' src='/clear-img.svg' />
                                         </button>
-                                        <div className="absolute xxxsm:bottom-11 xxsm:bottom-11 xsm:bottom-11 sm:bottom-14 md:bottom-14 lg:bottom-16 xl:bottom-16 
-                                        left-3/4 transform -translate-x-1/2 mb-2 bg-teal-600 text-white
-                                        text-xs rounded-lg py-1 pl-1 pr-0 w-20 opacity-0 group-hover:opacity-100 
+                                        <div className="absolute bottom-[99%] 
+                                        left-[75%] transform -translate-x-1/2 mb-2 bg-teal-600 text-white
+                                        text-xs rounded-lg py-1 pl-1 pr-0 w-28 opacity-0 group-hover:opacity-100 
                                         transition-opacity duration-500 z-10">
-                                            Save Solution
-                                            <div className="absolute left-1/3 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                            Clear Image Upload
+                                            <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                                         </div>
                                     </div>
-                                    <span className="excalidraw-title">Solution Canvas</span>
-                                </div> */}
-                                <div className="excalidraw-container mt-2
+                                </div>
+                                <img
+                                    src={imagesDisplay[exercise.exercise_id]}
+                                    alt="Uploaded solution preview"
+                                    className="IMGs-user-upload w-[39%] max-h-[300px] h-auto border-[3px] border-gray-600 rounded mt-2"
+                                />
+                            </>
+                        )}
+                        {/* Show user's DRAWING solution */}
+                        {excaliDisplay[exercise.exercise_id] && (
+                            <>
+                                <div className="mt-1 -mb-0">
+                                    <span className="text-md font-semibold">Your Drawing Solution:</span>
+                                    {/* CLEAR user INPUT */}
+                                    <div className="relative inline-block group align-middle">
+                                        <button
+                                            type="button"
+                                            onClick={() => clearDrawingInput(exercise.exercise_id)}
+                                            className="relative flex items-center align-middle ml-5 focus:outline-none
+                                        outline-none border-none rounded-full transform transition
+                                        duration-75 ease-in-out hover:scale-105 active:scale-95
+                                        border-1 bg-[rgba(172,172,184,0)] hover:from-cyan-500 hover:to-cyan-700
+                                        xxxsm:h-[12px] xxsm:h-[14px] xsm:h-[16px] sm:h-[18px] md:h-[20px] lg:h-[20px] xl:h-[20px]
+                                        xxxsm:w-[12px] xxsm:w-[14px] xsm:w-[16px] sm:w-[18px] md:w-[20px] lg:w-[20px] xl:w-[20px]"
+                                        >
+                                            <img className='clear-img xxxsm:w-[12px] xxsm:w-[14px] xsm:w-[16px] sm:w-[18px] md:w-[20px] lg:w-[22px] xl:w-[22px]' 
+                                            alt='clear img' src='/clear-img.svg' />
+                                        </button>
+                                        <div className="absolute bottom-[99%] 
+                                        left-[75%] transform -translate-x-1/2 mb-2 bg-teal-600 text-white
+                                        text-xs rounded-lg py-1 pl-1 pr-0 w-20 opacity-0 group-hover:opacity-100 
+                                        transition-opacity duration-500 z-10">
+                                            Clear Drawing
+                                            <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <img
+                                    src={excaliDisplay[exercise.exercise_id]}
+                                    alt="Drawing solution preview"
+                                    className="IMGs-user-upload w-[39%] max-h-[300px] h-auto border-[3px] border-[rgba(79,141,255,0.98)] rounded mt-2"
+                                /> {/* xxxsm:w-[150px] xxsm:w-[200px] xsm:w-[240px] sm:w-[270px] md:w-[300px] lg:w-[330px] xl:w-[330px] */}
+                            </>
+                        )}
+                        {/* Excalidraw TOOL */}
+                        {isDrawing[exercise.exercise_id] && (
+                            <>
+                                {/* <span className="excalidraw-title xxxsm:text-[10px] xxsm:text-[13px] xsm:text-[16px] sm:text-[18px] md:text-[20px] lg:text-[20px] xl:text-[24px]">
+                                    Solution Canvas
+                                </span> */}
+                                <div className="mb-2">
+                                    <div className="relative inline-block group align-middle">
+                                        <button
+                                            type="button"
+                                            onClick={() => handleExcalidrawSubmit(exercise.exercise_id)}
+                                            className="relative flex items-center align-middle ml-0 border-1 
+                                            bg-gradient-to-r from-cyan-700 to-cyan-500 hover:from-cyan-500 hover:to-cyan-700
+                                            focus:outline-none outline-none border-none rounded-full transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                            xxsm:ml-[1px] xsm:ml-[3px] sm:ml-[4px] md:ml-[5px] lg:ml-[5px] xl:ml-[5px]
+                                            xxxsm:w-[80px] xxsm:w-[100px] xsm:w-[115px] sm:w-[130px] md:w-[140px] lg:w-[160px] xl:w-[160px]
+                                            xxxsm:h-[13px] xxsm:h-[17px] xsm:h-[20px] sm:h-[22px] md:h-[25px] lg:h-[30px] xl:h-[30px]"
+                                        >
+                                            <div className="flex items-center">
+                                                <span className="text-slate-900 font-semibold ml-1
+                                                xxsm:mr-[2px] xsm:mr-[4px] sm:mr-[6px] md:mr-[7px] lg:mr-[8px] xl:mr-[8px]
+                                                xxxsm:text-[8px] xxsm:text-[10px] xsm:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[14px]">
+                                                    Review & Display
+                                                </span>
+                                                <img className='pre-drawing xxxsm:w-[12px] xxsm:w-[14px] xsm:w-[16px] sm:w-[20px] md:w-[24px] lg:w-[28px] xl:w-[28px]'
+                                                    alt='drawing tool' src='/prep-drawing.svg' />
+                                            </div>
+                                        </button>
+                                        <div className="absolute bottom-[99.9%]  
+                                        left-[50%] transform -translate-x-1/2 mb-2 bg-teal-600 text-white
+                                        text-xs rounded-lg py-1 pl-1 pr-0 w-40 opacity-0 group-hover:opacity-100 
+                                        transition-opacity duration-500 z-10">
+                                            Load and Display Drawing for Review and Submission
+                                            <div className="absolute left-[50%] transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                        </div>
+                                    </div>
+                                    <span className="excalidraw-title xxxsm:text-[10px] xxsm:text-[13px] xsm:text-[16px] sm:text-[18px] md:text-[20px] lg:text-[20px] xl:text-[24px]">
+                                        Solution Canvas
+                                    </span>
+                                </div>
+                                <div className="excalidraw-container canvas mt-0
                                 w-full xxxsm:h-[400px] xxsm:h-[475px] xsm:h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] xl:h-[700px]">
                                     <Excalidraw
                                         initialData={excalidrawData[exercise.exercise_id] || { elements: [], state: {} }}

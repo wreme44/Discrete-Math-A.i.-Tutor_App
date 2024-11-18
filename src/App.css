@@ -1081,14 +1081,14 @@ math-field:hover {
     color: #d31717 !important; 
     /* color: #cdbc009b;
     color: #14f4c7;
-    color: #0074b7;
+    color: #0873b1;
     color: #83c7ec33;
     color: #ff00a627;
     color: #2e649a;
     color: #ba21829c;
-    color: #0d214b;
-    color: #0d214b;
+    color: #2c62d780;
     color: #00336a;
+    color: #424242;
     color: rgba(180, 29, 29, 0.651) */
 }
 
@@ -1104,7 +1104,7 @@ math-field:hover {
 }
 
 .excalidraw-title {
-    margin-left: 40%;
+    margin-left: 21%;
     /* margin-top: 55px;
     margin-bottom: 115px; */
     /* font-size: large; */
@@ -1167,6 +1167,10 @@ math-field:hover {
 
 /* My STATUS / Userprogress page */
 
+.progress-title {
+    text-shadow: 2px 2px 4px rgba(0, 162, 255, 0.661);
+}
+
 .ldBar-label {
     /* font-size: 1.5em; */
     color: #ffffff; 
@@ -1175,7 +1179,7 @@ math-field:hover {
     /* top: 30.0%;
     left: 30%; */
     pointer-events: none; 
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+    text-shadow: 2px 2px 4px rgb(0, 0, 0);
 }
 
 .ldBar-label:after {

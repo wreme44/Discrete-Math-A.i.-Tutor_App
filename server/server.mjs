@@ -213,7 +213,7 @@ app.post('/api/validate-solution', async (req, res) => {
         {
             role: 'system',
                 content: `You are a Discrete Math tutor. You will be given a math problem, the student's solution, and the Correct Answer. 
-                        The may receive the student's solution as either text or an image or both.
+                        You may receive the student's solution as either text or an image or both.
  
                         1. Compare the student's text solution (if provided) and / or the image solution (if provided) with the Correct Answer, and determine if it's correct. 
                         2. Always return a response in valid JSON format with {"correct": true/false, "feedback": "feedback on the solution"}.
