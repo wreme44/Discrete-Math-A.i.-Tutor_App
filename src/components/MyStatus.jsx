@@ -142,7 +142,7 @@ const UserProgress = () => {
         fetchUserProgress();
     }, [userId]);
 
-    // loading bar
+    // loading bar Exercises
     useEffect(() => {
         const progressBar = new window.ldBar('#progress-bar')
         progressBar.set(completionPercentage)
@@ -151,7 +151,7 @@ const UserProgress = () => {
         //     label.innerHTML = `${completionPercentage}%`;
         // }
     }, [completionPercentage])
-
+    // loading bar Lessons
     useEffect(() => {
         const lessonBar = new window.ldBar('#lesson-bar')
         lessonBar.set(completionLessons)
@@ -170,13 +170,27 @@ const UserProgress = () => {
     //     // }
     // }, [completionPercentage])
 
+    // loading bar Table lessons
     useEffect(() => {
         allData.forEach((progress) => {
             const barId = `#loading-bar-${progress.lesson_id}`;
             const barElement = document.querySelector(barId);
             if (barElement) {
                 const bar = new window.ldBar(barElement);
-                bar.set(progress.completionPercentage)
+                // const bar = new window.ldBar(barElement, {
+                //     duration: progress.completionPercentage / 10,
+                // })
+                // bar.set(progress.completionPercentage)
+                let currentValue = 0;
+                const targetValue = progress.completionPercentage;
+                const step = 1;
+                const interval = setInterval(() => {
+                    currentValue += step;
+                    bar.set(currentValue);
+                    if (currentValue >= targetValue) {
+                        clearInterval(interval); // stop animation
+                    }
+                }, 60);
             }
             const label = barElement.querySelector('.ldBar-label');
             if (label) {
@@ -187,10 +201,16 @@ const UserProgress = () => {
 
     return (
         <div className="pt-[64px] px-[20px] bg-gray-900 rounded">
-            <h3 className="xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[24px] lg:text-[24px] xl:text-[24px]
-            xxxsm:mb-[10px] xxsm:mb-[20px] xsm:mb-[25px] sm:mb-[25px] md:mb-[20px] lg:mb-[20px] xl:mb-[10px]
-            xxxsm:mt-[35px] xxsm:mt-[30px] xsm:mt-[25px] sm:mt-[20px] md:mt-[10px] lg:mt-[0px] xl:mt-[0px] 
-            font-bold text-white flex justify-center">Progress Status</h3>
+            <div className="flex justify-center items-center">
+                <h3 className="xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[24px] lg:text-[24px] xl:text-[24px]
+                    xxxsm:mb-[10px] xxsm:mb-[20px] xsm:mb-[25px] sm:mb-[25px] md:mb-[20px] lg:mb-[20px] xl:mb-[10px]
+                    xxxsm:mt-[35px] xxsm:mt-[30px] xsm:mt-[25px] sm:mt-[20px] md:mt-[10px] lg:mt-[0px] xl:mt-[0px] 
+                    font-semibold text-white flex justify-center">
+                        Progress Status
+                </h3>
+                <img className="w-6 ml-3" alt="status" src="/progress-icon.svg" />
+            </div>
+            
             {/* Progress Bar */}
             <div className="progress-container 
             xxxsm:mb-[50px] xxsm:mb-[55px] xsm:mb-[55px] sm:mb-[60px] md:mb-[50px] lg:mb-[40px] xl:mb-[20px]" 
@@ -220,7 +240,7 @@ const UserProgress = () => {
                     // data-fill="data:ldbar/res,stripe(#f00,#0f0,0.5)"
                     // stroke="red"
                     data-stroke-width="10"
-                    data-duration="5"
+                    data-duration="6"
                     data-pattern-size="33"
                 // data-label="false"
                 // data-value={completionPercentage}
@@ -250,7 +270,7 @@ const UserProgress = () => {
                     // data-fill=""
                     // stroke="red"
                     data-stroke-width="10"
-                    data-duration="5"
+                    data-duration="6"
                     data-pattern-size="33"
                     // data-label="false"
                     // data-value={completionPercentage}
@@ -335,6 +355,7 @@ const UserProgress = () => {
                                             style={{ width: "100%", maxHeight: "auto" }}
                                             data-stroke="data:ldbar/res,gradient(0,3,#9df,#9fd,#df9,#fd9)"
                                             data-preset="rainbow"
+                                            data-duration="15"
                                             // data-preset="energy"
                                             // data-preset="text"
                                             // data-stroke="data:ldbar/res,gradient(0,1,#ff00a6,#00336a)"
