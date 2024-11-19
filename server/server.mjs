@@ -17,14 +17,23 @@ const rootDir = path.resolve(__dirname, '..');
 
 // middlewares
 app.use(express.static(path.join(rootDir, 'dist')));
-app.use(express.static(path.join(__dirname, 'dist')));
+// app.use(express.static(path.join(__dirname, 'dist')));
 
 app.use(cors());
 app.use(express.json({limit: '20mb'}));
 app.use(express.urlencoded({limit: '20mb', extended: true}));
 
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(rootDir, 'dist', 'index.html'));
+// });
+
 app.get('*', (req, res) => {
-    res.sendFile(path.join(rootDir, 'dist', 'index.html'));
+    try {
+        res.sendFile(path.resolve(rootDir, 'dist', 'index.html'));
+    } catch (error) {
+        console.error('Error serving index.html:', error);
+        res.status(500).send('Server Error');
+    }
 });
 
 // making sure each chunk is a complete json object
