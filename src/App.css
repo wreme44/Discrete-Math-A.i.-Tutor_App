@@ -1091,6 +1091,7 @@ math-field:hover {
     color: #424242;
     color: rgba(180, 29, 29, 0.651) */
 }
+/* "start": "concurrently \"npm run server\" \"npm run dev\"" */
 
 .loading-gif{
     width: 60px;
