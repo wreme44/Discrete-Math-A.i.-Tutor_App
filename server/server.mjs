@@ -19,22 +19,36 @@ const rootDir = path.resolve(__dirname, '..');
 app.use(express.static(path.join(rootDir, 'dist')));
 // app.use(express.static(path.join(__dirname, 'dist')));
 
-app.use(cors());
+// app.use(cors());
+// app.use(cors({
+//     origin: ['http://localhost:5000', 'https://discrete-mentor-16b9a1c9e019.herokuapp.com'],
+//     methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
+//     allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+//     credentials: true, // Include credentials if needed
+// }));
+
+app.use(
+    cors({
+        origin: process.env.NODE_ENV === 'production' 
+            ? 'https://your-deployed-app.herokuapp.com' 
+            : 'http://localhost:5173', // Allow localhost frontend during development
+        methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
+        allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+        credentials: true, // Allow cookies if needed
+    })
+);
 app.use(express.json({limit: '20mb'}));
 app.use(express.urlencoded({limit: '20mb', extended: true}));
+
+// error handling
+app.use((err, req, res, next) => {
+    console.error('Error occurred:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+});
 
 // app.get('*', (req, res) => {
 //     res.sendFile(path.join(rootDir, 'dist', 'index.html'));
 // });
-
-app.get('*', (req, res) => {
-    try {
-        res.sendFile(path.resolve(rootDir, 'dist', 'index.html'));
-    } catch (error) {
-        console.error('Error serving index.html:', error);
-        res.status(500).send('Server Error');
-    }
-});
 
 // making sure each chunk is a complete json object
 const isValidJSON = (str) => {
@@ -64,6 +78,15 @@ const isValidJSON = (str) => {
 //         }
 //     }
 // });
+
+
+
+// Log incoming requests
+app.use((req, res, next) => {
+    console.log(`Incoming Request: ${req.method} ${req.path}`);
+    next();
+});
+
 
 // SSE server sent events
 // handles streaming responses from ChatGPT API, forwards them to client
@@ -320,6 +343,15 @@ app.post('/api/validate-solution', async (req, res) => {
             console.error('Error:', error.message);
             res.status(500).json({ error: 'An unexpected error occurred' });
         }
+    }
+});
+
+app.get('*', (req, res) => {
+    try {
+        res.sendFile(path.resolve(rootDir, 'dist', 'index.html'));
+    } catch (error) {
+        console.error('Error serving index.html:', error);
+        res.status(500).send('Server Error');
     }
 });
 
