@@ -1,0 +1,46 @@
+daemon off;
+worker_processes auto;
+
+events {
+    use epoll;
+    accept_mutex on;
+    worker_connections 512;
+}
+
+http {
+    gzip on;
+    gzip_comp_level 2;
+    gzip_min_length 512;
+    gzip_proxied any;
+
+    server_tokens off;
+
+    log_format l2met 'measure#nginx.service=$request_time request_id=$http_x_request_id';
+    access_log logs/access.log l2met;
+    error_log stderr error;
+
+    include mime.types;
+    default_type application/octet-stream;
+    sendfile on;
+
+    client_body_timeout 5;
+
+    server {
+        listen <%= ENV["PORT"] %>;
+        server_name _;
+
+        root /app/dist;
+        index index.html;
+
+        # Serve static files directly
+        location / {
+            try_files $uri /index.html;
+        }
+
+        # Optional: Handle favicon requests
+        location = /favicon.ico {
+            log_not_found off;
+            access_log off;
+        }
+    }
+}
