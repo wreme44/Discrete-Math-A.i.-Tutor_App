@@ -162,7 +162,8 @@ const MyProfile = () => {
         const { error } = await supabase.auth.signOut();
         if (error) console.error(error);
         sessionStorage.clear();
-        navigate('/login');
+        // navigate('/login');
+        window.location.reload();
     };
 
     const handleCheckStatus = () => {
