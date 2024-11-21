@@ -1,1 +1,1 @@
-web: ./start-server.sh
+web: node server/server.mjs & bin/start-nginx-solo
