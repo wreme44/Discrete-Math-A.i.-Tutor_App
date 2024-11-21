@@ -37,10 +37,14 @@ http {
             try_files $uri /index.html;
         }
 
-        # Optional: Handle favicon requests
-        location = /favicon.ico {
-            log_not_found off;
-            access_log off;
+        # Proxy API requests to Node.js server
+        location /api/ {
+            proxy_pass http://127.0.0.1:5000; # Forward to Node.js
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_cache_bypass $http_upgrade;
         }
     }
 }

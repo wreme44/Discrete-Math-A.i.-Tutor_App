@@ -27,24 +27,24 @@ app.use(express.static(path.join(rootDir, 'dist')));
 //     credentials: true, // Include credentials if needed
 // }));
 
-// app.use(
-//     cors({
-//         origin: process.env.NODE_ENV === 'production' 
-//             ? 'https://your-deployed-app.herokuapp.com' 
-//             : 'http://localhost:5173', // Allow localhost frontend during development
-//         methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
-//         allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
-//         credentials: true, // Allow cookies if needed
-//     })
-// );
-
 app.use(
     cors({
-        origin: '*', // Allow all origins since frontend and backend are on the same domain
-        methods: ['GET', 'POST', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
+        origin: process.env.NODE_ENV === 'production' 
+            ? 'https://your-deployed-app.herokuapp.com' 
+            : 'http://localhost:5173', // Allow localhost frontend during development
+        methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
+        allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+        credentials: true, // Allow cookies if needed
     })
 );
+
+// app.use(
+//     cors({
+//         origin: '*', // Allow all origins since frontend and backend are on the same domain
+//         methods: ['GET', 'POST', 'OPTIONS'],
+//         allowedHeaders: ['Content-Type', 'Authorization'],
+//     })
+// );
 
 app.use(express.json({limit: '20mb'}));
 app.use(express.urlencoded({limit: '20mb', extended: true}));
@@ -54,10 +54,6 @@ app.use((err, req, res, next) => {
     console.error('Error occurred:', err);
     res.status(500).json({ error: 'Internal Server Error' });
 });
-
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(rootDir, 'dist', 'index.html'));
-// });
 
 // making sure each chunk is a complete json object
 const isValidJSON = (str) => {
