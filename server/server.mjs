@@ -27,16 +27,25 @@ app.use(express.static(path.join(rootDir, 'dist')));
 //     credentials: true, // Include credentials if needed
 // }));
 
+// app.use(
+//     cors({
+//         origin: process.env.NODE_ENV === 'production' 
+//             ? 'https://your-deployed-app.herokuapp.com' 
+//             : 'http://localhost:5173', // Allow localhost frontend during development
+//         methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
+//         allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+//         credentials: true, // Allow cookies if needed
+//     })
+// );
+
 app.use(
     cors({
-        origin: process.env.NODE_ENV === 'production' 
-            ? 'https://your-deployed-app.herokuapp.com' 
-            : 'http://localhost:5173', // Allow localhost frontend during development
-        methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
-        allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
-        credentials: true, // Allow cookies if needed
+        origin: '*', // Allow all origins since frontend and backend are on the same domain
+        methods: ['GET', 'POST', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
+
 app.use(express.json({limit: '20mb'}));
 app.use(express.urlencoded({limit: '20mb', extended: true}));
 
@@ -345,6 +354,9 @@ app.post('/api/validate-solution', async (req, res) => {
         }
     }
 });
+
+console.log('Registered routes:', app._router.stack.filter(r => r.route).map(r => r.route.path));
+
 
 app.get('*', (req, res) => {
     try {
