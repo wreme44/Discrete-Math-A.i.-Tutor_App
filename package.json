@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "server": "node server/server.mjs",
-    "start": "npm run build && npm run server",
+    "start": "vite build",
     "dev:all": "concurrently \"npm run dev\" \"npm run server\""
   },
   "dependencies": { 

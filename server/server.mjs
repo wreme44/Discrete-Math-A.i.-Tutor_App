@@ -30,13 +30,22 @@ app.use(express.static(path.join(rootDir, 'dist')));
 app.use(
     cors({
         origin: process.env.NODE_ENV === 'production' 
-            ? 'https://your-deployed-app.herokuapp.com' 
+            ? 'https://discrete-mentor-16b9a1c9e019.herokuapp.com' 
             : 'http://localhost:5173', // Allow localhost frontend during development
         methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
         allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
         credentials: true, // Allow cookies if needed
     })
 );
+
+// app.use(
+//     cors({
+//         origin: 'https://discrete-mentor-16b9a1c9e019.herokuapp.com', // Hardcoded production URL
+//         methods: ['GET', 'POST', 'OPTIONS'], // Specify allowed methods
+//         allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+//         credentials: true, // Allow cookies if needed
+//     })
+// );
 
 // app.use(
 //     cors({
@@ -365,4 +374,9 @@ app.get('*', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
+}).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+        console.error(`Port ${PORT} is already in use.`);
+        process.exit(1); // Gracefully exit
+    }
 });
