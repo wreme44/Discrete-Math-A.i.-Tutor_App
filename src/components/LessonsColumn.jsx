@@ -197,7 +197,7 @@ const LessonsColumn = ({
                                 animate={{ maxHeight: 800, opacity: 1 }}
                                 exit={{ maxHeight: 0, opacity: 0 }}
                                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                                className="absolute mt-[2px] left-[1px] w-[70%] bg-[#133053] text-white rounded-lg shadow-lg z-10 p-1 border-[1px] border-[#2a5aa1] border-opacity-75"
+                                className="absolute mt-[2px] left-[1px] w-auto bg-[#133053] text-white rounded-lg shadow-lg z-10 p-1 border-[1px] border-[#2a5aa1] border-opacity-75"
                             >
                                 {/* <div className={`absolute mt-[2px] left-[1px] w-[300px] bg-gray-800 text-white rounded-lg shadow-lg z-10 p-2
                                 border-2 border-amber-500 border-opacity-75 transition-all duration-2000 ease-in-out

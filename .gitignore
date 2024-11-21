@@ -9,6 +9,7 @@ lerna-debug.log*
 
 node_modules
 # dist removed to include build files
+dist
 dist-ssr
 *.local
 

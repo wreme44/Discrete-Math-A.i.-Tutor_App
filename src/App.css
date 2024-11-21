@@ -498,7 +498,8 @@ button.reset-password-link:hover {
 
 .check-status-button {
     /* margin-top: 20px; */
-    background-color: #e6f8ff;
+    background-color: #e6f8ff00;
+    /* background-color: #e6f8ff; */
     color: rgb(0, 0, 0);
     border: 1px solid transparent;
     /* padding: 0.4em 1.2em; */
@@ -506,7 +507,8 @@ button.reset-password-link:hover {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.546);
+    font-weight: 800;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
@@ -514,6 +516,7 @@ button.reset-password-link:hover {
 }
 
 .check-status-button:hover {
+  /* background-color: #fbfbfb40; */
   background-color: #fbfbfb;
 }
 
@@ -586,14 +589,16 @@ button.reset-password-link:hover {
 
 .delete-account-button {
     /* margin-top: 40px; */
-    background-color: #cd1212;
-    color: white;
+    background-color: #cd121200;
+    /* background-color: #cd1212; */
+    color: rgba(234, 11, 11, 0.923);
     border: 1px solid transparent;
     /* padding: 0.4em 1.2em; */
     padding: 10px 15px;
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
+    text-shadow: 2px 2px 4px rgb(88, 23, 23);
     font-weight: 500;
     font-family: inherit;
     transition: border-color 0.25s;
@@ -602,7 +607,34 @@ button.reset-password-link:hover {
 }
 
 .delete-account-button:hover {
-    background-color: #dd1717;
+    background-color: #dd1717e6;
+    /* background-color: #dd1717; */
+    color: rgba(225, 214, 214, 0.923);
+}
+
+.del-profile-icon-icon {
+    /* Add a box shadow to make the image stand out */
+    box-shadow: 1px 1px 5px rgb(255, 0, 0);
+
+    /* Add a border around the image */
+    border: 2px solid rgb(255, 0, 0);
+
+    /* Slightly scale up the image */
+    /* transform: scale(1.1); */
+
+    /* Add transition for smooth effect */
+    /* transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; */
+}
+
+.del-profile-icon:hover {
+    /* Further scale up the image on hover */
+    /* transform: scale(1.2); */
+
+    /* Change the box shadow on hover */
+    /* box-shadow: 0 0 10px rgb(255, 0, 0); */
+
+    /* Change the border color on hover */
+    /* border-color: rgba(0, 0, 0, 0.7); */
 }
 
 .del-profile-text{
