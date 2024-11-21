@@ -626,7 +626,7 @@ button.reset-password-link:hover {
     /* transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s; */
 }
 
-.del-profile-icon:hover {
+/* .del-profile-icon:hover { */
     /* Further scale up the image on hover */
     /* transform: scale(1.2); */
 
@@ -635,7 +635,7 @@ button.reset-password-link:hover {
 
     /* Change the border color on hover */
     /* border-color: rgba(0, 0, 0, 0.7); */
-}
+/* } */
 
 .del-profile-text{
     /* font-size: 22px; */
