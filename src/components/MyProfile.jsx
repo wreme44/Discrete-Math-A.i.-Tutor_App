@@ -170,7 +170,8 @@ const MyProfile = () => {
         const { error } = await supabase.auth.signOut();
         if (error) console.error(error);
         sessionStorage.clear();
-        navigate('/login');
+        // navigate('/login');
+        window.location.reload();
     };
 
     const handleCheckStatus = () => {
@@ -181,7 +182,7 @@ const MyProfile = () => {
         <>
             {user ? (
                 <div className="myAccount">
-                    <div className="profile-container w-full xxxsm:w-[200px] xxsm:w-[225px] xsm:w-[225px] sm:w-[275px] md:w-[300px] lg:w-[350px] xl:w-[350px] h-auto "> {/* xsm:h-[200px] sm:h-[250px] md:h-[250px] lg:h-[300px] xl:h-[300px] */}
+                    <div className="profile-container w-full xxxsm:w-[200px] xxsm:w-[225px] xsm:w-[225px] sm:w-[275px] md:w-[300px] lg:w-[350px] xl:w-[350px] h-auto max-h-[90vh] overflow-y-auto"> {/* xsm:h-[200px] sm:h-[250px] md:h-[250px] lg:h-[300px] xl:h-[300px] */}
                         {/* <h5 className="myAccount-title">Your DiscreteMentor Account</h5> */}
                         {/* <img className="user-icon" alt="home button" src='/D.Mentor5.png' /> */}
                         <div className="username xxxsm:text-[16px] xxsm:text-[18px] xsm:text-[18px] sm:text-[22px] md:text-[24px] lg:text-[28px] xl:text-[28px]
@@ -209,12 +210,12 @@ const MyProfile = () => {
                         </div> */}
                         {/* Check Progress Status */}
                         <div className="check-status-div">
-                            <button className="check-status-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[70%] lg:w-[70%] xl:w-[70%]
+                            <button className="check-status-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[68%] lg:w-[70%] xl:w-[70%]
                                         xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                         xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleCheckStatus}>
                                 <div className="flex items-center justify-center">
                                     <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/check-status.svg" />
-                                    <span className="ml-0 mr-1">Check Your Progress</span>
+                                    <span className="ml-0 mr-0">Check Your Progress</span>
                                 </div>
                             </button>
                         </div>
@@ -223,7 +224,7 @@ const MyProfile = () => {
                                         xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                         xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleEditProfile}>
                             {isEditing ? (
-                                <div className="flex items-center justify-center">
+                                <div className="flex items-center justify-center"> {/* justify-center */}
                                     <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/cancel-edit.svg" />
                                     <span className="ml-0 mr-1">Cancel Edit</span>
                                 </div>
@@ -275,9 +276,9 @@ const MyProfile = () => {
                         {/* Delete profile button */}
                         <button className="delete-account-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[70%] lg:w-[70%] xl:w-[70%]
                                         xxxsm:mt-[15px] xxsm:mt-[20px] xsm:mt-[20px] sm:mt-[30px] md:mt-[30px] lg:mt-[40px] xl:mt-[40px]
-                                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleDeleteProfile}>
+                                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]" onClick={handleDeleteProfile}>
                             <div className="flex items-center justify-center">
-                                <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/delete-user.svg" />
+                                <img className="del-profile-icon xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/delete-user.svg" />
                                 <span className="ml-0 mr-1">Delete Profile</span>
                             </div>
                         </button>

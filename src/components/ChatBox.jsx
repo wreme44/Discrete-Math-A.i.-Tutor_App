@@ -41,8 +41,13 @@ const ChatBox = () => {
         setIsTyping(true);
         assistantMessageRef.current = ''; // resetting reference to store assistants message during streaming
 
+        const baseURL = process.env.NODE_ENV === 'production'
+            ? 'https://discrete-mentor-16b9a1c9e019.herokuapp.com'
+            : 'http://localhost:5000';
+
         try { // sending user message to backend api, (await)ing for the response
-            const response = await fetch('http://localhost:5000/api/chat', {
+            const response = await fetch(`${baseURL}/api/chat`, {
+            // const response = await fetch('https://discrete-mentor-16b9a1c9e019.herokuapp.com/api/chat', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

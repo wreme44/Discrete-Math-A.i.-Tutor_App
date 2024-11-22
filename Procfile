@@ -1,0 +1,1 @@
+web: node server/server.mjs & bin/start-nginx-solo

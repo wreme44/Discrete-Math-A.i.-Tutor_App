@@ -20,6 +20,17 @@ const UserProgress = () => {
     const completionPercentage = totalExercises > 0 ? Math.round((completedExercises / totalExercises) * 100) : 0;
     const completionLessons = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
+    // useEffect(() => {
+    //     const script = document.createElement('script')
+    //     script.src = '/libs/loading-bar.min.js'
+    //     script.async = true;
+    //     document.body.appendChild(script);
+
+    //     return () => {
+    //         document.body.removeChild(script);
+    //     }
+    // }, [])
+
     useEffect(() => {
         const fetchUserProgress = async () => {
             if (userId) {

@@ -6,7 +6,6 @@ import LessonsColumn from './LessonsColumn';
 import ExercisesPage from './ExercisesPage';
 import { use } from 'marked';
 import { supabase } from '../supabaseClient';
-// import { LessonProgressProvider } from './LessonProgressContext';
 
 const MainPage = () => {
 

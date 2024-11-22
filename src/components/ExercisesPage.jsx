@@ -314,9 +314,15 @@ const ExercisesPage = ({
         // setIsTyping((prev) => ({...prev, [exerciseId]: true}));
         setIsTyping(true)
 
+        const baseURL = process.env.NODE_ENV === 'production'
+            ? 'https://discrete-mentor-16b9a1c9e019.herokuapp.com'
+            : 'http://localhost:5000';
+
         try {
             // standard api call instead of streaming api
-            const response = await fetch('http://localhost:5000/api/validate-solution', {
+
+            const response = await fetch(`${baseURL}/api/validate-solution`, {
+            // const response = await fetch('https://discrete-mentor-16b9a1c9e019.herokuapp.com/api/validate-solution', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', },
                 body: JSON.stringify(payload),
