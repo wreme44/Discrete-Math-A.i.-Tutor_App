@@ -1,8 +1,8 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import './App.css'
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+import './index.css';
+import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Layout from '../routes/Layout.jsx';
 import NotFound from '../routes/NotFound.jsx';
@@ -11,7 +11,10 @@ import LoginRoute from '../routes/LoginRoute.jsx';
 import Profile from '../routes/Profile.jsx';
 import MyStatus from './components/MyStatus.jsx';
 import ResetPassword from "./components/ResetPassword";
-
+import Games from './components/Games.jsx'; // Import the new component
+import FlashcardChallenges from './components/FlashcardChallenges.jsx'; // Import the new component
+import MemoryMatch from './components/MemoryMatch.jsx'; // Import the new component
+import DragAndDropPuzzle from './components/DragAndDropPuzzle.jsx'; // Import the new component 
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -25,9 +28,13 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route index={false} path="/myProfile" element={<Profile />} />
                     <Route path="/myStatus" element={<MyStatus />} />
                     <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/games" element={<Games />} />
+                    <Route path="/flashcard-challenges" element={<FlashcardChallenges />} />
+                    <Route path="/memory-match" element={<MemoryMatch />} />
+                    <Route path="/drag-and-drop-puzzle" element={<DragAndDropPuzzle />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </BrowserRouter>
-    </React.StrictMode>,
-)
+    </React.StrictMode>
+);

@@ -154,6 +154,14 @@ const MyProfile = () => {
         setIsModalOpen(false);
     };
 
+
+    // Handle navigation to the Games page
+    const handleGamesNavigation = () => {
+        navigate('/games');
+    };
+
+
+
     if (isLoading) {
         return <div className="flex items-center justify-center min-h-screen"><img src='/loading-ripple.svg' /></div>;
     }
@@ -179,6 +187,20 @@ const MyProfile = () => {
                         <div className="username xxxsm:text-[16px] xxsm:text-[18px] xsm:text-[18px] sm:text-[22px] md:text-[24px] lg:text-[28px] xl:text-[28px]
                             xxxsm:mb-[4px] xxsm:mb-[6px] xsm:mb-[6px] sm:mb-[10px] md:mb-[16px] lg:mb-[18px] xl:mb-[20px]
                             xxxsm:mt-[4px] xxsm:mt-[6px] xsm:mt-[6px] sm:mt-[10px] md:mt-[16px] lg:mt-[18px] xl:mt-[20px]">{name}</div>
+
+                        {/* Games Button */}
+                        <button
+                            className="games-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[70%] lg:w-[70%] xl:w-[70%]
+                            xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
+                            onClick={handleGamesNavigation}>
+                            <div className="flex items-center justify-center">
+                                <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Games" src="/check-status.svg" />
+                                <span className="ml-0 mr-1">Games</span>
+                            </div>
+                        </button>
+
+
                         {/* <div><ToastContainer/></div> */}
                         {/* <div className="username">
                             <div className="items-center justify-center">
