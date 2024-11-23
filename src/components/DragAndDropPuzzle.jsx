@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const DragAndDropPuzzle = () => {
   const [mainSetA, setMainSetA] = useState([]);
@@ -232,6 +233,19 @@ const DragAndDropPuzzle = () => {
               Start Game
             </button>
           </div>
+          {/* Games Button */}
+          <div className="flex flex-col items-center justify-center
+                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
+                    {/* <Link className=""
+                        to="/games">
+                        <img className="xxxsm:w-[30px] xxsm:w-[40px] xsm:w-[50px] sm:w-[60px] md:w-[60px] lg:w-[70px] xl:w-[70px] h-auto mr-1"
+                            alt="Games" src="/games-icon.svg" />
+                    </Link> */}
+                    <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
+                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded"
+                        to="/games">Game Hub</Link>
+            </div>
         </div>
       )}
 
@@ -271,6 +285,19 @@ const DragAndDropPuzzle = () => {
           <button className="restart-button" onClick={restartGame}>
             Restart Game
           </button>
+          {/* Games Button */}
+          <div className="flex flex-col items-center justify-center
+                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
+                    {/* <Link className=""
+                        to="/games">
+                        <img className="xxxsm:w-[30px] xxsm:w-[40px] xsm:w-[50px] sm:w-[60px] md:w-[60px] lg:w-[70px] xl:w-[70px] h-auto mr-1"
+                            alt="Games" src="/games-icon.svg" />
+                    </Link> */}
+                    <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
+                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded"
+                        to="/games">Game Hub</Link>
+            </div>
         </>
       )}
 
@@ -288,6 +315,19 @@ const DragAndDropPuzzle = () => {
               Restart Game
             </button>
           </div>
+          {/* Games Button */}
+          <div className="flex flex-col items-center justify-center
+                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
+                    {/* <Link className=""
+                        to="/games">
+                        <img className="xxxsm:w-[30px] xxsm:w-[40px] xsm:w-[50px] sm:w-[60px] md:w-[60px] lg:w-[70px] xl:w-[70px] h-auto mr-1"
+                            alt="Games" src="/games-icon.svg" />
+                    </Link> */}
+                    <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
+                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded"
+                        to="/games">Game Hub</Link>
+            </div>
         </div>
       )}
     </div>

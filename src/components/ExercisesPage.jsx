@@ -16,6 +16,8 @@ import hljs from 'highlight.js';
 import 'highlight.js/styles/atom-one-dark.css';
 import remarkGfm from 'remark-gfm'
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
+import { useNavigate, Link } from "react-router-dom";
+import Games from './Games';
 
 const MathLiveInput = ({ value, onChange, onFocus }) => {
 
@@ -42,11 +44,14 @@ const ExercisesPage = ({
     onExerciseCompletion, userId, exercisesData,
     groupedExercises, lessonsData }) => {
 
+    const navigate = useNavigate();
+
     // const [user, setUser] = useState(null);
     // const [userId, setUserId] = useState(null);
     // State to hold exercises data fetched from the database
     // const [exercisesData, setExercisesData] = useState([]);
     // const [groupedExercises, setGroupedExercises] = useState({});
+    const [showGames, setShowGames] = useState(false);
     // pre determined correct answers
     const [correctAnswers, setCorrectAnswers] = useState({});
     // State to keep track of current lesson index
@@ -96,6 +101,10 @@ const ExercisesPage = ({
     const currentLessonId = lessonIds[currentExerciseIndex];
     const currentExercises = groupedExercises[currentLessonId] || [];
     const currentLessonIndex = lessonsData.findIndex(lesson => lesson.lesson_id === parseInt(currentLessonId));
+
+    const toggleGames = () => {
+        setShowGames(prev => !prev);
+    };
 
     const cleanLatexInput = (latexInput) => {
 
@@ -595,7 +604,7 @@ const ExercisesPage = ({
 
     // checking completion status 
     useEffect(() => {
-
+        // console.log("all correct:", allCorrect)
         // update lessons next page button when all exercises are completed
         if (allCorrect) {
             onExerciseCompletion(true);
@@ -670,9 +679,11 @@ const ExercisesPage = ({
                             console.error("Error checking existing progress:", selectError.message);
                             return;
                         }
+                        const existingCompletedLessons = JSON.parse(sessionStorage.getItem('completedLessons')) || {};
                         if (existingProgress) {
                             // convert to map for lookup
                             const completedMap = {
+                                ...existingCompletedLessons,
                                 [existingProgress.lesson_id]: existingProgress.completed
                             };
                             setLessonMarkedDone(completedMap);
@@ -694,6 +705,7 @@ const ExercisesPage = ({
                             } else {
                                 // console.log(`Lesson ${currentLessonId} marked as completed for user ${userId}`);
                                 const completedMap = {
+                                    ...existingCompletedLessons,
                                     [currentLessonId]: true
                                 };
                                 setLessonMarkedDone(completedMap);
@@ -805,6 +817,10 @@ const ExercisesPage = ({
             ...prevState, [exerciseId]: !prevState[exerciseId],
         }));
     };
+
+    const handleGamesNavigation = () => {
+        navigate('/games');
+    };
     // render component
     // if (loading) return <p>Loading exercises...</p>;
     // if (error) return <p>{error}</p>;
@@ -815,6 +831,9 @@ const ExercisesPage = ({
     // const isLessonCompleted = lessonComplete[currentLessonId];
 
     return (
+        <>
+        {!showGames ? (
+
         <div className="flex flex-col h-full -mt-2">
             {currentLessonId && (
                 <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[18px] lg:text-[20px] xl:text-[20px] font-bold mb-1">Exercise {currentLessonIndex + 1}</h2>
@@ -1143,6 +1162,24 @@ const ExercisesPage = ({
                         {/* <hr className="border-0 border-t border-gray-600 border-opacity-50 w-[70%] mx-auto" /> */}
                     </div>
                 ))}
+                {/* Games Button */}
+                <div className="flex flex-col items-center justify-center
+                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
+                    <Link className=""
+                        to="/games">
+                        <img className="xxxsm:w-[30px] xxsm:w-[40px] xsm:w-[50px] sm:w-[60px] md:w-[60px] lg:w-[70px] xl:w-[70px] h-auto mr-1"
+                            alt="Games" src="/games-icon.svg" />
+                    </Link>
+                    <button className="game-link px-2 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
+                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded"
+                        onClick={toggleGames}>
+                            <span>D-Mentor Games</span>
+                    </button>
+                    {/* <Link className="game-link px-2 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
+                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded"
+                        to="/games">D-Mentor Games</Link> */}
+                </div>
             </div>
             <div className="flex justify-between items-end -mb-1">
                 <div className="relative flex mt-1 -mb-1">
@@ -1179,6 +1216,18 @@ const ExercisesPage = ({
                 </div>
             </div>
         </div>
+        ) :  (
+            <>
+                <Games/>
+                <button className="game-link px-2 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
+                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded"
+                        onClick={toggleGames}>
+                            <span>Back to Exercises</span>
+                </button>
+            </>
+
+        )}
+        </>
     );
 };
 

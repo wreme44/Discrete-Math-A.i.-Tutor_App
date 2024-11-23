@@ -1,33 +1,44 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 
 const Games = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Add class to body
+    document.body.classList.add('myAccountBody');
+
+    return () => {
+      // Remove class when leaving the page
+      document.body.classList.remove('myAccountBody');
+    };
+  }, []);
 
   return (
     <div className="games-container">
       <style>
         {`
           /* Background Styling */
-          @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-          }
+        //   @keyframes gradientShift {
+        //     0% { background-position: 0% 50%; }
+        //     50% { background-position: 100% 50%; }
+        //     100% { background-position: 0% 50%; }
+        //   }
 
           .games-container {
-            background: radial-gradient(circle, #121212, #1c1c1c, #262626, #2a2a2a);
-            background-size: 150% 150%;
-            animation: gradientShift 10s ease infinite;
+            // background: radial-gradient(circle, #121212, #1c1c1c, #262626, #2a2a2a);
+            // background-size: 150% 150%;
+            // animation: gradientShift 10s ease infinite;
             color: white;
             text-align: center;
-            height: 100vh;
+            // height: 100vh;
+            padding-top: 150px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             font-family: "Arial", sans-serif;
-            overflow: hidden;
+            // overflow: hidden;
           }
 
           .games-title {

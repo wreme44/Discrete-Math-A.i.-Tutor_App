@@ -213,12 +213,16 @@ const ChatBox = () => {
                         break-words max-w-full whitespace-normal`}>
                             {msg.role === 'assistant' ? (
                                 <>
-                                {/* {console.log(msg.content)} */}
-                                {/* {console.log(cleanLatexResponse(msg.content))} */}
-                                <LatexRenderer content={msg.content}/>
+                                    <div className='flex items-start'>
+                                        <img className="w-6 h-auto mr-2" alt="Tutor Icon" src="/logo.png" />
+                                        {/* {console.log(msg.content)} */}
+                                        {/* {console.log(cleanLatexResponse(msg.content))} */}
+                                        <LatexRenderer content={msg.content} />
+                                    </div>
+
                                 </>
                             ) : (
-                                <LatexRenderer content={msg.content}/>
+                                <LatexRenderer content={msg.content} />
                             )}
                         </span>
                     </div>

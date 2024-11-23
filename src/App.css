@@ -288,14 +288,17 @@ button.reset-password-link:hover {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     /* height: calc(100vh - 40px); */
     background-color: #1d2733;
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('accountPage.gif');
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
+    /* background-attachment: fixed; */
     background-position: center 20px;
     padding-top: 60px;
+    /* overflow-y: auto; */
 
     /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 12.png');
     background-repeat: no-repeat;
@@ -516,6 +519,23 @@ button.reset-password-link:hover {
 .check-status-button:hover {
   background-color: #fbfbfb;
 }
+
+.games-button-profile {
+    background-color: #e6f8ff;
+    color: rgb(0, 0, 0);
+    border: none;
+    padding: 10px 15px;
+    /* margin: 10px 0; */
+    cursor: pointer;
+    /* font-size: 16px; */
+    font-weight: 500;
+    border-radius: 8px;
+    /* width: 70%; */
+  }
+  
+  .games-button-profile:hover {
+    background-color: #fbfbfb;
+  }
 
 .edit-profile-button {
   background-color: #e6f8ff;
@@ -1072,6 +1092,15 @@ math-field:hover {
 
 /* Exercise Page */
 
+.game-link {
+    color:#0a2663 !important;
+    text-decoration: none !important;
+}
+
+.game-link:hover {
+    color:#000000 !important;
+}
+
 /* Correct / Incorrect user solution text color */
 .correct-answer {
     color: #0eb87f !important;
@@ -1212,3 +1241,81 @@ math-field:hover {
 /* .progress-label:after {
     content: "%";
 } */
+
+/* --------------------------------------------------------------- */
+
+/* GAMES page */
+
+body.myAccountBody {
+    background-color: #1d2733;
+    @keyframes gradientShift {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+    background: radial-gradient(circle, #121212, #1c1c1c, #262626, #2a2a2a);
+    background-size: 150% 150%;
+    animation: gradientShift 10s ease infinite;
+}
+
+
+/* -------------------------------------------------------------------- */
+
+/* FLASHCARD page */
+
+body.flashCardBody {
+    background-color: #1f2937;
+    cursor: url('wand-cursor.svg'), auto;
+}
+
+.card-container {
+    transform-style: preserve-3d;
+    transition: transform 0.9s;
+    border-radius: 10px;
+    box-shadow: 0px 10px 10px rgb(0, 0, 0);
+    cursor: pointer;
+    /* transform: rotateY(180deg); */
+}
+.card-front, .card-back {
+    /* position: absolute;
+    width: 100%;
+    height: 100%; */
+    backface-visibility: hidden;
+    /* display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px; */
+}
+
+/* .card-front {
+    background-color: #fff;
+    color: #000;
+    z-index: 2;
+} */
+
+.card-back {
+    /* background-color: #f8f8f8; */
+    /* color: #000; */
+    transform: rotateY(180deg);
+    /* z-index: 1; */
+}
+
+.card-container.flipped {
+    transform: rotateY(180deg);
+}
+
+/* -------------------------------------------------------------------- */
+
+/* MEMORY match page */
+
+body.memoryMatchBody {
+    background-color: #1a202c;
+}

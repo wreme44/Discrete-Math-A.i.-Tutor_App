@@ -26,6 +26,16 @@ const LessonsColumn = ({
         const savedIndex = sessionStorage.getItem("currentLessonIndex");
         return savedIndex ? parseInt(savedIndex, 10) : 0;
     });
+
+    // const [lessonData, setLessonData] = useState(() => {
+    //     const savedLessonsData = sessionStorage.getItem('lessonsData');
+    //     return savedLessonsData ? JSON.parse(savedLessonsData) : [];
+    // })
+
+    // const [completedLesson, setCompletedLesson] = useState(() => {
+    //     const savedCompletedLessons = sessionStorage.getItem('completedLessons');
+    //     return savedCompletedLessons ? JSON.parse(savedCompletedLessons) : {};
+    // });
     // Loading and error states
     // const [loading, setLoading] = useState(true);
     // const [error, setError] = useState(null);
@@ -104,6 +114,10 @@ const LessonsColumn = ({
     };
 
     const isLessonCompleted = completedLessons[currentLesson?.lesson_id];
+    // const [isLessonCompleted, setIsLessonCompleted] = useState(() => {
+    //     const savedIsLessonCompleted = sessionStorage.getItem("currentLessonIndex");
+    //     return savedIsLessonCompleted ? parseInt(savedIndex, 10) : 0;
+    // });
 
     useEffect(() => {
         const modal = document.getElementById("imageModal");
@@ -176,19 +190,19 @@ const LessonsColumn = ({
                 <div className="relative mr-2">
                     <button
                         onClick={() => setIsDropdownOpen((prev) => !prev)}
-                        className="flex items-center space-x-1 hover:bg-[#c0c0c02d] hover:border-[#c0c0c000] outline-none focus:outline-none"
+                        className="flex items-start space-x-1 hover:bg-[#c0c0c02d] hover:border-[#c0c0c000] outline-none focus:outline-none"
                     >   
                         {isDropdownOpen
-                                ? (<><XMarkIcon className="xxxsm:w-[16px] xxsm:w-[20px] xsm:w-[20px] sm:w-[20px] md:w-[20px] lg:w-[20px] xl:w-[20px] 
-                                xxxsm:h-[16px] xxsm:h-[20px] xsm:h-[20px] sm:h-[20px] md:h-[20px] lg:h-[20px] xl:h-[20px]" />
-                                <h2 className="font-bold mb-1 flex-grow text-left xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[16px] lg:text-[18px] xl:text-[20px]">
+                                ? (<><h2 className="font-bold mb-1 flex-grow text-left xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[16px] lg:text-[18px] xl:text-[20px]">
                                     {currentLesson.title}
-                                </h2></>)
-                                : (<><ChevronDownIcon className="xxxsm:w-[16px] xxsm:w-[20px] xsm:w-[20px] sm:w-[20px] md:w-[20px] lg:w-[20px] xl:w-[20px] 
-                                xxxsm:h-[16px] xxsm:h-[20px] xsm:h-[20px] sm:h-[20px] md:h-[20px] lg:h-[20px] xl:h-[20px]" />
-                                <h2 className="font-bold mb-1 flex-grow text-left xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[16px] lg:text-[18px] xl:text-[20px]">
+                                </h2>
+                                <XMarkIcon className="xxxsm:w-[16px] xxsm:w-[20px] xsm:w-[20px] sm:w-[20px] md:w-[20px] lg:w-[20px] xl:w-[20px] 
+                                xxxsm:h-[16px] xxsm:h-[20px] xsm:h-[20px] sm:h-[20px] md:h-[20px] lg:h-[20px] xl:h-[20px]" /></>)
+                                : (<><h2 className="font-bold mb-1 flex-grow text-left xxxsm:text-[14px] xxsm:text-[16px] xsm:text-[18px] sm:text-[20px] md:text-[16px] lg:text-[18px] xl:text-[20px]">
                                     {currentLesson.title}
-                                </h2></>)}
+                                </h2>
+                                <ChevronDownIcon className="xxxsm:w-[16px] xxsm:w-[20px] xsm:w-[20px] sm:w-[20px] md:w-[20px] lg:w-[20px] xl:w-[20px] 
+                                xxxsm:h-[16px] xxsm:h-[20px] xsm:h-[20px] sm:h-[20px] md:h-[20px] lg:h-[20px] xl:h-[20px]" /></>)}
                     </button>
                     <AnimatePresence>
                         {isDropdownOpen && (
@@ -209,7 +223,8 @@ const LessonsColumn = ({
                                             <button
                                                 key={lessonId}
                                                 onClick={() => navigateToLesson(lessonIndex)}
-                                                className="w-full text-left px-2 py-1 hover:bg-[#1b3657] rounded hover:border-gray-700"
+                                                // className="w-full text-left px-2 py-1 hover:bg-[#1b3657] rounded-none hover:border-gray-700 border-t-red-200"
+                                                className={`w-full text-left px-2 py-1 hover:bg-[#1b3657] rounded-none ${lessonIndex !== 0 ? 'border-t-[rgba(255,255,255,0.33)]' : ''}`}
                                             >
                                                 {lessonsData[lessonIndex]?.title || `Lesson ${lessonIndex + 1}`}
                                             </button>

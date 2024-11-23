@@ -15,21 +15,11 @@ const UserProgress = () => {
     const [totalLessons, setTotalLessons] = useState(10);
     const [completedLessons, setCompletedLessons] = useState(0);
     const [lessonProgress, setLessonProgress] = useState([]);
+    const [scriptLoaded, setScriptLoaded] = useState(false);
 
     // Calculate completion percentage
     const completionPercentage = totalExercises > 0 ? Math.round((completedExercises / totalExercises) * 100) : 0;
     const completionLessons = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
-
-    // useEffect(() => {
-    //     const script = document.createElement('script')
-    //     script.src = '/libs/loading-bar.min.js'
-    //     script.async = true;
-    //     document.body.appendChild(script);
-
-    //     return () => {
-    //         document.body.removeChild(script);
-    //     }
-    // }, [])
 
     useEffect(() => {
         const fetchUserProgress = async () => {
@@ -152,6 +142,88 @@ const UserProgress = () => {
 
         fetchUserProgress();
     }, [userId]);
+
+    // Load the loading-bar script only when the component is mounted
+    // useEffect(() => {
+    //     const script = document.createElement('script');
+    //     script.src = '/libs/loading-bar.min.js';
+    //     script.async = true;
+    //     script.onload = () => setScriptLoaded(true);
+    //     document.body.appendChild(script);
+
+    //     return () => {
+    //         document.body.removeChild(script);
+    //         setScriptLoaded(false);
+    //     };
+    // }, []);
+
+    // useEffect(() => {
+    //     const scriptId = 'loading-bar-script';
+    //     let script = document.getElementById(scriptId);
+
+    //     if (!script) {
+    //         script = document.createElement('script');
+    //         script.id = scriptId;
+    //         script.src = '/libs/loading-bar.min.js';
+    //         script.async = true;
+    //         script.onload = () => setScriptLoaded(true);
+    //         document.body.appendChild(script);
+    //     } else {
+    //         setScriptLoaded(true);
+    //     }
+
+    //     const handleBeforeUnload = () => {
+    //         if (script) {
+    //             document.body.removeChild(script);
+    //             setScriptLoaded(false);
+    //         }
+    //     };
+
+    //     window.addEventListener('beforeunload', handleBeforeUnload);
+
+    //     return () => {
+    //         if (script) {
+    //             document.body.removeChild(script);
+    //             setScriptLoaded(false);
+    //         }
+    //         window.removeEventListener('beforeunload', handleBeforeUnload);
+    //     };
+    // }, []);
+
+    // useEffect(() => {
+    //     if (scriptLoaded) {
+    //         // loading bar Exercises
+    //         const progressBar = new window.ldBar('#progress-bar');
+    //         progressBar.set(completionPercentage);
+
+    //         // loading bar Lessons
+    //         const lessonBar = new window.ldBar('#lesson-bar');
+    //         lessonBar.set(completionLessons);
+
+    //         // loading bar Table lessons
+    //         allData.forEach((progress) => {
+    //             const barId = `#loading-bar-${progress.lesson_id}`;
+    //             const barElement = document.querySelector(barId);
+    //             if (barElement) {
+    //                 const bar = new window.ldBar(barElement);
+    //                 let currentValue = 0;
+    //                 const targetValue = progress.completionPercentage;
+    //                 const step = 1;
+    //                 const interval = setInterval(() => {
+    //                     currentValue += step;
+    //                     bar.set(currentValue);
+    //                     if (currentValue >= targetValue) {
+    //                         clearInterval(interval); // stop animation
+    //                     }
+    //                 }, 60);
+    //             }
+    //             const label = barElement.querySelector('.ldBar-label');
+    //             if (label) {
+    //                 label.remove();
+    //             }
+    //         });
+    //     }
+    // }, [scriptLoaded, completionPercentage, completionLessons, allData]);
 
     // loading bar Exercises
     useEffect(() => {
@@ -339,7 +411,7 @@ const UserProgress = () => {
             </div> */}
             <div className="overflow-y-auto max-h-[450px] relative"> {/* absolute bottom-[20px] left-[40px] right-[40px] */}
                 <table className="table-auto w-full text-white">
-                    <thead className="sticky top-0">
+                    <thead className="sticky top-0 z-10">
                         <tr className="bg-gray-600">
                             <th className="px-0 py-1
                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[13px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
@@ -358,10 +430,10 @@ const UserProgress = () => {
                                 // );
                                 // return (
                                 <tr key={progress.lesson_id} className="bg-gray-800">
-                                    <td className="border px-2 py-1
+                                    <td className="border px-2 py-1 border-[rgb(0,0,0)]
                                     xxxsm:text-[10px] xxsm:text-[11px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
                                         {progress.title}</td>
-                                    <td className="border px-2 py-2">
+                                    <td className="border px-2 py-2 border-[rgb(0,0,0)]">
                                         <div
                                             id={`loading-bar-${progress.lesson_id}`}
                                             className="ldBar"
@@ -385,7 +457,7 @@ const UserProgress = () => {
                                                 : "0%"}
                                         </div>
                                     </td>
-                                    <td className="border px-2 py-1 text-center
+                                    <td className="border px-2 py-1 text-center border-[rgb(0,0,0)]
                                     xxxsm:text-[10px] xxsm:text-[11px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[18px]">
                                         {progress.completed_at
                                             ? new Date(progress.completed_at).toLocaleString(undefined, {
