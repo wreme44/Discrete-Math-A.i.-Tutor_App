@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, useRef } from 'react';
 import { Link } from "react-router-dom";
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import ChatBox from './ChatBox'
@@ -9,6 +9,7 @@ import { supabase } from '../supabaseClient';
 
 const MainPage = () => {
 
+    const bottomRef = useRef(null);
     const [isRowView, setIsRowView] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
@@ -46,6 +47,15 @@ const MainPage = () => {
     // Toggle between column and row view
     const toggleView = () => setIsRowView((prev) => !prev);
 
+    const toggleViewWithScroll = () => {
+        if (!isRowView) {
+            setIsRowView((prev) => !prev);
+        }
+        // setIsRowView((prev) => !prev);
+        setTimeout(() => {
+            bottomRef.current.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+    }
     const toggleChatBox = () => { setIsChatVisible(!isChatVisible) }
     // callback to handle the completion of exercises
     const handleExercisesCompletion = useCallback((isCompleted) => {
@@ -237,9 +247,11 @@ const MainPage = () => {
                             exercisesData={exercisesData}
                             groupedExercises={groupedExercises}
                             lessonsData={lessonsData}
+                            toggleViewWithScroll={toggleViewWithScroll}
                         // loading={loading}
                         // error={error}
                         />
+                         <div ref={bottomRef}></div>
                     </div>
                     <div className={`rounded overflow-y-auto 
                         ${isSmallScreen

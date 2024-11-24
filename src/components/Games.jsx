@@ -1,23 +1,23 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const Games = () => {
-  const navigate = useNavigate();
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    // Add class to body
-    document.body.classList.add('myAccountBody');
+    useEffect(() => {
+        // Add class to body
+        document.body.classList.add('myAccountBody');
 
-    return () => {
-      // Remove class when leaving the page
-      document.body.classList.remove('myAccountBody');
-    };
-  }, []);
+        return () => {
+            // Remove class when leaving the page
+            document.body.classList.remove('myAccountBody');
+        };
+    }, []);
 
-  return (
-    <div className="games-container">
-      <style>
-        {`
+    return (
+        <div className="games-container">
+            <style>
+                {`
           /* Background Styling */
         //   @keyframes gradientShift {
         //     0% { background-position: 0% 50%; }
@@ -100,34 +100,34 @@ const Games = () => {
           .ambient-glow2 { bottom: 15%; right: 15%; }
           .ambient-glow3 { top: 50%; left: 70%; }
         `}
-      </style>
+            </style>
 
-      <h1 className="games-title">Games Hub</h1>
-      <button
-        className="game-button"
-        onClick={() => navigate("/flashcard-challenges")}
-      >
-        <span className="game-icon">🃏</span> Flashcard Challenges
-      </button>
-      <button
-        className="game-button"
-        onClick={() => navigate("/memory-match")}
-      >
-        <span className="game-icon">🧠</span> Memory Match
-      </button>
-      <button
-        className="game-button"
-        onClick={() => navigate("/drag-and-drop-puzzle")}
-      >
-        <span className="game-icon">🖱️</span> Drag and Drop Puzzle
-      </button>
+            <h1 className="games-title">Game Hub</h1>
+            <button
+                className="game-button"
+                onClick={() => navigate("/flashcard-challenges")}
+            >
+                <span className="game-icon">🃏</span> Flashcard Challenges
+            </button>
+            <button
+                className="game-button"
+                onClick={() => navigate("/memory-match")}
+            >
+                <span className="game-icon">🧠</span> Memory Match
+            </button>
+            <button
+                className="game-button"
+                onClick={() => navigate("/drag-and-drop-puzzle")}
+            >
+                <span className="game-icon">🖱️</span> Drag and Drop Puzzle
+            </button>
 
-      {/* Ambient Glow Effects */}
-      <div className="ambient-glow ambient-glow1"></div>
-      <div className="ambient-glow ambient-glow2"></div>
-      <div className="ambient-glow ambient-glow3"></div>
-    </div>
-  );
+            {/* Ambient Glow Effects */}
+            <div className="ambient-glow ambient-glow1"></div>
+            <div className="ambient-glow ambient-glow2"></div>
+            <div className="ambient-glow ambient-glow3"></div>
+        </div>
+    );
 };
 
 export default Games;

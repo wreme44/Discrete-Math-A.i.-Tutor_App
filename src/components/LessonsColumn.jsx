@@ -220,14 +220,14 @@ const LessonsColumn = ({
                                     const lessonIndex = lessonsData.findIndex(lesson => lesson.lesson_id === parseInt(lessonId));
                                     return (
                                         lessonIndex >= 0 && (
-                                            <button
-                                                key={lessonId}
-                                                onClick={() => navigateToLesson(lessonIndex)}
-                                                // className="w-full text-left px-2 py-1 hover:bg-[#1b3657] rounded-none hover:border-gray-700 border-t-red-200"
-                                                className={`w-full text-left px-2 py-1 hover:bg-[#1b3657] rounded-none ${lessonIndex !== 0 ? 'border-t-[rgba(255,255,255,0.33)]' : ''}`}
-                                            >
-                                                {lessonsData[lessonIndex]?.title || `Lesson ${lessonIndex + 1}`}
-                                            </button>
+                                            <div key={lessonId} className="block">
+                                                <button
+                                                    onClick={() => navigateToLesson(lessonIndex)}
+                                                    className={`inline-block text-left px-2 py-1 hover:bg-[#1b3657] rounded-none ${lessonIndex !== 0 ? 'border-t-[rgba(255,255,255,0.33)]' : ''}`}
+                                                >
+                                                    {lessonsData[lessonIndex]?.title || `Lesson ${lessonIndex + 1}`}
+                                                </button>
+                                            </div>
                                         )
                                     );
                                 })}

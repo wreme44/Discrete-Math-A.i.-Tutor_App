@@ -42,7 +42,7 @@ const MathLiveInput = ({ value, onChange, onFocus }) => {
 
 const ExercisesPage = ({
     onExerciseCompletion, userId, exercisesData,
-    groupedExercises, lessonsData }) => {
+    groupedExercises, lessonsData, toggleViewWithScroll }) => {
 
     const navigate = useNavigate();
 
@@ -52,6 +52,7 @@ const ExercisesPage = ({
     // const [exercisesData, setExercisesData] = useState([]);
     // const [groupedExercises, setGroupedExercises] = useState({});
     const [showGames, setShowGames] = useState(false);
+    const [shouldScroll, setShouldScroll] = useState(false);
     // pre determined correct answers
     const [correctAnswers, setCorrectAnswers] = useState({});
     // State to keep track of current lesson index
@@ -104,7 +105,18 @@ const ExercisesPage = ({
 
     const toggleGames = () => {
         setShowGames(prev => !prev);
+        toggleViewWithScroll();
+        // setShouldScroll(true); // Set the state to trigger the scroll
     };
+
+    // useEffect(() => {
+    //     if (shouldScroll) {
+    //         setTimeout(() => {
+    //             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    //             setShouldScroll(false); // Reset the state after scrolling
+    //         }, 3000); // Adjust the delay as needed
+    //     }
+    // }, [shouldScroll]);
 
     const cleanLatexInput = (latexInput) => {
 
@@ -833,7 +845,6 @@ const ExercisesPage = ({
     return (
         <>
         {!showGames ? (
-
         <div className="flex flex-col h-full -mt-2">
             {currentLessonId && (
                 <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[18px] lg:text-[20px] xl:text-[20px] font-bold mb-1">Exercise {currentLessonIndex + 1}</h2>
@@ -1216,7 +1227,7 @@ const ExercisesPage = ({
                 </div>
             </div>
         </div>
-        ) :  (
+        ) : (
             <>
                 <Games/>
                 <button className="game-link px-2 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
