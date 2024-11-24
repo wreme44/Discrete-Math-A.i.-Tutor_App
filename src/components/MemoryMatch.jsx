@@ -174,7 +174,7 @@ const MemoryMatch = () => {
                     if (!span) return;
                     let fontSize = 16; // Starting font size
                     span.style.fontSize = `${fontSize}px`;
-    
+
                     // Reduce font size until text fits
                     while (
                         span.scrollWidth > card.offsetWidth ||
@@ -187,14 +187,14 @@ const MemoryMatch = () => {
                 }
             });
         };
-    
-        resizeText(); // Call initially
+
+        resizeText();
         setTimeout(resizeText, 0); // Ensure it runs after DOM updates
-    
+
         window.addEventListener("resize", resizeText); // Recalculate on window resize
         return () => window.removeEventListener("resize", resizeText); // Cleanup
     }, [cards, flippedCards]);
-    
+
 
     // const resizeText = useCallback(() => {
     //     cardRefs.current.forEach((card) => {
@@ -235,14 +235,14 @@ const MemoryMatch = () => {
                         <ul className="my-6">
                             <li>⭐⭐⭐ {difficultySettings.Apprentice.thresholds[0]}s or less ⭐⭐⭐ </li>
                             <li>⭐⭐ {difficultySettings.Apprentice.thresholds[1]}s or less⭐⭐</li>
-                            <li>⭐ {difficultySettings.Apprentice.thresholds[1]}s ⭐</li>
+                            <li>⭐ {difficultySettings.Apprentice.thresholds[1]}s +⭐</li>
                         </ul>
                         <span className="">Select a difficulty to begin:</span>
                         <div className="difficulty-buttons space-x-1 mt-3">
                             {Object.keys(difficultySettings).map((level) => (
                                 <button className="bg-[rgba(0,96,250,0.71)] hover:bg-[rgb(0,89,255)] text-black text-lg font-semibold rounded
                                     px-1"
-                                key={level} onClick={() => selectDifficulty(level)}>
+                                    key={level} onClick={() => selectDifficulty(level)}>
                                     {level}
                                 </button>
                             ))}
@@ -267,10 +267,10 @@ const MemoryMatch = () => {
                 <>
                     <h1 className="memory-main-title">Mentor Memory</h1>
                     <div className="flex items-center">
-                        <img className="w-[50px]" alt="time" src="./time-icon.svg"/>
-                        <span className="mb-0">{time}s</span>    
+                        <img className="w-[50px]" alt="time" src="./time-icon.svg" />
+                        <span className="mb-0">{time}s</span>
                     </div>
-                    <span>Stars: {"⭐".repeat(stars)}</span>
+                    {/* <span>Stars: {"⭐".repeat(stars)}</span> */}
                     <div className="grid">
                         {cards.map((card, index) => (
                             <div
@@ -290,11 +290,11 @@ const MemoryMatch = () => {
                         {!gameOver && (
                             <>
                                 <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
-                                text-black text-lg font-semibold rounded px-1" 
-                                onClick={() => startNewGame(difficulty)}>Restart</button>
+                                text-black text-lg font-semibold rounded px-1"
+                                    onClick={() => startNewGame(difficulty)}>Restart</button>
                                 <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
-                                text-black text-lg font-semibold rounded px-1" 
-                                onClick={handleQuit}>Quit</button>
+                                text-black text-lg font-semibold rounded px-1"
+                                    onClick={handleQuit}>Quit</button>
                             </>
                         )}
                     </div>
@@ -303,7 +303,9 @@ const MemoryMatch = () => {
                             <h2>Congratulations! You matched all cards!</h2>
                             <p>Time: {time}s</p>
                             <p>Stars: {"⭐".repeat(stars)}</p>
-                            <button onClick={handleQuit}>Select Difficulty</button>
+                            <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
+                                text-black text-lg font-semibold rounded px-1 mt-1"
+                                onClick={handleQuit}>Select Difficulty</button>
                         </div>
                     )}
                 </>
