@@ -11,10 +11,11 @@ import LoginRoute from '../routes/LoginRoute.jsx';
 import Profile from '../routes/Profile.jsx';
 import MyStatus from './components/MyStatus.jsx';
 import ResetPassword from "./components/ResetPassword";
-import Games from './components/Games.jsx'; // Import the new component
-import FlashcardChallenges from './components/FlashcardChallenges.jsx'; // Import the new component
-import MemoryMatch from './components/MemoryMatch.jsx'; // Import the new component
-import DragAndDropPuzzle from './components/DragAndDropPuzzle.jsx'; // Import the new component 
+import Games from './components/Games.jsx';
+import FlashcardChallenges from './components/FlashcardChallenges.jsx';
+import MemoryMatch from './components/MemoryMatch.jsx';
+import DragAndDropPuzzle from './components/DragAndDropPuzzle.jsx';
+import MathHangman from './components/MathHangman.jsx';
 
 
 ReactDOM.createRoot(document.getElementById('root')).render(
@@ -32,6 +33,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/flashcard-challenges" element={<FlashcardChallenges />} />
                     <Route path="/memory-match" element={<MemoryMatch />} />
                     <Route path="/drag-and-drop-puzzle" element={<DragAndDropPuzzle />} />
+                    <Route path="/math-hangman" element={<MathHangman />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
             </Routes>
