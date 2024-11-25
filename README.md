@@ -2,7 +2,7 @@
 
 ## Live Application
 
-The application is deployed and can be accessed at [Live Application](https://).
+The application is deployed and can be accessed at [Live Application](https://discrete-mentor-16b9a1c9e019.herokuapp.com/).
 
 This web app: 
 
