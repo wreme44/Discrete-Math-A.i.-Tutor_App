@@ -73,7 +73,7 @@ const SignUp = () => {
                 <form onSubmit={handleSignUp}>
                     <div className="name">
                         <input
-                            className="w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
+                            className="login-input-field w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
                             p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300" 
                             type="text"
                             placeholder="Name"
@@ -84,7 +84,7 @@ const SignUp = () => {
                     </div>
                     <div className="email">
                         <input
-                            className="w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
+                            className="login-input-field w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
                             p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300" 
                             type="email"
                             placeholder="Email"
@@ -95,7 +95,7 @@ const SignUp = () => {
                     </div>
                     <div className="password">
                         <input
-                            className="w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
+                            className="login-input-field w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
                             p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300" 
                             type="password"
                             placeholder="Password"

@@ -173,6 +173,11 @@
     margin-bottom: 5px;
 }
 
+.login-input-field{
+    color:#000000;
+    background-color: #ffffff;
+}
+
 .password {
     margin-top: 5px;
 }
@@ -183,6 +188,7 @@
     /* width: 100%; */
     padding: 10px;
     color: #000000;
+    background-color: #ffffff;
     border-radius: 10px;
     border: 1px solid #ffffff;
     transition: border-color 0.3s, box-shadow 0.3s;

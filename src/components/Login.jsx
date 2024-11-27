@@ -70,7 +70,7 @@ const Login = () => {
                 <form onSubmit={(e) => { e.preventDefault(); handleLogin(email, password) }}>
                     <div className="email">
                         <input 
-                        className="w-full xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[46px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
+                        className="login-input-field w-full xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[46px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
                         p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300" 
                         type="email" 
                         placeholder="Email" 
@@ -79,7 +79,7 @@ const Login = () => {
                     </div>
                     <div className="password">
                         <input 
-                        className="w-full xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[46px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
+                        className="login-input-field w-full xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[46px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
                         p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300" 
                         type="password" 
                         placeholder="Password" 
@@ -137,7 +137,7 @@ const Login = () => {
                 <input
                     type="email"
                     placeholder="Email"
-                    className="w-full text-black p-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="login-input-field w-full p-2 mb-4 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
                     value={resetEmail}
                     onChange={(e) => setResetEmail(e.target.value)}
                 />
