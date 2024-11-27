@@ -854,15 +854,19 @@ const ExercisesPage = ({
                             <div key={exercise.exercise_id} className="mb-20 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                                 {renderExerciseQuestion(exercise.question)}
                                 {/* MathLiveInput for the exercise */}
-                                <div className="relative mt-2 flex items-center space-x-1">
-                                    <MathLiveInput
-                                        value={submittedSolutions[exercise.exercise_id] || ""}
-                                        onChange={(value) => setSubmittedSolutions({
-                                            ...submittedSolutions,
-                                            [exercise.exercise_id]: value,
-                                        })}
-                                        onFocus={() => setInputAlert(false)}
-                                    />
+                                <div className="relative mt-2 flex items-center "> {/* space-x-1 */}
+                                    <div className="math-input-field w-[86%] overflow-hidden -mr-10
+                                        xxxsm:text-[12px] xxsm:text-[14px] xsm:text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] xl:text-[24px]"
+                                    >
+                                        <MathLiveInput
+                                            value={submittedSolutions[exercise.exercise_id] || ""}
+                                            onChange={(value) => setSubmittedSolutions({
+                                                ...submittedSolutions,
+                                                [exercise.exercise_id]: value,
+                                            })}
+                                            onFocus={() => setInputAlert(false)}
+                                        />
+                                    </div>
                                     {/* image Upload */}
                                     <div className="relative inline-block group">
                                         <input
