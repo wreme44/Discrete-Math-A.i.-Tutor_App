@@ -563,7 +563,7 @@ button.reset-password-link:hover {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 700;
+    font-weight: 500;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
@@ -1467,7 +1467,7 @@ body.memoryMatchBody {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-top: 150px;
+    padding-top: 90px;
 }
 
 .instructions-modal {
@@ -1491,6 +1491,7 @@ body.memoryMatchBody {
     background-color: #2d3748;
     border-radius: 10px;
     max-width: 400px;
+    box-shadow: 0px 2px 18px rgb(0, 187, 255);
 }
 
 .memory-modal-title {
@@ -1513,6 +1514,7 @@ body.memoryMatchBody {
     display: grid;
     gap: 10px;
     grid-template-columns: repeat(4, 1fr);
+    
 }
 
 .grid-card {
@@ -1530,6 +1532,7 @@ body.memoryMatchBody {
     /* font-size: calc(5px + 1vw);  */
     /* padding: 10px; */
     /* fit-content: ; */
+    box-shadow: 0px 2px 10px rgba(0, 187, 255, 0.481);
 }
 
 .grid-card.flipped {

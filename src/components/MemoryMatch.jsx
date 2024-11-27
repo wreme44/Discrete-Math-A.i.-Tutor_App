@@ -252,11 +252,6 @@ const MemoryMatch = () => {
                     <div className="flex flex-col items-center justify-center
                             xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
-                        {/* <Link className=""
-                        to="/games">
-                        <img className="xxxsm:w-[30px] xxsm:w-[40px] xsm:w-[50px] sm:w-[60px] md:w-[60px] lg:w-[70px] xl:w-[70px] h-auto mr-1"
-                            alt="Games" src="/games-icon.svg" />
-                    </Link> */}
                         <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
                         hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
                         transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
@@ -290,14 +285,28 @@ const MemoryMatch = () => {
                     <div className="control-buttons space-x-2 mt-5">
                         {!gameOver && (
                             <>
-                                <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
+                                <div className="space-x-2">
+                                    <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
                                 text-black text-lg font-semibold rounded px-1"
-                                    onClick={() => startNewGame(difficulty)}>Restart</button>
-                                <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
+                                            onClick={() => startNewGame(difficulty)}>Restart
+                                        </button>
+                                        <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
                                 text-black text-lg font-semibold rounded px-1"
-                                    onClick={handleQuit}>Quit</button>
-                            </>
-                        )}
+                                            onClick={handleQuit}>Quit
+                                        </button>
+                                    </div>
+                                    {/* Games Button */}
+                                    <div className="flex flex-col items-center justify-center
+                                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
+                                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
+                                        <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
+                                            hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                                            to="/games">Game Hub
+                                        </Link>
+                                    </div>
+                                </>
+                            )}
                     </div>
                     {gameOver && (
                         <div className="game-over">
