@@ -97,7 +97,7 @@
     height: 100vh;
     background-color: rgba(255, 255, 255, 0);
 
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('login-page5.PNG');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/login-page5.PNG');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
@@ -110,7 +110,7 @@
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.421);
 
-    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('login-page5.PNG');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('/login-page5.PNG');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
@@ -302,7 +302,7 @@ button.reset-password-link:hover {
     height: auto;
     /* height: calc(100vh - 40px); */
     background-color: #1d2733;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('accountPage.gif');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/accountPage.gif');
     background-repeat: no-repeat;
     background-size: 100vw 100vh;
     /* background-attachment: fixed; */
@@ -317,6 +317,19 @@ button.reset-password-link:hover {
     margin: 0;
     opacity: 0.15; */
 }
+/* 
+.profile-page {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    gap: 10px;
+} */
+
+/* .left-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
 
 .profile-container {
     background-color: #4a91e245;
@@ -336,6 +349,13 @@ button.reset-password-link:hover {
     /* height: 350px; */
     /* color: #fff; */
 }
+
+/* Right container */
+/* .right-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+} */
 
 .no-account {
     position: relative;
@@ -433,7 +453,7 @@ button.reset-password-link:hover {
     font-size: 30px;
     font-weight: bold;
     margin-top: 20px;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('accountPage.gif');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/accountPage.gif');
     background-repeat: no-repeat;
     background-size: 200px 200px;
     background-position: center 10px;
@@ -511,13 +531,33 @@ button.reset-password-link:hover {
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  } */
+*/ 
+.main-page-nav-button {
+    /* margin-top: 20px; */
+    background-color: #e6f8ff;
+    color: rgb(0, 0, 0);
+    /* border: 1px solid transparent; */
+    /* padding: 0.4em 1.2em; */
+    padding: 10px 15px;
+    /* margin: 10px 0; */
+    cursor: pointer;
+    /* font-size: 16px; */
+    font-weight: 700;
+    font-family: inherit;
+    transition: border-color 0.25s;
+    border-radius: 8px;
+    /* width: 70%; */
+}
+
+.main-page-nav-button:hover {
+    background-color: #fbfbfb;
+}
 
 .check-status-button {
     /* margin-top: 20px; */
     background-color: #e6f8ff;
     color: rgb(0, 0, 0);
-    border: 1px solid transparent;
+    /* border: 1px solid transparent; */
     /* padding: 0.4em 1.2em; */
     padding: 10px 15px;
     /* margin: 10px 0; */
@@ -702,7 +742,7 @@ button.reset-password-link:hover {
 }
 
 .signout-button:hover {
-    background-color: #15485e;
+    background-color: #13668a;
 }
 
 /* .signout-button {
@@ -953,7 +993,7 @@ button.reset-password-link:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('notFound.gif');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/notFound.gif');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     height: 100vh;
@@ -984,7 +1024,7 @@ button.reset-password-link:hover {
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('landingPage1.gif');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.25), rgba(0, 0, 0, 0.25)), url('/landingPage1.gif');
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center 10px;
@@ -1314,7 +1354,7 @@ body.myAccountBody {
 
 body.flashCardBody {
     background-color: #1f2937;
-    cursor: url('wand-cursor.svg'), auto;
+    cursor: url('/wand-cursor.svg'), auto;
 }
 
 /* .card-page-container{

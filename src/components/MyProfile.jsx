@@ -178,43 +178,67 @@ const MyProfile = () => {
         navigate('/myStatus');
     };
 
+    const handleMainPageNav = () => {
+        navigate('/');
+    };
+
     return (
         <>
             {user ? (
                 <div className="myAccount">
                     <div className="profile-container w-full xxxsm:w-[200px] xxsm:w-[225px] xsm:w-[225px] sm:w-[275px] md:w-[300px] lg:w-[350px] xl:w-[350px] h-auto max-h-[90vh] overflow-y-auto"> {/* xsm:h-[200px] sm:h-[250px] md:h-[250px] lg:h-[300px] xl:h-[300px] */}
-                        {/* <h5 className="myAccount-title">Your DiscreteMentor Account</h5> */}
+                        {/* Username */}
                         {/* <img className="user-icon" alt="home button" src='/D.Mentor5.png' /> */}
                         <div className="username xxxsm:text-[16px] xxsm:text-[18px] xsm:text-[18px] sm:text-[22px] md:text-[24px] lg:text-[28px] xl:text-[28px]
                             xxxsm:mb-[4px] xxsm:mb-[6px] xsm:mb-[6px] sm:mb-[10px] md:mb-[16px] lg:mb-[18px] xl:mb-[20px]
-                            xxxsm:mt-[4px] xxsm:mt-[6px] xsm:mt-[6px] sm:mt-[10px] md:mt-[16px] lg:mt-[18px] xl:mt-[20px]">{name}</div>
-
-                        {/* <div><ToastContainer/></div> */}
-                        {/* <div className="username">
-                            <div className="items-center justify-center">
-                                <span className="mt-1">{name}</span>
-                            </div>
-                        </div> */}
-                        {/* Check Progress Status */}
-                        <div className="check-status-div">
-                            <button className="check-status-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[68%] lg:w-[70%] xl:w-[70%]
+                            xxxsm:mt-[4px] xxsm:mt-[6px] xsm:mt-[6px] sm:mt-[10px] md:mt-[16px] lg:mt-[18px] xl:mt-[20px]">
+                            {name}
+                        </div>
+                        {/* <div className="relative inline-block group">
+                            <button className="main-page-nav-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[68%] lg:w-[70%] xl:w-[130%]
                                         xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
-                                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleCheckStatus}>
-                                <div className="flex items-center justify-center">
-                                    <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/check-status.svg" />
-                                    <span className="ml-0 mr-0">Check Your Progress</span>
+                                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleMainPageNav}>
+                                <div className="relative flex items-center justify-center">
+                                    <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/learn-icon.svg" />
+                                    <span className="ml-0 mr-0">Lessons & Exercises</span>
                                 </div>
                             </button>
-                        </div>
+                            <div className="absolute xxxsm:bottom-11 xxsm:bottom-11 xsm:bottom-11 sm:bottom-14 md:bottom-14 lg:bottom-16 xl:bottom-16 
+                                        left-1/2 transform -translate-x-1/2 mb-2 bg-teal-600 text-white
+                                        text-xs rounded-lg py-1 pl-1 pr-0 w-[150px] opacity-0 group-hover:opacity-100 
+                                        transition-opacity duration-500 z-10">
+                                <img className="w-24 h-auto " alt="" src="/notFound.png" />
+                                The Cloaked Mentor Awaits
+                                <div className="absolute left-1/2 transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                            </div>
+                        </div> */}
+                        {/* Lessons & Exercises button (MainPage) */}
+                        <button className="main-page-nav-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[68%] lg:w-[70%] xl:w-[70%]
+                                        xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
+                                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleMainPageNav}>
+                            <div className="relative flex items-center justify-center">
+                                <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/learn-icon.svg" />
+                                <span className="ml-0 mr-0">Lessons & Exercises</span>
+                            </div>
+                        </button>
+                        {/* Check Progress Status */}
+                        <button className="check-status-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[68%] lg:w-[70%] xl:w-[70%]
+                                        xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
+                                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleCheckStatus}>
+                            <div className="relative flex items-center justify-center">
+                                <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/check-status.svg" />
+                                <span className="ml-0 mr-0">Check Your Progress</span>
+                            </div>
+                        </button>
                         {/* Games Button */}
                         <button
-                            className="games-button-profile xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[70%] lg:w-[70%] xl:w-[70%]
+                            className="games-button-profile xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[68%] lg:w-[70%] xl:w-[70%]
                                         xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                         xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
                             onClick={handleGamesNavigation}>
-                            <div className="flex items-center justify-center">
-                                <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Games" src="/games-profile.svg" />
-                                <span className="ml-0 mr-1">Game Hub</span>
+                            <div className="relative flex items-center justify-center">
+                                <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Games" src="/games-profile.svg" />
+                                <span className="">Game Hub</span> {/* absolute left-1/2 transform -translate-x-1/2 mx-auto*/}
                             </div>
                         </button>
                         {/* EDIT - Toggle the update name form */}
@@ -222,18 +246,17 @@ const MyProfile = () => {
                                         xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                         xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleEditProfile}>
                             {isEditing ? (
-                                <div className="flex items-center justify-center"> {/* justify-center */}
-                                    <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/cancel-edit.svg" />
-                                    <span className="ml-0 mr-1">Cancel Edit</span>
+                                <div className="relative flex items-center justify-center"> {/* justify-center */}
+                                    <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/cancel-edit.svg" />
+                                    <span className="">Cancel Edit</span>
                                 </div>
                             ) : (
-                                <div className="flex items-center justify-center">
-                                    <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/edit-profile.svg" />
-                                    <span className="ml-0 mr-1">Edit Username</span>
+                                <div className="relative flex items-center justify-center">
+                                    <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/edit-profile.svg" />
+                                    <span className="">Edit Username</span>
                                 </div>
                             )}
                         </button>
-
                         {isEditing && (
                             <div className="update-profile">
                                 <label htmlFor="newName" className="input-label xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]
@@ -263,31 +286,29 @@ const MyProfile = () => {
                                 <button className="update-profile-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[70%] lg:w-[70%] xl:w-[70%]
                                         xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                         xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleUpdateProfile}>
-                                    <div className="flex items-center justify-center">
-                                        <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/feather.svg" />
-                                        <span className="ml-0 mr-1">Update Username</span>
+                                    <div className="relative flex items-center justify-center">
+                                        <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/feather.svg" />
+                                        <span className="">Update Username</span>
                                     </div>
                                 </button>
                             </div>
                         )}
-
                         {/* Delete profile button */}
                         <button className="delete-account-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[70%] lg:w-[70%] xl:w-[70%]
                                         xxxsm:mt-[15px] xxsm:mt-[20px] xsm:mt-[20px] sm:mt-[30px] md:mt-[30px] lg:mt-[40px] xl:mt-[40px]
                                         xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]" onClick={handleDeleteProfile}>
-                            <div className="flex items-center justify-center">
-                                <img className="del-profile-icon xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/delete-user.svg" />
-                                <span className="ml-0 mr-1">Delete Profile</span>
+                            <div className="relative flex items-center justify-center">
+                                <img className="del-profile-icon absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/delete-user.svg" />
+                                <span className="">Delete Profile</span>
                             </div>
                         </button>
-
                         {/* Sign out */}
                         <button className="signout-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[70%] lg:w-[70%] xl:w-[70%]
                                         xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[3px] sm:my-[5px] md:my-[12px] lg:my-[15px] xl:my-[15px]
                                         xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleSignOut}>
-                            <div className="flex items-center justify-center">
-                                <img className="xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/log-out.svg" />
-                                <span className="ml-0 mr-1">Sign Out</span>
+                            <div className="relative flex items-center justify-center">
+                                <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/log-out.svg" />
+                                <span className="">Sign Out</span>
                             </div>
                         </button>
                     </div>
