@@ -1782,7 +1782,7 @@ body.dragDropBody {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding-top: 80px;
+    /* padding-top: 80px; */
 }
 
 .instructions-drag-modal {
@@ -1805,7 +1805,7 @@ body.dragDropBody {
     background-color: #ffd000d0;
     /* font-size: 1.1em; */
     font-weight: 600;
-    padding: 20px;
+    /* padding: 20px; */
     border-radius: 10px;
     text-align: center;
     max-width: 400px;
@@ -1831,7 +1831,7 @@ body.dragDropBody {
 
 .drop-title {
     margin-bottom: 20px;
-    font-size: 2.0rem;
+    /* font-size: 2.0rem; */
     font-weight: bold;
     color: #000000;
     text-shadow: 0 0 10px rgb(255, 196, 0), 0 0 20px rgb(255, 196, 0);
@@ -1839,9 +1839,9 @@ body.dragDropBody {
 }
 
 .main-drag-sets {
-    margin-bottom: 20px;
+    /* margin-bottom: 20px; */
     background-color: #ffb300c4;
-    padding: 5px;
+    /* padding: 5px; */
     border-radius: 8px;
     color: #000000;
     font-weight: 600;
@@ -1865,8 +1865,8 @@ body.dragDropBody {
 }
 
 .drag-category {
-    width: 200px;
-    height: 150px;
+    /* width: 200px;
+    height: 150px; */
     color: #000000;
     font-weight: 600;
     background-color: #ffb3009c;
@@ -1880,6 +1880,7 @@ body.dragDropBody {
     text-shadow: 2px 2px 4px rgba(227, 227, 227, 0.764);
     box-shadow: 0px 2px 8px rgb(255, 255, 255);
     transition: background-color 0.3s ease;
+    z-index: 10;
 }
 
 .drag-category.wrong {
@@ -1897,9 +1898,10 @@ body.dragDropBody {
 .drag-item {
     background-color: #ffb300eb;
     color: #000000;
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
     border-radius: 5px;
     cursor: grab;
+    /* transition: transform 0.1s ease; */
 }
 
 .dragging {
@@ -1960,4 +1962,13 @@ body.dragDropBody {
 
 .drag-completed-modal-content p {
     margin-bottom: 10px;
+}
+
+#dragging-clone {
+    background-color: rgba(255, 179, 0, 0.8); /* Optional: Distinguish clone visually */
+    border-radius: 5px; /* Match original styling */
+    z-index: 1000; /* Ensure it appears above other elements */
+    /* padding: 10px 20px; */
+    color: #000000; /* Optional: Match text color */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for better visibility */
 }
