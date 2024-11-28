@@ -50,7 +50,7 @@ const SignUp = () => {
                 if (insertError) {
                     console.error('Error inserting user data:', insertError.message);
                 }
-                setNotification('Please check your inbox and verify your Email before logging in');
+                setNotification('Please check your inbox and verify your email before logging in');
             }
         } catch (error) {
             console.error('Signup error:', error.message);
