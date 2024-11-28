@@ -1,0 +1,248 @@
+/* General Styles */
+.assessment-page {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: center;
+  background-color: #1a1a2e;
+  color: #eaeaea;
+  min-height: 100vh;
+  padding: 2rem;
+  position: relative;
+}
+
+/* Sidebar (not working)*/
+.sidebar {
+  position: fixed;
+  top: 15%;
+  right: 0;
+  width: 300px;
+  background-color: #222831;
+  color: #eaeaea;
+  max-height: 80vh;
+  border-radius: 10px 0 0 10px;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
+  overflow-y: visible;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.toggle-sidebar-btn {
+  position: fixed;
+  top: 20%;
+  right: 310px;
+  background-color: #00adb5;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px 0 0 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  z-index: 1100;
+}
+
+.toggle-sidebar-btn:hover {
+  background-color: #0288a8;
+}
+
+/* Incorrect Questions Section */
+.incorrect-questions {
+  padding: 1rem;
+}
+
+.incorrect-questions h2 {
+  color: #00adb5;
+  font-size: 1.2rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.incorrect-item {
+  background-color: #393e46;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease-in-out;
+}
+
+.incorrect-item:hover {
+  background-color: #282d33;
+}
+
+.incorrect-item strong {
+  display: block;
+  color: #00adb5;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.incorrect-item span {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #ffffff;
+}
+
+/* Main Content */
+.main-content {
+  margin-top: 2rem;
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Header */
+.assessment-header {
+  font-size: 2.5rem;
+  margin-bottom: 2rem;
+  color: #00adb5;
+}
+
+/* Quiz Buttons */
+.quizzes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.quiz-button {
+  background-color: #393e46;
+  color: #00adb5;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.quiz-button.completed {
+  background-color: #28a745;
+  color: #ffffff;
+}
+
+.quiz-button:hover {
+  transform: scale(1.1);
+  background-color: #00adb5;
+  color: #ffffff;
+}
+
+/* Quiz Section */
+.quiz-container {
+  background-color: #222831;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.quiz-container h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #00adb5;
+}
+
+.quiz-container p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+
+.answer-input {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  width: 80%;
+  border: 2px solid #00adb5;
+  border-radius: 5px;
+  font-size: 1rem;
+  background-color: #393e46;
+  color: #ffffff;
+  text-align: center;
+}
+
+.navigation-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.prev-button,
+.next-button,
+.submit-button,
+.quit-button {
+  background-color: #00adb5;
+  color: #ffffff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.prev-button:hover,
+.next-button:hover,
+.submit-button:hover,
+.quit-button:hover {
+  transform: scale(1.1);
+  background-color: #393e46;
+}
+
+.quit-button {
+  background-color: #ff4d4d;
+}
+
+.quit-button:hover {
+  background-color: #e60000;
+}
+
+/* Progress Bar */
+.progress-bar {
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  height: 20px;
+  width: 100%;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  background-color: #00adb5;
+  height: 100%;
+  transition: width 0.3s ease-in-out;
+}
+
+/* Modal */
+.modal-overlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #222831;
+  color: #eaeaea;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 600px;
+  margin: auto;
+  text-align: center;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}

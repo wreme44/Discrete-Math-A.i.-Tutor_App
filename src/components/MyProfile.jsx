@@ -181,6 +181,11 @@ const MyProfile = () => {
         navigate('/games');
     };
 
+    // Handle navigation to the Assessment page
+    const handleAssessmentNavigation = () => {
+        navigate('/assessment');
+    };
+
 
 
     if (isLoading) {
@@ -249,6 +254,18 @@ const MyProfile = () => {
                             <div className="relative flex items-center justify-center">
                                 <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/check-status.svg" />
                                 <span className="ml-0 mr-0">Check Your Progress</span>
+                            </div>
+                        </button>
+                        {/* Assessment Page Button */}
+                        <button
+                            className="main-page-nav-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[68%] lg:w-[70%] xl:w-[70%]
+                            xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
+                            onClick={handleAssessmentNavigation}
+                        >
+                            <div className="relative flex items-center justify-center">
+                                <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/check-status.svg" />
+                                <span className="ml-0 mr-0">Challenge Center</span>
                             </div>
                         </button>
                         {/* Games Button */}

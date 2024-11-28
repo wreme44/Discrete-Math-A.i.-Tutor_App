@@ -16,7 +16,7 @@ import FlashcardChallenges from './components/FlashcardChallenges.jsx';
 import MemoryMatch from './components/MemoryMatch.jsx';
 import DragAndDropPuzzle from './components/DragAndDropPuzzle.jsx';
 import MathHangman from './components/MathHangman.jsx';
-
+import Assessment from './components/Assessment.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
@@ -34,6 +34,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
                     <Route path="/memory-match" element={<MemoryMatch />} />
                     <Route path="/drag-and-drop-puzzle" element={<DragAndDropPuzzle />} />
                     <Route path="/math-hangman" element={<MathHangman />} />
+                    <Route path="/assessment" element={<Assessment />} />
                 </Route>
                 <Route path="*" element={<NotFound />} />
             </Routes>
