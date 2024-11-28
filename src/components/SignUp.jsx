@@ -7,7 +7,7 @@ const SignUp = () => {
     const [password, setPassword] = useState('');
     const [name, setName] = useState('');
     const [notification, setNotification] = useState('');
-    // const navigate = useNavigate();
+    const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
 
     const handleSignUp = async (e) => {
         e.preventDefault();
@@ -19,45 +19,38 @@ const SignUp = () => {
         }
 
         try {
-            // Sign up the user with Supabase Auth and set display_name
             const { data, error } = await supabase.auth.signUp({
                 email,
                 password,
                 options: {
                     data: {
-                        full_name: name  // Store the name in the 'display_name' field
+                        full_name: name
                     }
                 }
             });
 
             if (error) {
-                if(error.message === 'User already registered'){
+                if (error.message === 'User already registered') {
                     setNotification('This Email address is already registered. Please log in or use a different Email to sign up');
                 } else {
-                    // Handle any other signup errors
                     console.error('Error signing up:', error.message);
                     setNotification(`Error signing up: ${error.message}`);
                 }
             } else if (data.user) {
-                // Insert user data into 'users' table AFTER authentication
                 const { error: insertError } = await supabase
                     .from('users')
                     .insert([{
                         user_id: data.user.id,
-                        name,  // Insert name from input
+                        name,
                         email,
-                        role: 'student', // Add role or other initial values if needed
+                        role: 'student',
                         current_level: 'beginner'
                     }]);
 
                 if (insertError) {
                     console.error('Error inserting user data:', insertError.message);
-                } 
+                }
                 setNotification('Please check your inbox and verify your Email before logging in');
-                // setTimeout(() => {
-                //     navigate('/login');
-                // }, 10000) // after 10 seconds of showing verify info, navigating to login page
-                
             }
         } catch (error) {
             console.error('Signup error:', error.message);
@@ -74,7 +67,7 @@ const SignUp = () => {
                     <div className="name">
                         <input
                             className="login-input-field w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
-                            p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300" 
+                            p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300"
                             type="text"
                             placeholder="Name"
                             value={name}
@@ -85,7 +78,7 @@ const SignUp = () => {
                     <div className="email">
                         <input
                             className="login-input-field w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
-                            p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300" 
+                            p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300"
                             type="email"
                             placeholder="Email"
                             value={email}
@@ -93,22 +86,29 @@ const SignUp = () => {
                             required
                         />
                     </div>
-                    <div className="password">
+                    <div className="password relative">
                         <input
                             className="login-input-field w-full xxxsm:h-[20px] xxsm:h-[25px] xsm:h-[30px] sm:h-[40px] md:h-[46px] lg:h-[46px] xl:h-[46px] 
-                            p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300" 
-                            type="password"
+                            p-2 rounded-md border border-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
                         />
+                        <button
+                            type="button"
+                            className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-blue-500 hover:text-blue-700 focus:outline-none"
+                            onClick={() => setShowPassword(!showPassword)}
+                        >
+                            {showPassword ? "Hide" : "Show"}
+                        </button>
                     </div>
                     <button className="signup-button w-full xxxsm:w-[50px] xxsm:w-[60px] xsm:w-[70px] sm:w-[80px] md:w-[80px] lg:w-[90px] xl:w-[90px] 
                                     h-auto xxxsm:h-[22px] xxsm:h-[25px] xsm:h-[30px] sm:h-[38px] md:h-[38px] lg:h-[42px] xl:h-[42px]
                                     xxxsm:mt-[8px] xxsm:mt-[15px] xsm:mt-[10px] sm:mt-[13px] md:mt-[29px] lg:mt-[20px] xl:mt-[20px]
-                                    xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" 
-                                    type="submit">Sign Up</button>
+                                    xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
+                        type="submit">Sign Up</button>
                     <p className=" xxxsm:text-[9px] xxsm:text-[11px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px]">Already have an Account?<Link className="link-to-login-signup" to="/login"> Login</Link></p>
                 </form>
                 {notification && <p className="signup-notification xxxsm:text-[8px] xxsm:text-[9px] xsm:text-[10px] sm:text-[12px] md:text-[16px] lg:text-[16px]">{notification}</p>}
