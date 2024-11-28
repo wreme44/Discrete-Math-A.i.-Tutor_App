@@ -5,11 +5,14 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Modal from 'react-modal';
 
+
 Modal.setAppElement('#root');
 
 const MyProfile = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
+    const [passwordForDeletion, setPasswordForDeletion] = useState(''); // Password input for deletion confirmation
+    const [notification, setNotification] = useState(''); // State for notifications in the modal
     const [userId, setUserId] = useState(() => {
         const savedUserId = sessionStorage.getItem('userId');
         return savedUserId ? JSON.parse(savedUserId) : (null);
@@ -129,11 +132,29 @@ const MyProfile = () => {
     };
 
     // Delete profile function
-    const handleDeleteProfile = async () => {
-        setIsModalOpen(true);
+    const handleDeleteProfile = () => {
+        setPasswordForDeletion(''); // Clear the password field
+        setNotification(''); // Clear any previous notifications
+        setIsModalOpen(true); // Open the modal
+        sessionStorage.clear()
     };
 
     const confirmDeleteProfile = async () => {
+        if (!passwordForDeletion) {
+            setNotification("Please enter your password to confirm.");
+            return;
+        }
+
+        const { error: authError } = await supabase.auth.signInWithPassword({
+            email: user.email,
+            password: passwordForDeletion
+        });
+
+        if (authError) {
+            setNotification("Invalid password. Please try again.");
+            return;
+        }
+
         const { error } = await supabase
             .from('users')
             .delete()
@@ -145,12 +166,12 @@ const MyProfile = () => {
             toast.success("Profile deleted successfully!", {
                 position: "top-center",
                 autoClose: 4000,
-                theme: "colored",
-                onClose: () => setToastActive(false)
+                theme: "colored"
             });
             await supabase.auth.signOut();
             navigate('/signup');
         }
+
         setIsModalOpen(false);
     };
 
@@ -326,41 +347,49 @@ const MyProfile = () => {
                                 transform: 'translate(-50%, -50%)',
                                 background: 'rgba(3, 78, 144, 0.95)',
                                 borderRadius: '20px',
-                                textAlign: 'center',
-                                boxShadow: '0px 0px 30px 1px rgba(255, 255, 255, 0.4)',
                                 padding: '20px',
-                                maxHeight: '400px',
                                 maxWidth: '400px',
-                                margin: 'auto',
+                                width: '90%'
                             },
                             overlay: {
                                 backgroundColor: 'rgba(0, 0, 0, 0.5)'
                             }
                         }}
                     >
-                        <div className="flex items-center justify-center">
-                            {/* <h2 className="del-profile-title">Confirm Delete Profile</h2> */}
-                            <span className="del-profile-text xxxsm:text-[12px] xxsm:text-[14px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[22px] xl:text-[22px]">
-                                {`Are you sure? \n\nDeleting your profile cannot be undone!`}
-                            </span>
-                        </div>
-                        <div className="flex items-center justify-center">
-                            <button className="del-profile-button xxxsm:text-[10px] xxsm:text-[11px] xsm:text-[11px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[16px]
-                            xxxsm:mr-[2px] xxsm:mr-[2px] xsm:mr-[2px] sm:mr-[6px] md:mr-[8px] lg:mr-[10px] xl:mr-[10px]
-                            xxxsm:mt-[18px] xxsm:mt-[20px] xsm:mt-[20px] sm:mt-[40px] md:mt-[40px] lg:mt-[40px] xl:mt-[40px]" onClick={confirmDeleteProfile}>
-                                <div className="flex items-center justify-center">
-                                    <span className="ml-0 mr-1">Confirm Deletion</span>
-                                </div>
+                        <h3 className="text-center text-lg font-bold text-white mb-4">
+                            Confirm Delete Profile
+                        </h3>
+                        <p className="text-center text-sm text-gray-200 mb-4">
+                            Please re-enter your password to confirm deletion. This action cannot be undone.
+                        </p>
+                        <input
+                            type="password"
+                            placeholder="Enter your password"
+                            className="w-full p-2 mb-4 rounded-md border border-gray-500 bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={passwordForDeletion}
+                            onChange={(e) => setPasswordForDeletion(e.target.value)}
+                        />
+                        {notification && (
+                            <p className="text-sm text-center text-red-500 font-bold mb-4">
+                                {notification}
+                            </p>
+                        )}
+                        <div className="flex justify-around">
+                            <button
+                                className="w-32 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition-colors"
+                                onClick={confirmDeleteProfile}
+                            >
+                                Confirm
                             </button>
-                            <button className="cancel-del-button xxxsm:text-[10px] xxsm:text-[11px] xsm:text-[11px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[16px]
-                            xxxsm:mt-[18px] xxsm:mt-[20px] xsm:mt-[20px] sm:mt-[40px] md:mt-[40px] lg:mt-[40px] xl:mt-[40px]"
-                                onClick={() => setIsModalOpen(false)}>
-                                <div className="flex items-center justify-center">
-                                    <span className="ml-0 mr-1">Cancel</span>
-                                </div>
+                            <button
+                                className="w-32 py-2 bg-gray-500 text-white font-semibold rounded-md hover:bg-gray-600 transition-colors"
+                                onClick={() => setIsModalOpen(false)}
+                            >
+                                Cancel
                             </button>
                         </div>
                     </Modal>
+
                 </div>
             ) : (
                 <div className="no-account flex flex-col items-center justify-center">
