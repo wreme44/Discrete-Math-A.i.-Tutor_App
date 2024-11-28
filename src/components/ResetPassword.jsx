@@ -7,6 +7,8 @@ const ResetPassword = () => {
   const [confirmPassword, setConfirmPassword] = useState(''); // State for confirm password input
   const [notification, setNotification] = useState(''); // State for any messages to display
   const [isSubmitting, setIsSubmitting] = useState(false); // State to manage button loading state
+  const [showNewPassword, setShowNewPassword] = useState(false); // State for toggling new password visibility
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // State for toggling confirm password visibility
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -49,42 +51,56 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="reset-password-page">
-      <div className="reset-password-container w-full xxsm:w-[250px] xsm:w-[300px] sm:w-[350px] md:w-[400px] lg:w-[450px] xl:w-[500px] h-auto xxsm:h-[250px] xsm:h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] xl:h-[500px]">
-        <h5 className="reset-password-title xsm:text-[18px] sm:text-[26px] md:text-[28px] lg:text-[30px] xl:text-[32px]
-                            xsm:mb-[10px] sm:mb-[20px] md:mb-[25px] lg:mb-[30px] xl:mb-[35px]">Reset Your Password</h5>
+    <div className="reset-password-page flex items-center justify-center min-h-screen bg-dark-900">
+      <div className="reset-password-container w-full max-w-md bg-gray-800 p-6 rounded-lg shadow-md">
+        <h5 className="reset-password-title text-xl sm:text-2xl md:text-3xl lg:text-3xl font-semibold text-center text-white mb-6">
+          Reset Your Password
+        </h5>
 
-        <p className="reset-password-description xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[18px] mb-4 text-center text-gray-600">
+        <p className="reset-password-description text-sm sm:text-base text-center text-gray-400 mb-6">
           Enter a new password below. Once submitted, you'll be redirected to the login page.
         </p>
 
         <form onSubmit={handlePasswordReset}>
-          <div className="new-password mb-4">
+          <div className="new-password mb-4 relative">
             <input
-              type="password"
+              type={showNewPassword ? "text" : "password"}
               placeholder="New Password"
-              className="w-full xsm:h-[35px] sm:h-[46px] md:h-[50px] lg:h-[55px] xl:h-[55px] p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full p-2 rounded-md border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
               required
             />
+            <button
+              type="button"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-blue-400 hover:text-blue-600 focus:outline-none"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+            >
+              {showNewPassword ? "Hide" : "Show"}
+            </button>
           </div>
 
-          <div className="confirm-password mb-4">
+          <div className="confirm-password mb-4 relative">
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               placeholder="Confirm New Password"
-              className="w-full xsm:h-[35px] sm:h-[46px] md:h-[50px] lg:h-[55px] xl:h-[55px] p-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              className="w-full p-2 rounded-md border border-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-700 text-white"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
             />
+            <button
+              type="button"
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 text-sm text-blue-400 hover:text-blue-600 focus:outline-none"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? "Hide" : "Show"}
+            </button>
           </div>
 
           <button
             type="submit"
-            className="reset-password-button w-full xxsm:w-[60px] xsm:w-[70px] sm:w-[80px] md:w-[90px] lg:w-[100px] xl:w-[110px] h-auto xsm:h-[30px] sm:h-[38px] md:h-[42px] lg:h-[46px] xl:h-[46px]
-                                    bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors duration-200"
+            className="w-full py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 transition-colors duration-200"
             disabled={isSubmitting}
           >
             {isSubmitting ? "Submitting..." : "Set New Password"}
@@ -92,13 +108,13 @@ const ResetPassword = () => {
         </form>
 
         {notification && (
-          <p className="reset-password-notification xsm:text-[10px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[16px] mt-4 text-center text-gray-700">
+          <p className="reset-password-notification text-sm text-center text-red-500 font-bold mt-4">
             {notification}
           </p>
         )}
       </div>
     </div>
   );
-}
+};
 
 export default ResetPassword;

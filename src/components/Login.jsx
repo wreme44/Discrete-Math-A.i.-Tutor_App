@@ -141,7 +141,9 @@ const Login = () => {
                 >
                     Send Reset Link
                 </button>
-                {resetNotification && <p className="text-center text-sm text-gray-700">{resetNotification}</p>}
+                {resetNotification && (
+                    <p style={{ color: 'orange', fontWeight: 'bold', marginTop: '0.5rem', textAlign: 'center', fontSize: '0.875rem' }}>
+                        {resetNotification}</p>)}
                 <button
                     className="w-full py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 mt-0"
                     onClick={() => setIsResetModalOpen(false)}
