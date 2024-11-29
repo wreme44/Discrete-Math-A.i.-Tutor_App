@@ -13,27 +13,20 @@ const Assessment = () => {
   const [score, setScore] = useState(0);
   const [completedQuizzes, setCompletedQuizzes] = useState([]);
   const [incorrectQuestions, setIncorrectQuestions] = useState([]);
-  const [user, setUser] = useState(null);
   const [showSidebar, setShowSidebar] = useState(false);
-
-  // Fetch user on load
-  useEffect(() => {
-    const fetchUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error) console.error(error);
-      else setUser(data.user);
-    };
-    fetchUser();
-  }, []);
+  const [userId, setUserId] = useState(() => {
+    const savedUserId = sessionStorage.getItem("userId");
+    return savedUserId ? JSON.parse(savedUserId) : null;
+  });
 
   // Fetch completed quizzes on load
   useEffect(() => {
     const fetchCompletedQuizzes = async () => {
-      if (user) {
+      if (userId) {
         const { data, error } = await supabase
           .from("user_assessment_progress")
           .select("*")
-          .eq("user_id", user.id);
+          .eq("user_id", userId);
 
         if (error) {
           console.error("Error fetching quiz progress:", error);
@@ -53,7 +46,7 @@ const Assessment = () => {
       }
     };
     fetchCompletedQuizzes();
-  }, [user]);
+  }, [userId]);
 
   const fetchQuestions = async (quiz) => {
     let lessonIds;
@@ -136,9 +129,9 @@ const Assessment = () => {
       alert(`You scored ${calculatedScore}/${totalQuestions}. Try again!`);
     }
 
-    if (user) {
+    if (userId) {
       const { error } = await supabase.from("user_assessment_progress").insert({
-        user_id: user.id,
+        user_id: userId,
         quiz_id: quizzes.indexOf(currentQuiz) + 1,
         score: calculatedScore,
         completed: passed,
