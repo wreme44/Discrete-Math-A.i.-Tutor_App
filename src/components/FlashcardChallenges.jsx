@@ -123,7 +123,7 @@ const FlashcardChallenges = () => {
     }, []);
 
     return (
-        <div className="card-page-container flex flex-col items-center justify-center text-center bg-gray-800 text-white
+        <div className="card-page-container flex flex-col items-center justify-center text-center text-white
         xxxsm:pt-[70px] xxsm:pt-[75px] xsm:pt-[80px] sm:pt-[80px] md:pt-[80px] lg:pt-[80px] xl:pt-[80px]">
             <CustomCursor />
             <h1 className="flashcard-title mb-6
@@ -157,18 +157,18 @@ const FlashcardChallenges = () => {
 
             <div className="type-answer flex items-center align-middle mb-2">
                 <button
-                    className="bg-[rgba(75,207,137,0.81)] text-white rounded-full hover:bg-[rgb(75,207,115)]
+                    className="prev-flashcard bg-[rgba(75,207,137,0.81)] text-white rounded-full hover:bg-[rgb(75,207,115)]
                     xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]"
                     onClick={handlePrevious}
                 >
-                    <img className='prev-page-icon' alt='... ...' src='/prev-page.svg' />
+                    <img className='prev-flashcard' alt='... ...' src='/prev-page.svg' />
                 </button>
                 <input
                     type="text"
                     placeholder="Enter your guess..."
                     value={guess}
                     onChange={(e) => setGuess(e.target.value)}
-                    className={`text-white bg-[rgba(36,36,36,0.5)] p-2 mx-2 rounded border border-[rgba(30,255,143,0.4)]
+                    className={`type-answer text-white bg-[rgba(36,36,36,0.5)] p-2 mx-2 rounded border border-[rgba(30,255,143,0.4)]
                         xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[40px] md:h-[45px] lg:h-[45px] xl:h-[45px]
                         xxxsm:w-[150px] xxsm:w-[175px] xsm:w-[200px] sm:w-[225px] md:w-[250px] lg:w-[300px] xl:w-[300px]
                         ${correctGuess === "correct"
@@ -179,11 +179,11 @@ const FlashcardChallenges = () => {
                         }`}
                 />
                 <button
-                    className="bg-[rgba(75,207,137,0.81)] text-white rounded-full hover:bg-[rgb(75,207,115)]
+                    className="next-flashcard bg-[rgba(75,207,137,0.81)] text-white rounded-full hover:bg-[rgb(75,207,115)]
                             xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]"
                     onClick={handleNext}
                 >
-                    <img className='next-page-icon' alt='... ...' src='/next-page.svg' />
+                    <img className='next-flashcard' alt='... ...' src='/next-page.svg' />
                 </button>
             </div>
             <div className="flex justify-center gap-6 mt-0">
@@ -194,10 +194,10 @@ const FlashcardChallenges = () => {
                         xxxsm:w-[18px] xxsm:w-[22px] xsm:w-[25px] sm:w-[27px] md:w-[30px] lg:w-[32px] xl:w-[32px]"
                     onClick={shuffleRandomCard}
                 >
-                    <img className='' alt='shuffle' src='/shuffle-icon.svg' />
+                    <img className='shuffle-button' alt='shuffle' src='/shuffle-icon.svg' />
                 </button>
                 <button
-                    className="mt-0 px-2 py-1 bg-[rgba(52,130,88,0.5)] text-white rounded hover:bg-[rgba(58,163,107,0.71)]
+                    className="check-flash-button mt-0 px-2 py-1 bg-[rgba(52,130,88,0.5)] text-white rounded hover:bg-[rgba(58,163,107,0.71)]
                     transform transition duration-75 ease-in-out hover:scale-110 active:scale-95
                     xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[20px]"
                     onClick={checkAnswer}
