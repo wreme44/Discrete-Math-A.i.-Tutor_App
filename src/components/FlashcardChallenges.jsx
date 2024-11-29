@@ -123,29 +123,42 @@ const FlashcardChallenges = () => {
     }, []);
 
     return (
-        <div className="card-page-container flex flex-col items-center justify-center text-center pt-[100px] bg-gray-800 text-white">
+        <div className="card-page-container flex flex-col items-center justify-center text-center bg-gray-800 text-white
+        xxxsm:pt-[70px] xxsm:pt-[75px] xsm:pt-[80px] sm:pt-[80px] md:pt-[80px] lg:pt-[80px] xl:pt-[80px]">
             <CustomCursor />
-            <h1 className="flashcard-title mb-6">MentorCards</h1>
-            <div className="streak-tracker flex text-lg mb-4 space-x-[20px]">
+            <h1 className="flashcard-title mb-6
+            xxxsm:text-[16px] xxsm:text-[20px] xsm:text-[25px] sm:text-[30px] md:text-[39px] lg:text-[45px] xl:text-[45px]">
+                MentorCards
+            </h1>
+            <div className="streak-tracker flex mb-4
+            xxxsm:space-x-[12px] xxsm:space-x-[14px] xsm:space-x-[16px] sm:space-x-[18px] md:space-x-[20px] lg:space-x-[20px] xl:space-x-[20px]
+            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[20px]">
                 <p>Current Streak: {streak}</p>
                 <p>Longest Streak: {longestStreak}</p>
             </div>
-            <div className="card-container">
+            <div className="card-container
+            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
+            xxxsm:h-[125px] xxsm:h-[150px] xsm:h-[175px] sm:h-[200px] md:h-[250px] lg:h-[300px] xl:h-[300px]
+            xxxsm:w-[200px] xxsm:w-[250px] xsm:w-[325px] sm:w-[350px] md:w-[400px] lg:w-[500px] xl:w-[500px]">
                 <div
-                    className={`cards ${flipped ? 'flipped' : ''} border-2 border-[rgba(81,233,152,0.16)] rounded-lg`}
+                    className={`cards ${flipped ? 'flipped' : ''} border-2 border-[rgba(81,233,152,0.16)] rounded-lg
+                    xxxsm:text-[12px] xxsm:text-[14px] xsm:text-[16px] sm:text-[20px] md:text-[27px] lg:text-[30px] xl:text-[32px]`}
                     onClick={handleFlip}
                 >
                     {!flipped ? (
-                        <h2 className="card-front">{discreteMathTerms[currentCardIndex].term}</h2>
+                        <h2 className="card-front">
+                            {discreteMathTerms[currentCardIndex].term}</h2>
                     ) : (
-                        <h2 className="card-back">{discreteMathTerms[currentCardIndex].definition}</h2>
+                        <h2 className="card-back">
+                            {discreteMathTerms[currentCardIndex].definition}</h2>
                     )}
                 </div>
             </div>
 
             <div className="type-answer flex items-center align-middle mb-2">
                 <button
-                    className="bg-[rgba(75,207,137,0.81)] text-white rounded-full w-8 h-8 hover:bg-[rgb(75,207,115)]"
+                    className="bg-[rgba(75,207,137,0.81)] text-white rounded-full hover:bg-[rgb(75,207,115)]
+                    xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]"
                     onClick={handlePrevious}
                 >
                     <img className='prev-page-icon' alt='... ...' src='/prev-page.svg' />
@@ -155,7 +168,9 @@ const FlashcardChallenges = () => {
                     placeholder="Enter your guess..."
                     value={guess}
                     onChange={(e) => setGuess(e.target.value)}
-                    className={`text-white bg-[rgba(36,36,36,0.5)] p-2 mx-1 rounded border border-[rgba(30,255,143,0.4)]
+                    className={`text-white bg-[rgba(36,36,36,0.5)] p-2 mx-2 rounded border border-[rgba(30,255,143,0.4)]
+                        xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[40px] md:h-[45px] lg:h-[45px] xl:h-[45px]
+                        xxxsm:w-[150px] xxsm:w-[175px] xsm:w-[200px] sm:w-[225px] md:w-[250px] lg:w-[300px] xl:w-[300px]
                         ${correctGuess === "correct"
                             ? "bg-[rgba(38,255,0,0.68)]"
                             : correctGuess === "wrong"
@@ -164,23 +179,27 @@ const FlashcardChallenges = () => {
                         }`}
                 />
                 <button
-                    className="bg-[rgba(75,207,137,0.81)] text-white rounded-full w-8 h-8 hover:bg-[rgb(75,207,115)]"
+                    className="bg-[rgba(75,207,137,0.81)] text-white rounded-full hover:bg-[rgb(75,207,115)]
+                            xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]"
                     onClick={handleNext}
                 >
                     <img className='next-page-icon' alt='... ...' src='/next-page.svg' />
                 </button>
             </div>
-            <div className="flex justify-center gap-2 mt-0">
+            <div className="flex justify-center gap-6 mt-0">
                 <button
-                    className="shuffle-button w-8 h-8 outline-none
+                    className="shuffle-button outline-none
                         focus:outline-none hover:outline-none ring-0
-                        transform transition duration-75 ease-in-out hover:scale-110 active:scale-95"
+                        transform transition duration-75 ease-in-out hover:scale-110 active:scale-95
+                        xxxsm:w-[18px] xxsm:w-[22px] xsm:w-[25px] sm:w-[27px] md:w-[30px] lg:w-[32px] xl:w-[32px]"
                     onClick={shuffleRandomCard}
                 >
-                    <img className='' alt='... ...' src='/shuffle-icon.svg' />
+                    <img className='' alt='shuffle' src='/shuffle-icon.svg' />
                 </button>
                 <button
-                    className="mt-0 px-1 py-1 bg-[rgba(52,130,88,0.5)] text-white rounded hover:bg-[rgba(58,163,107,0.71)]"
+                    className="mt-0 px-2 py-1 bg-[rgba(52,130,88,0.5)] text-white rounded hover:bg-[rgba(58,163,107,0.71)]
+                    transform transition duration-75 ease-in-out hover:scale-110 active:scale-95
+                    xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[20px]"
                     onClick={checkAnswer}
                 >
                     Check
@@ -209,7 +228,7 @@ const FlashcardChallenges = () => {
             </div> */}
             {/* Games Button */}
             <div className="flex flex-col items-center justify-center
-                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
+                            xxxsm:mt-[10px] xxsm:mt-[12px] xsm:mt-[15px] sm:mt-[20px] md:mt-[20px] lg:mt-[15px] xl:mt-[15px]
                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
                 {/* <Link className=""
                         to="/games">

@@ -226,7 +226,7 @@ const MemoryMatch = () => {
     // }, [cards, resizeText]);
 
     return (
-        <div className="memory-match-container">
+        <div className="memory-match-container xxxsm:pt-[70px] xxsm:pt-[75px] xsm:pt-[80px] sm:pt-[70px] md:pt-[65px] lg:pt-[65px] xl:pt-[65px]">
             {showInstructions ? (
                 <div className="instructions-modal">
                     <div className="modal-content text-[rgb(35,116,215)]">
@@ -241,7 +241,7 @@ const MemoryMatch = () => {
                         <div className="difficulty-buttons space-x-1 mt-3">
                             {Object.keys(difficultySettings).map((level) => (
                                 <button className="bg-[rgba(0,96,250,0.71)] hover:bg-[rgb(0,89,255)] text-black text-lg font-semibold rounded
-                                    px-1"
+                                    transform transition duration-75 ease-in-out hover:scale-105 active:scale-95 px-1"
                                     key={level} onClick={() => selectDifficulty(level)}>
                                     {level}
                                 </button>
@@ -261,10 +261,19 @@ const MemoryMatch = () => {
                 </div>
             ) : (
                 <>
-                    <h1 className="memory-main-title">Mentor Memory</h1>
-                    <div className="flex items-center">
-                        <img className="w-[50px]" alt="time" src="./time-icon.svg" />
-                        <span className="mb-0">{time}s</span>
+                    <h1 className="memory-main-title
+                    xxxsm:text-[16px] xxsm:text-[20px] xsm:text-[25px] sm:text-[30px] md:text-[39px] lg:text-[45px] xl:text-[45px]">
+                        Mentor Memory
+                    </h1>
+                    <div className="flex items-center
+                    xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[10px] lg:mb-[10px] xl:mb-[10px]">
+                        <img className="xxxsm:w-[20px] xxsm:w-[25px] xsm:w-[30px] sm:w-[40px] md:w-[50px] lg:w-[50px] xl:w-[50px]
+                        xxxsm:mr-[5px] xxsm:mr-[5px] xsm:mr-[5px] sm:mr-[5px] md:mr-[5px] lg:mr-[5px] xl:mr-[5px]"
+                            alt="time" src="./time-icon.svg" />
+                        <span className="time-memory
+                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
+                            {time}s
+                        </span>
                     </div>
                     {/* <span>Stars: {"⭐".repeat(stars)}</span> */}
                     <div className="grid">
@@ -274,11 +283,15 @@ const MemoryMatch = () => {
                                 ref={(el) => (cardRefs.current[index] = el)}
                                 className={`grid-card transform transition
                                         duration-75 ease-in-out hover:scale-105 active:scale-95
+                                        xxxsm:h-[70px] xxsm:h-[80px] xsm:h-[90px] sm:h-[100px] md:h-[100px] lg:h-[100px] xl:h-[100px]
+                                        xxxsm:w-[55px] xxsm:w-[65px] xsm:w-[100px] sm:w-[125px] md:w-[150px] lg:w-[150px] xl:w-[150px]
                                      ${flippedCards.includes(index) || matchedCards.includes(index) ? "flipped" : ""
                                     }`}
                                 onClick={() => handleCardClick(index)}
                             >
-                                <span>{flippedCards.includes(index) || matchedCards.includes(index) ? card.text : ""}</span>
+                                <span className="">
+                                    {flippedCards.includes(index) || matchedCards.includes(index) ? card.text : ""}
+                                </span>
                             </div>
                         ))}
                     </div>
@@ -286,35 +299,41 @@ const MemoryMatch = () => {
                         {!gameOver && (
                             <>
                                 <div className="space-x-2">
-                                    <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
-                                text-black text-lg font-semibold rounded px-1"
-                                            onClick={() => startNewGame(difficulty)}>Restart
-                                        </button>
-                                        <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
-                                text-black text-lg font-semibold rounded px-1"
-                                            onClick={handleQuit}>Quit
-                                        </button>
-                                    </div>
-                                    {/* Games Button */}
-                                    <div className="flex flex-col items-center justify-center
+                                    <button className="restart-quit-memory-button bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
+                                    text-black font-semibold rounded px-1
+                                    transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                    xxxsm:text-[12px] xxsm:text-[14px] xsm:text-[16px] sm:text-[16px] md:text-[18px] lg:text-[18px] xl:text-[18px]"
+                                        onClick={() => startNewGame(difficulty)}>Restart
+                                    </button>
+                                    <button className="restart-quit-memory-button bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
+                                    text-black font-semibold rounded px-1
+                                    transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                    xxxsm:text-[12px] xxsm:text-[14px] xsm:text-[16px] sm:text-[16px] md:text-[18px] lg:text-[18px] xl:text-[18px]"
+                                        onClick={handleQuit}>Quit
+                                    </button>
+                                </div>
+                                {/* Games Button */}
+                                <div className="flex flex-col items-center justify-center
                                             xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
                                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
-                                        <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
+                                    <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
                                             hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
                                             transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
-                                            to="/games">Game Hub
-                                        </Link>
-                                    </div>
-                                </>
-                            )}
+                                        to="/games">Game Hub
+                                    </Link>
+                                </div>
+                            </>
+                        )}
                     </div>
                     {gameOver && (
-                        <div className="game-over">
-                            <h2>Congratulations! You matched all cards!</h2>
+                        <div className="game-over text-[rgba(0,154,250,0.71)] font-semibold
+                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
+                            <h2 className="">Congratulations! You matched all cards!</h2>
                             <p>Time: {time}s</p>
                             <p>Stars: {"⭐".repeat(stars)}</p>
-                            <button className="bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
-                                text-black text-lg font-semibold rounded px-1 mt-1"
+                            <button className="restart-quit-memory-button bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
+                                text-black font-semibold rounded px-1 mt-1
+                                transform transition duration-75 ease-in-out hover:scale-105 active:scale-95 mb-[8px]"
                                 onClick={handleQuit}>Select Difficulty</button>
                         </div>
                     )}
