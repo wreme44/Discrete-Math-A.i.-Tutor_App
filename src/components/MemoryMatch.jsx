@@ -276,7 +276,7 @@ const MemoryMatch = () => {
                         </span>
                     </div>
                     {/* <span>Stars: {"⭐".repeat(stars)}</span> */}
-                    <div className="grid">
+                    <div className="grid-memory">
                         {cards.map((card, index) => (
                             <div
                                 key={index}

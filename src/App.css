@@ -1736,7 +1736,7 @@ body.flashCardBody {
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
-    cursor: url('/wand-cursor.svg'), auto;
+    /* cursor: url('/wand-cursor.svg'), auto; */
 }
 
 /* .card-page-container{
@@ -1940,7 +1940,7 @@ body.memoryMatchBody {
     text-shadow: 0 0 10px rgba(0, 145, 255, 0.527), 0 0 20px rgba(0, 145, 255, 0.553);
 }
 
-.grid {
+.grid-memory {
     display: grid;
     gap: 10px;
     grid-template-columns: repeat(4, 1fr);
