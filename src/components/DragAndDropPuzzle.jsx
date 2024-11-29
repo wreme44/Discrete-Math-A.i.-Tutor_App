@@ -275,7 +275,8 @@ const DragAndDropPuzzle = () => {
 
             {!showInstructions && !gameCompleted && (
                 <>
-                    <h1 className="drop-title xxxsm:text-[16px] xxsm:text-[20px] xsm:text-[25px] sm:text-[30px] md:text-[39px] lg:text-[39px] xl:text-[39px]">Discrete Drops: Subsets</h1>
+                    <h1 className="drop-title xxxsm:text-[16px] xxsm:text-[20px] xsm:text-[25px] sm:text-[30px] md:text-[39px] lg:text-[45px] xl:text-[45px]">
+                        Discrete Drops: Subsets</h1>
                     <div className="main-drag-sets xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
                     xxxsm:p-[5px] xxsm:p-[5px] xsm:p-[5px] sm:p-[8px] md:p-[8px] lg:p-[8px] xl:p-[8px]">
                         <p className="mb-1 xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">

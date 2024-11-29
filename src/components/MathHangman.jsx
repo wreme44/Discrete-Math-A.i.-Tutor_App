@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Link } from 'react-router-dom'
+import React, { useState, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 const discreteMathTerms = [
     { term: "Set", hint: "A collection of distinct objects or elements." },
@@ -65,6 +65,12 @@ const MathHangman = () => {
     const [gameStatus, setGameStatus] = useState("playing");
     const [lifelineUsed, setLifelineUsed] = useState(false);
     const [showInstructions, setShowInstructions] = useState(true);
+    const navigate = useNavigate();
+
+    const navToGamePage = () => {
+        navigate('/games');
+    };
+
 
     const startNewGame = () => {
         const randomTerm =
@@ -123,6 +129,24 @@ const MathHangman = () => {
         }
     };
 
+    // Function to toggle `lifelineUsed` and update state
+    // const toggleLifelineMessage = () => {
+    //     setLifelineUsed((prev) => !prev); // Toggle the boolean state
+    // };
+
+    // // Combined click handler for the button
+    // const handleLifelineClick = () => {
+    //     useLifeline();
+    //     toggleLifelineMessage();
+    // };
+
+    // // Render logic for the button text
+    // const lifelineText = lifelineUsed
+    //     ? Math.random() < 0.5
+    //         ? "The D-Mentor Spared You Once"
+    //         : "No lifelines left—only the D-Mentor remains"
+    //     : "Use Lifeline";
+
     const renderWord = () => {
         if (!selectedWord) return null;
 
@@ -137,120 +161,191 @@ const MathHangman = () => {
         );
     };
 
+    // const renderHangman = () => {
+    //     const parts = [
+    //         <circle key="head" cx="50" cy="30" r="10" stroke="#ce0000" fill="none" />,
+    //         <line key="body" x1="50" y1="40" x2="50" y2="70" stroke="#ce0000" />,
+    //         <line key="left-arm" x1="50" y1="50" x2="40" y2="60" stroke="#ce0000" />,
+    //         <line key="right-arm" x1="50" y1="50" x2="60" y2="60" stroke="#ce0000" />,
+    //         <line key="left-leg" x1="50" y1="70" x2="40" y2="80" stroke="#ce0000" />,
+    //         <line key="right-leg" x1="50" y1="70" x2="60" y2="80" stroke="#ce0000" />,
+    //     ];
+
+    //     return parts.slice(0, MAX_ATTEMPTS - attemptsLeft);
+    // }; 
+
+    // const renderHangman = () => {
+    //     const parts = [
+    //         <path
+    //             key="hood"
+    //             d="M35,35 Q50,5 65,35 Q50,25 35,35 Z"
+    //             stroke="#ce0000"
+    //             fill="none"
+    //         />,
+    //         <line key="body" x1="50" y1="40" x2="50" y2="70" stroke="#ce0000" />,
+    //         <line key="left-arm" x1="50" y1="50" x2="40" y2="60" stroke="#ce0000" />,
+    //         <line key="right-arm" x1="50" y1="50" x2="60" y2="60" stroke="#ce0000" />,
+    //         <line key="left-leg" x1="50" y1="70" x2="40" y2="80" stroke="#ce0000" />,
+    //         <line key="right-leg" x1="50" y1="70" x2="60" y2="80" stroke="#ce0000" />,
+    //     ];
+
+    //     return parts.slice(0, MAX_ATTEMPTS - attemptsLeft);
+    // }; 
+
     const renderHangman = () => {
         const parts = [
-            <circle key="head" cx="50" cy="30" r="10" stroke="white" fill="none" />,
-            <line key="body" x1="50" y1="40" x2="50" y2="70" stroke="white" />,
-            <line key="left-arm" x1="50" y1="50" x2="40" y2="60" stroke="white" />,
-            <line key="right-arm" x1="50" y1="50" x2="60" y2="60" stroke="white" />,
-            <line key="left-leg" x1="50" y1="70" x2="40" y2="80" stroke="white" />,
-            <line key="right-leg" x1="50" y1="70" x2="60" y2="80" stroke="white" />,
+            // Hooded or spectral head
+             <path
+             key="hood"
+             d="M35,35 Q50,5 65,35 Q50,25 35,35 Z"
+             stroke="#ce0000"
+             strokeWidth="2"
+             fill="none"
+             />,
+            // Cloaked body
+            <path 
+                key="cloak" 
+                d="M50,30 Q40,40 50,70 Q60,40 50,30 Z" 
+                stroke="#ce0000" 
+                strokeWidth="2"
+                fill="none" 
+            />,
+            // Left "wing" or spectral arm
+            <path 
+                key="left-wing" 
+                d="M50,40 Q30,50 40,60" 
+                stroke="#ce0000" 
+                strokeWidth="2"
+                fill="none" 
+            />,
+            // Right "wing" or spectral arm
+            <path 
+                key="right-wing" 
+                d="M50,40 Q70,50 60,60" 
+                stroke="#ce0000" 
+                strokeWidth="2"
+                fill="none" 
+            />,
+            // Left spectral "leg"
+            <path 
+                key="left-leg" 
+                d="M50,70 Q45,80 40,90" 
+                stroke="#ce0000" 
+                strokeWidth="2"
+                fill="none" 
+            />,
+            // Right spectral "leg"
+            <path 
+                key="right-leg" 
+                d="M50,70 Q55,80 60,90" 
+                stroke="#ce0000" 
+                strokeWidth="2"
+                fill="none" 
+            />,
         ];
-
+    
         return parts.slice(0, MAX_ATTEMPTS - attemptsLeft);
     };
 
-    return (
-        <div className="hangman-container">
-            <style>
-                {`
-          .hangman-container {
-            text-align: center;
-            font-family: Arial, sans-serif;
-            color: white;
-            background-color: #1a202c;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-          }
-          .word-container {
-            font-size: 24px;
-            margin-bottom: 20px;
-          }
-          .letter, .underscore, .space {
-            margin: 0 5px;
-            font-size: 28px;
-            font-weight: bold;
-            text-transform: uppercase;
-          }
-          .underscore {
-            text-decoration: underline;
-          }
-          .space {
-            display: inline-block;
-            width: 20px;
-          }
-          .hint {
-            font-size: 18px;
-            margin-bottom: 20px;
-            color: #81e6d9;
-          }
-          .keyboard {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 20px;
-          }
-          .key {
-            background-color: #4a5568;
-            color: white;
-            padding: 10px 15px;
-            margin: 5px;
-            border-radius: 5px;
-            cursor: pointer;
-          }
-          .key.disabled {
-            background-color: #2d3748;
-            cursor: not-allowed;
-          }
-          .lifeline {
-            margin-bottom: 20px;
-            padding: 10px 20px;
-            background-color: #38b2ac;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-          }
-          .lifeline:disabled {
-            background-color: #2d3748;
-            cursor: not-allowed;
-          }
-          .game-status {
-            font-size: 24px;
-            margin-bottom: 20px;
-          }
-          .restart-button {
-            padding: 10px 20px;
-            background-color: #4a5568;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-          }
-        `}
-            </style>
+    // const renderHangman = () => {
+    //     const parts = [
+    //         // Enlarged hood with shadow
+    //         <path 
+    //             key="hood" 
+    //             d="M35,35 Q50,5 65,35 Q50,25 35,35 Z" 
+    //             stroke="white" 
+    //             strokeWidth="2" 
+    //             fill="none" 
+    //             filter="url(#shadow)" 
+    //         />,
+    //         // Cloaked body with shadow
+    //         <path 
+    //             key="cloak" 
+    //             d="M50,30 Q35,50 50,80 Q65,50 50,30 Z" 
+    //             stroke="white" 
+    //             strokeWidth="2" 
+    //             fill="none" 
+    //             filter="url(#shadow)" 
+    //         />,
+    //         // Left "wing" or spectral arm
+    //         <path 
+    //             key="left-wing" 
+    //             d="M50,45 Q30,55 35,65" 
+    //             stroke="white" 
+    //             strokeWidth="2" 
+    //             fill="none" 
+    //             filter="url(#shadow)" 
+    //         />,
+    //         // Right "wing" or spectral arm
+    //         <path 
+    //             key="right-wing" 
+    //             d="M50,45 Q70,55 65,65" 
+    //             stroke="white" 
+    //             strokeWidth="2" 
+    //             fill="none" 
+    //             filter="url(#shadow)" 
+    //         />,
+    //         // Left spectral "leg"
+    //         <path 
+    //             key="left-leg" 
+    //             d="M50,80 Q45,90 40,100" 
+    //             stroke="white" 
+    //             strokeWidth="2" 
+    //             fill="none" 
+    //             filter="url(#shadow)" 
+    //         />,
+    //         // Right spectral "leg"
+    //         <path 
+    //             key="right-leg" 
+    //             d="M50,80 Q55,90 60,100" 
+    //             stroke="white" 
+    //             strokeWidth="2" 
+    //             fill="none" 
+    //             filter="url(#shadow)" 
+    //         />,
+    //     ];
+    
+    //     return [
+    //         // Shadow filter definition
+    //         <defs key="shadow-filter">
+    //             <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+    //                 <feDropShadow dx="2" dy="2" stdDeviation="2" floodColor="black" floodOpacity="0.5" />
+    //             </filter>
+    //         </defs>,
+    //         // Return hangman parts
+    //         ...parts.slice(0, MAX_ATTEMPTS - attemptsLeft),
+    //     ];
+    // };
+    
 
+    useEffect(() => {
+        // Add class to body
+        document.body.classList.add('hangmanBody');
+
+        return () => {
+            // Remove class when leaving the page
+            document.body.classList.remove('hangmanBody');
+        };
+    }, []);
+
+    return (
+        <div className="hangman-container
+            xxxsm:px-[10px] xxsm:px-[12px] xsm:px-[15px] sm:px-[18px] md:px-[20px] lg:px-[20px] xl:px-[20px]
+            xxxsm:pt-[60px] xxsm:pt-[60px] xsm:pt-[60px] sm:pt-[60px] md:pt-[60px] lg:pt-[60px] xl:pt-[60px]">
             {showInstructions && (
-                <div className="instructions-modal">
-                    <div className="instructions-content">
-                        <h2>Welcome to Math Hangman</h2>
-                        <p>
-                            Guess the discrete math term letter by letter. You have {MAX_ATTEMPTS} chances!
-                        </p>
-                        <p>
-                            <strong>Hints:</strong> Use the provided hint to assist you in guessing.
-                        </p>
-                        <p>
-                            <strong>Lifeline:</strong> Reveal a random letter to help you, but you can only use it once!
-                        </p>
-                        <button className="restart-button" onClick={startNewGame}>
+                <div className="instructions-modal-hangman">
+                    <div className="instructions-content-hangman text-[rgb(209,26,26)] font">
+                        <h2 className="hangman-modal-title">Welcome to Math Hangman</h2>
+                        <p>Guess the discrete math term letter by letter.</p>
+                        <p>You have {MAX_ATTEMPTS} chances!</p>
+                        <p><strong>Hints:</strong> Use the provided hint to assist you in guessing.</p>
+                        <p><strong>Lifeline:</strong> Reveal a random letter to help you, but you can only use it once!</p>
+                        <button className="restart-button-hangman py-[10px] px-[15px] mt-[10px]
+                            bg-[rgb(0,0,0)] hover:bg-[rgb(60,1,1)] text-[rgb(255,0,0)] text-lg font-semibold rounded
+                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95" 
+                        onClick={startNewGame}>
                             Start Game
                         </button>
-
                     </div>
                     <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
                         hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
@@ -261,26 +356,45 @@ const MathHangman = () => {
             )}
             {selectedWord && (
                 <>
-                    <h1>Mathman</h1>
-                    <div className="hangman-drawing">
-                        <svg width="100" height="100">
+                    <h1 className="hangman-game-title xxxsm:text-[16px] xxsm:text-[20px] xsm:text-[25px] sm:text-[30px] md:text-[39px] lg:text-[45px] xl:text-[45px]">
+                        Discrete MathMan</h1>
+                    <div className="hangman-drawing flex items-center justify-center
+                        xxxsm:h-[50px] xxsm:h-[60px] xsm:h-[90px] sm:h-[100px] md:h-[125px] lg:h-[150px] xl:h-[150px]
+                        xxxsm:w-[100px] xxsm:w-[100px] xsm:w-[125px] sm:w-[150px] md:w-[175px] lg:w-[200px] xl:w-[200px]">
+                        <svg className="scale-svg origin-center
+                        xxxsm:h-[100px] xxsm:h-[100px] xsm:h-[100px] sm:h-[100px] md:h-[100px] lg:h-[100px] xl:h-[100px]
+                        xxxsm:w-[100px] xxsm:w-[100px] xsm:w-[100px] sm:w-[100px] md:w-[100px] lg:w-[100px] xl:w-[100px]
+                        xxxsm:scale-[50%] xxsm:scale-[60%] xsm:scale-[100%] sm:scale-[110%] md:scale-[130%] lg:scale-[150%] xl:scale-[150%]">
                             {renderHangman()}
                         </svg>
                     </div>
-                    <div className="word-container">{renderWord()}</div>
-                    <div className="hint">Hint: {hint}</div>
+                    <div className="word-container mt-[8px]
+                    xxxsm:text-[16px] xxsm:text-[18px] xsm:text-[20px] sm:text-[25px] md:text-[30px] lg:text-[32px] xl:text-[32px]">
+                        {renderWord()}
+                    </div>
+                    <div className="hint
+                    xxxsm:text-[11px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[17px] lg:text-[18px] xl:text-[18px]">
+                        Hint: {hint}
+                    </div>
                     <button
-                        className="lifeline"
+                        className="lifeline transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                        xxxsm:text-[10px] xxsm:text-[11px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[15px] xl:text-[15px]
+                        xxxsm:px-[10px] xxsm:px-[10px] xsm:px-[12px] sm:px-[14px] md:px-[15px] lg:px-[15px] xl:px-[15px]
+                        xxxsm:py-[5px] xxsm:py-[7px] xsm:py-[7px] sm:py-[8px] md:py-[8px] lg:py-[8px] xl:py-[8px]"
                         onClick={useLifeline}
                         disabled={lifelineUsed || gameStatus !== "playing"}
                     >
-                        Use Lifeline
+                        {lifelineUsed ? "The D-Mentor spared you once" : "Use Lifeline"}
                     </button>
                     <div className="keyboard">
                         {"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map((letter) => (
                             <button
                                 key={letter}
-                                className={`key ${guessedLetters.includes(letter) ? "disabled" : ""}`}
+                                className={`key ${guessedLetters.includes(letter) ? "disabled" : ""}
+                                transform transition duration-75 ease-in-out hover:scale-[1.3] active:scale-95
+                                xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]
+                                xxxsm:px-[4px] xxsm:px-[6px] xsm:px-[12px] sm:px-[14px] md:px-[15px] lg:px-[15px] xl:px-[15px]
+                                xxxsm:py-[0px] xxsm:py-[2px] xsm:py-[7px] sm:py-[8px] md:py-[8px] lg:py-[8px] xl:py-[8px]`}
                                 onClick={() => handleGuess(letter)}
                                 disabled={guessedLetters.includes(letter) || gameStatus !== "playing"}
                             >
@@ -289,24 +403,57 @@ const MathHangman = () => {
                         ))}
                     </div>
                     {gameStatus === "lost" && (
-                        <div className="game-status">
-                            You Lost! 😢 <br />
+                        <div className="game-status
+                        xxxsm:text-[9px] xxsm:text-[10px] xsm:text-[11px] sm:text-[12px] md:text-[14px] lg:text-[14px] xl:text-[14px]">
+                            The shadows may win today, but light always returns. <br />
+                            The D-Mentor whispers: Will you rise again? <br/>
                             <strong>The correct word was: {selectedWord}</strong>
                         </div>
                     )}
                     {gameStatus === "won" && (
-                        <div className="game-status">You Won! 🎉</div>
+                        <div className="game-status
+                        xxxsm:text-[9px] xxsm:text-[10px] xsm:text-[11px] sm:text-[12px] md:text-[14px] lg:text-[14px] xl:text-[14px]">
+                            VICTORY earned, lesson learned — the D-Mentor is Pleased <br />
+                            and nods in approval — You’ve Done Well.
+
+                        </div>
                     )}
                     {(gameStatus === "won" || gameStatus === "lost") && (
-                        <button className="restart-button" onClick={startNewGame}>
-                            Play Again
-                        </button>
+                        <div className="space-x-2">
+                            <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
+                            hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                            xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]" 
+                            onClick={startNewGame}>
+                                Play Again
+                            </button>
+                            <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
+                            hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                            xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]"
+                            onClick={navToGamePage}>Game Hub
+                            </button>
+                        </div>
+
+                        
                     )}
-                    <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
-                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
-                        transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
-                        to="/games">Game Hub
-                    </Link>
+                    {gameStatus === "playing" && (
+                        <div className="space-x-2 mt-1">
+                        <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
+                        hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                        transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                        xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]" 
+                        onClick={startNewGame}>
+                            New Game
+                        </button>
+                        <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
+                        hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                        transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                        xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]"
+                        onClick={navToGamePage}>Game Hub
+                        </button>
+                    </div>
+                    )}
                 </>
             )}
         </div>
