@@ -1538,7 +1538,7 @@ body.myAccountBody {
         }
     }
 
-    background: radial-gradient(circle, #121212, #1c1c1c, #262626, #2a2a2a);
+    background: radial-gradient(circle, #002425, #163232, #02292a, #032c2d);
     background-size: 150% 150%;
     animation: gradientShift 10s ease infinite;
     overflow: hidden;
@@ -1688,10 +1688,10 @@ body.myAccountBody {
 /* Adding Ambient Effects */
 .ambient-glow {
     position: absolute;
-    width: 200px;
-    height: 200px;
-    background: rgba(0, 255, 255, 0.2);
-    filter: blur(100px);
+    width: 150px;
+    height: 150px;
+    background: rgb(0, 255, 255);
+    filter: blur(90px);
     border-radius: 50%;
     animation: pulse 6s infinite ease-in-out alternate;
     pointer-events: none;
@@ -1715,13 +1715,13 @@ body.myAccountBody {
 }
 
 .ambient-glow2 {
-    bottom: 15%;
-    right: 15%;
+    bottom: 8%;
+    right: 45%;
 }
 
 .ambient-glow3 {
-    top: 50%;
-    left: 70%;
+    top: 10%;
+    right: 10%;
 }
 
 
@@ -1731,7 +1731,7 @@ body.myAccountBody {
 
 body.flashCardBody {
     background-color: #1f2937;
-    background-image: linear-gradient(rgba(0, 16, 9, 0.9), rgba(0, 16, 9, 0.9)), url('/flashcard-image.png');
+    background-image: linear-gradient(rgba(0, 35, 20, 0.8), rgba(0, 37, 21, 0.8)), url('/flashcard-image.png');
     /* background-image:  rgba(0, 13, 33, 0.9)), url('/memory-match.png'); */
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -1772,17 +1772,22 @@ body.flashCardBody {
     transition: transform 0.9s;
     border-radius: 10px;
     box-shadow: 0px 5px 10px rgba(19, 190, 119, 0.681);
+    /* text-shadow: 0 0 10px rgba(0, 0, 0, 0.258), 0 0 20px rgba(0, 0, 0, 0.251); */
+    /* text-shadow: 0 0 10px rgba(255, 255, 255, 0.258), 0 0 20px rgba(255, 255, 255, 0.251); */
+    text-shadow: 0 0 10px rgba(27, 206, 134, 0.611), 0 0 20px rgba(0, 193, 116, 0.657);
+    background-color: #00ca8319;
     /* cursor: pointer; */
     width: 100%;
     height: 100%;
-    color: #00c777;
+    color: #ffffff;
+    /* color: #00c777; */
     font-weight: 500;
     cursor: url('/wand-cursor-flashcard.svg'), auto;
     /* transform: rotateY(180deg); */
 }
 
 .cards:hover {
-    background-color: #2c52456d;
+    background-color: #00ca8344;
 }
 
 .card-front,
@@ -1823,14 +1828,17 @@ body.flashCardBody {
 
 .type-answer{
     cursor: url('/wand-cursor-flashcard.svg'), auto;
+    color: #00ff99;
 }
 
 .next-flashcard{
     cursor: url('/wand-cursor-flashcard.svg'), auto;
+    box-shadow: 0px 0px 10px rgb(19, 190, 119);
 }
 
 .prev-flashcard{
     cursor: url('/wand-cursor-flashcard.svg'), auto;
+    box-shadow: 0px 0px 10px rgb(19, 190, 119);
 }
 
 .next-flashcard:hover{
@@ -1843,8 +1851,9 @@ body.flashCardBody {
 
 .shuffle-button {
     outline: none !important;
-    box-shadow: 0 0 0 2px rgba(213, 13, 13, 0);
+    /* box-shadow: 0 0 0 2px rgba(213, 13, 13, 0); */
     cursor: url('/wand-cursor-flashcard.svg'), auto;
+    /* box-shadow: 0px 0px 10px rgb(19, 190, 119); */
 }
 
 /* .shuffle-button:focus {
@@ -1858,10 +1867,24 @@ body.flashCardBody {
 
 .check-flash-button{
     cursor: url('/wand-cursor-flashcard.svg'), auto;
+    box-shadow: 0px 0px 15px rgb(19, 190, 119);
 }
 
 .check-flash-button:hover{
     cursor: url('/wand-cursor-flashcard.svg'), auto;
+}
+
+.game-link-flash-button {
+    /* color: #000000 !important; */
+    text-decoration: none !important;
+    cursor: url('/wand-cursor-flashcard.svg'), auto;
+    box-shadow: 0px 5px 10px rgb(19, 190, 119);
+    margin-bottom: 15px;
+}
+
+.game-link-flash-button:hover {
+    /* color: #0a2663 !important; */
+    cursor: url('/wand-cursor-flashcard.svg'), auto; 
 }
 
 /* -------------------------------------------------------------------- */
@@ -1870,7 +1893,7 @@ body.flashCardBody {
 
 body.memoryMatchBody {
     background-color: #1a202c;
-    background-image: linear-gradient(rgba(0, 12, 30, 0.9), rgba(0, 12, 30, 0.9)), url('/memory-match.png');
+    background-image: linear-gradient(rgba(0, 12, 30, 0.8), rgba(0, 12, 30, 0.8)), url('/memory-match.png');
     /* background-image:  rgba(0, 13, 33, 0.9)), url('/memory-match.png'); */
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -1880,7 +1903,7 @@ body.memoryMatchBody {
 .memory-match-container {
     text-align: center;
     font-family: Arial, sans-serif;
-    color: white;
+    /* color: white; */
     /* background-color: #1a202c; */
     /* min-height: 100vh; */
     display: flex;
@@ -1900,12 +1923,12 @@ body.memoryMatchBody {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    color: white;
+    /* color: white; */
     z-index: 1000;
 }
 
@@ -1930,12 +1953,12 @@ body.memoryMatchBody {
     margin-bottom: 20px;
     /* font-size: 2.0rem; */
     font-weight: bold;
-    color: #002e51;
-    text-shadow: 0 0 10px rgba(0, 145, 255, 0.8), 0 0 20px rgba(0, 145, 255, 0.8);
+    color: #000000;
+    text-shadow: 0 0 20px rgba(0, 145, 255), 0 0 20px rgba(0, 145, 255);
 }
 
 .time-memory {
-    font-weight: 700;
+    font-weight: 800;
     color: #0069b9;
     text-shadow: 0 0 10px rgba(0, 145, 255, 0.527), 0 0 20px rgba(0, 145, 255, 0.553);
 }
@@ -1962,7 +1985,7 @@ body.memoryMatchBody {
     /* font-size: calc(5px + 1vw);  */
     /* padding: 10px; */
     /* fit-content: ; */
-    box-shadow: 0px 2px 10px rgba(0, 187, 255, 0.481);
+    box-shadow: 0px 1px 15px rgba(0, 187, 255, 0.737);
 }
 
 .grid-card.flipped {
@@ -1987,9 +2010,22 @@ body.memoryMatchBody {
 }
 
 .restart-quit-memory-button {
-    box-shadow: 0px 2px 10px rgba(0, 187, 255, 0.481);
+    box-shadow: 0px 2px 10px rgba(0, 187, 255, 0.903);
     cursor: url('/wand-cursor-memory.svg'), auto;
     
+}
+
+.game-link-memory-button {
+    /* color: #000000 !important; */
+    text-decoration: none !important;
+    cursor: url('/wand-cursor-memory.svg'), auto;
+    box-shadow: 0px 2px 10px rgb(3, 181, 221);
+    margin-bottom: 15px;
+}
+
+.game-link-memory-button:hover {
+    /* color: #0a2663 !important; */
+    cursor: url('/wand-cursor-memory.svg'), auto; 
 }
 
 /* .control-buttons button {
@@ -2014,7 +2050,7 @@ body.memoryMatchBody {
 
 body.dragDropBody {
     background-color: #1a202c;
-    background-image: linear-gradient(rgba(24, 23, 0, 0.9), rgba(24, 23, 0, 0.9)), url('/dragndrop.png');
+    background-image: linear-gradient(rgba(24, 23, 0, 0.7), rgba(24, 23, 0, 0.7)), url('/dragndrop.png');
     /* background-image:  rgba(0, 13, 33, 0.9)), url('/memory-match.png'); */
     background-repeat: no-repeat;
     background-size: 100% 100%;
@@ -2103,6 +2139,7 @@ body.dragDropBody {
     /* border-radius: 8px; */
     color: #ffbb00e6;
     font-weight: 600;
+    text-shadow: 0 0 50px rgb(255, 196, 0), 0 0 10px rgb(255, 196, 0);
 }
 
 .drag-categories-container {
@@ -2151,6 +2188,7 @@ body.dragDropBody {
     /* padding: 10px 20px; */
     border-radius: 5px;
     cursor: grab;
+    box-shadow: 0px 2px 8px rgb(255, 255, 255);
     /* transition: transform 0.1s ease; */
 }
 
@@ -2160,12 +2198,26 @@ body.dragDropBody {
 
 .drag-restart-button {
     margin-top: 20px;
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
     /* background-color: #4a5568; */
     /* color: white; */
     border: none;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     cursor: url('/wand-cursor-drag.svg'), auto;
+    box-shadow: 0px 2px 8px rgb(255, 187, 0);
+}
+
+.game-link-drag-button {
+    /* color: #000000 !important; */
+    text-decoration: none !important;
+    cursor: url('/wand-cursor-hangman.svg'), auto;
+    box-shadow: 0px 2px 8px rgb(255, 187, 0);
+    margin-bottom: 5px;
+}
+
+.game-link-drag-button:hover {
+    /* color: #0a2663 !important; */
+    cursor: url('/wand-cursor-drag.svg'), auto; 
 }
 
 /* .drag-restart-button:hover {
@@ -2237,7 +2289,9 @@ body.dragDropBody {
 
 body.hangmanBody {
     background-color: #1a202c;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('/hangman.png');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/hangman.png');
+    
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url('/hangman.png'); */
     background-repeat: no-repeat;
     background-size: 100% 100%;
     background-position: center;
@@ -2247,17 +2301,17 @@ body.hangmanBody {
     text-align: center;
     font-family: Arial, sans-serif;
     color: white;
-    background-color: #1a202c;
+    /* background-color: #1a202c; */
     /* min-height: 100vh; */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     /* padding: 20px; */
-    background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('/hangman.png');
-    background-repeat: no-repeat;
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url('/hangman.png'); */
+    /* background-repeat: no-repeat;
     background-size: 100% 100%;
-    background-position: center;
+    background-position: center; */
 }
 
 .instructions-modal-hangman {
@@ -2354,7 +2408,7 @@ body.hangmanBody {
 
 .key {
     background: linear-gradient(90deg, #9b0e0e, #9b0e0e, #9b0e0e);
-    box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.8);
+    box-shadow: 0px 0px 20px rgb(255, 0, 0);
     color: rgb(0, 0, 0);
     font-weight: 700;
     /* padding: 10px 15px; */
@@ -2362,6 +2416,11 @@ body.hangmanBody {
     border-radius: 33px;
     /* cursor: pointer; */
     cursor: url('/wand-cursor-hangman.svg'), auto;
+}
+
+.key:hover{
+    background: linear-gradient(90deg, #ff0000, #d30d0d, #ff0000);
+
 }
 
 .key.disabled {
@@ -2373,7 +2432,7 @@ body.hangmanBody {
     margin-bottom: 20px;
     /* padding: 10px 20px; */
     background-color: #000000b3;
-    color: rgb(219, 0, 0);
+    color: rgb(255, 0, 0);
     font-weight: 800;
     border: none;
     border-radius: 5px;
@@ -2383,14 +2442,17 @@ body.hangmanBody {
 
 .lifeline:disabled {
     background-color: #2d3748;
-    color: rgb(160, 0, 0);
+    color: rgb(230, 4, 4);
     /* color:#004599; */
     cursor: url('/wand-cursor-hangman.svg'), auto;
 }
 
 .game-status {
-    color: rgb(189, 0, 0);
-    /* font-size: 24px; */
+    color: rgb(255, 0, 0);
+    background-color: #000000b6;
+    box-shadow: 0px 0px 20px rgba(255, 0, 0, 0.74);
+
+    font-weight: 600;
     margin-bottom: 4px;
 }
 

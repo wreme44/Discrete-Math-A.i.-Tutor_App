@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const MemoryMatch = () => {
     const [showInstructions, setShowInstructions] = useState(true);
@@ -63,6 +63,12 @@ const MemoryMatch = () => {
         { term: "Induction", definition: "A proof technique using a base case and an inductive step." },
         { term: "Contradiction Proof", definition: "A proof method where an assumption leads to a contradiction, proving the assumption false." },
     ];
+
+    const navigate = useNavigate();
+
+    const navToGamePage = () => {
+        navigate('/games');
+    };
 
     const difficultySettings = {
         Apprentice: { pairs: 4, thresholds: [25, 45] },
@@ -240,7 +246,8 @@ const MemoryMatch = () => {
                         <span className="">Select a difficulty to begin:</span>
                         <div className="difficulty-buttons space-x-1 mt-3">
                             {Object.keys(difficultySettings).map((level) => (
-                                <button className="bg-[rgba(0,96,250,0.71)] hover:bg-[rgb(0,89,255)] text-black text-lg font-semibold rounded
+                                <button className="bg-gradient-to-r from-[rgb(75,143,211)] to-[rgb(12,103,152)] hover:from-[rgb(12,103,152)]  
+                                    hover:to-[rgb(75,143,211)] text-black font-[600] text-lg rounded
                                     transform transition duration-75 ease-in-out hover:scale-105 active:scale-95 px-1"
                                     key={level} onClick={() => selectDifficulty(level)}>
                                     {level}
@@ -313,28 +320,43 @@ const MemoryMatch = () => {
                                     </button>
                                 </div>
                                 {/* Games Button */}
-                                <div className="flex flex-col items-center justify-center
-                                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
-                                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
-                                    <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
-                                            hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
-                                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
-                                        to="/games">Game Hub
-                                    </Link>
-                                </div>
+                                <button className="game-link-memory-button mt-5 font-[600] bg-gradient-to-r from-[rgb(75,143,211)] to-[rgb(12,103,152)] hover:from-[rgb(12,103,152)]  
+                                    hover:to-[rgb(75,143,211)] text-black focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                                    transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                    xxxsm:px-[8px] xxsm:px-[10px] xsm:px-[10px] sm:px-[12px] md:px-[12px] lg:px-[15px] xl:px-[15px]
+                xxxsm:py-[2px] xxsm:py-[2px] xsm:py-[2px] sm:py-[2px] md:py-[2px] lg:py-[2px] xl:py-[2px]
+               xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]"
+                                    onClick={navToGamePage}>Game Hub
+                                </button>
                             </>
                         )}
                     </div>
                     {gameOver && (
-                        <div className="game-over text-[rgba(0,154,250,0.71)] font-semibold
-                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
+                        <div className="game-over text-[rgb(0,154,250)] font-semibold
+                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
                             <h2 className="">Congratulations! You matched all cards!</h2>
                             <p>Time: {time}s</p>
                             <p>Stars: {"⭐".repeat(stars)}</p>
-                            <button className="restart-quit-memory-button bg-[rgba(0,154,250,0.71)] hover:bg-[rgba(0,154,250,0.88)]
-                                text-black font-semibold rounded px-1 mt-1
-                                transform transition duration-75 ease-in-out hover:scale-105 active:scale-95 mb-[8px]"
-                                onClick={handleQuit}>Select Difficulty</button>
+                            <div className="space-x-1">
+                                <button className="restart-quit-memory-button bg-gradient-to-r from-[rgb(75,143,211)] to-[rgb(12,103,152)] hover:from-[rgb(12,103,152)]  
+                                    hover:to-[rgb(75,143,211)] text-black font-[600] rounded px-1 mt-1
+                                transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                xxxsm:px-[8px] xxsm:px-[10px] xsm:px-[10px] sm:px-[12px] md:px-[12px] lg:px-[15px] xl:px-[15px]
+                                    xxxsm:py-[2px] xxsm:py-[2px] xsm:py-[2px] sm:py-[2px] md:py-[2px] lg:py-[2px] xl:py-[2px]
+                                    xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]"
+                                    onClick={handleQuit}>Select Difficulty
+                                </button>
+                                {/* Games Button */}
+                                <button className="game-link-memory-button mt-5 font-[600] bg-gradient-to-r from-[rgb(75,143,211)] to-[rgb(12,103,152)] hover:from-[rgb(12,103,152)]  
+                                    hover:to-[rgb(75,143,211)] text-black focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                                    transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                    xxxsm:px-[8px] xxsm:px-[10px] xsm:px-[10px] sm:px-[12px] md:px-[12px] lg:px-[15px] xl:px-[15px]
+                                    xxxsm:py-[2px] xxsm:py-[2px] xsm:py-[2px] sm:py-[2px] md:py-[2px] lg:py-[2px] xl:py-[2px]
+                                    xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]"
+                                    onClick={navToGamePage}>Game Hub
+                                </button>
+                            </div>
+
                         </div>
                     )}
                 </>

@@ -195,55 +195,55 @@ const MathHangman = () => {
     const renderHangman = () => {
         const parts = [
             // Hooded or spectral head
-             <path
-             key="hood"
-             d="M35,35 Q50,5 65,35 Q50,25 35,35 Z"
-             stroke="#ce0000"
-             strokeWidth="2"
-             fill="none"
-             />,
-            // Cloaked body
-            <path 
-                key="cloak" 
-                d="M50,30 Q40,40 50,70 Q60,40 50,30 Z" 
-                stroke="#ce0000" 
+            <path
+                key="hood"
+                d="M35,35 Q50,5 65,35 Q50,25 35,35 Z"
+                stroke="#ff0000"
                 strokeWidth="2"
-                fill="none" 
+                fill="none"
+            />,
+            // Cloaked body
+            <path
+                key="cloak"
+                d="M50,30 Q40,40 50,70 Q60,40 50,30 Z"
+                stroke="#ff0000"
+                strokeWidth="2"
+                fill="none"
             />,
             // Left "wing" or spectral arm
-            <path 
-                key="left-wing" 
-                d="M50,40 Q30,50 40,60" 
-                stroke="#ce0000" 
+            <path
+                key="left-wing"
+                d="M50,40 Q30,50 40,60"
+                stroke="#ff0000"
                 strokeWidth="2"
-                fill="none" 
+                fill="none"
             />,
             // Right "wing" or spectral arm
-            <path 
-                key="right-wing" 
-                d="M50,40 Q70,50 60,60" 
-                stroke="#ce0000" 
+            <path
+                key="right-wing"
+                d="M50,40 Q70,50 60,60"
+                stroke="#ff0000"
                 strokeWidth="2"
-                fill="none" 
+                fill="none"
             />,
             // Left spectral "leg"
-            <path 
-                key="left-leg" 
-                d="M50,70 Q45,80 40,90" 
-                stroke="#ce0000" 
+            <path
+                key="left-leg"
+                d="M50,70 Q45,80 40,90"
+                stroke="#ff0000"
                 strokeWidth="2"
-                fill="none" 
+                fill="none"
             />,
             // Right spectral "leg"
-            <path 
-                key="right-leg" 
-                d="M50,70 Q55,80 60,90" 
-                stroke="#ce0000" 
+            <path
+                key="right-leg"
+                d="M50,70 Q55,80 60,90"
+                stroke="#ff0000"
                 strokeWidth="2"
-                fill="none" 
+                fill="none"
             />,
         ];
-    
+
         return parts.slice(0, MAX_ATTEMPTS - attemptsLeft);
     };
 
@@ -304,7 +304,7 @@ const MathHangman = () => {
     //             filter="url(#shadow)" 
     //         />,
     //     ];
-    
+
     //     return [
     //         // Shadow filter definition
     //         <defs key="shadow-filter">
@@ -316,7 +316,7 @@ const MathHangman = () => {
     //         ...parts.slice(0, MAX_ATTEMPTS - attemptsLeft),
     //     ];
     // };
-    
+
 
     useEffect(() => {
         // Add class to body
@@ -341,9 +341,10 @@ const MathHangman = () => {
                         <p><strong>Hints:</strong> Use the provided hint to assist you in guessing.</p>
                         <p><strong>Lifeline:</strong> Reveal a random letter to help you, but you can only use it once!</p>
                         <button className="restart-button-hangman py-[10px] px-[15px] mt-[10px]
-                            bg-[rgb(0,0,0)] hover:bg-[rgb(60,1,1)] text-[rgb(255,0,0)] text-lg font-semibold rounded
-                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95" 
-                        onClick={startNewGame}>
+                            bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
+                        hover:to-[rgb(255,0,0)] text-[rgb(0,0,0)] text-lg font-semibold rounded
+                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                            onClick={startNewGame}>
                             Start Game
                         </button>
                     </div>
@@ -357,7 +358,7 @@ const MathHangman = () => {
             {selectedWord && (
                 <>
                     <h1 className="hangman-game-title xxxsm:text-[16px] xxsm:text-[20px] xsm:text-[25px] sm:text-[30px] md:text-[39px] lg:text-[45px] xl:text-[45px]">
-                        Discrete MathMan</h1>
+                        Hanged MathMan</h1>
                     <div className="hangman-drawing flex items-center justify-center
                         xxxsm:h-[50px] xxsm:h-[60px] xsm:h-[90px] sm:h-[100px] md:h-[125px] lg:h-[150px] xl:h-[150px]
                         xxxsm:w-[100px] xxsm:w-[100px] xsm:w-[125px] sm:w-[150px] md:w-[175px] lg:w-[200px] xl:w-[200px]">
@@ -406,14 +407,14 @@ const MathHangman = () => {
                         <div className="game-status
                         xxxsm:text-[9px] xxsm:text-[10px] xsm:text-[11px] sm:text-[12px] md:text-[14px] lg:text-[14px] xl:text-[14px]">
                             The shadows may win today, but light always returns. <br />
-                            The D-Mentor whispers: Will you rise again? <br/>
+                            The D-Mentor whispers: Will you rise again? <br />
                             <strong>The correct word was: {selectedWord}</strong>
                         </div>
                     )}
                     {gameStatus === "won" && (
                         <div className="game-status
                         xxxsm:text-[9px] xxsm:text-[10px] xsm:text-[11px] sm:text-[12px] md:text-[14px] lg:text-[14px] xl:text-[14px]">
-                            VICTORY earned, lesson learned — the D-Mentor is Pleased <br />
+                            VICTORY EARNED, lesson learned — the D-Mentor is Pleased <br />
                             and nods in approval — You’ve Done Well.
 
                         </div>
@@ -423,36 +424,36 @@ const MathHangman = () => {
                             <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
                             hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
                             transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
-                            xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]" 
-                            onClick={startNewGame}>
+                            xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]"
+                                onClick={startNewGame}>
                                 Play Again
                             </button>
                             <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
                             hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
                             transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
                             xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]"
-                            onClick={navToGamePage}>Game Hub
+                                onClick={navToGamePage}>Game Hub
                             </button>
                         </div>
 
-                        
+
                     )}
                     {gameStatus === "playing" && (
                         <div className="space-x-2 mt-1">
-                        <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
-                        hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
-                        transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
-                        xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]" 
-                        onClick={startNewGame}>
-                            New Game
-                        </button>
-                        <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
+                            <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
                         hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
                         transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
                         xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]"
-                        onClick={navToGamePage}>Game Hub
-                        </button>
-                    </div>
+                                onClick={startNewGame}>
+                                New Game
+                            </button>
+                            <button className="game-link-hangman-button px-2 bg-gradient-to-r from-[rgb(255,0,0)] to-[rgba(255,17,0,0.72)] hover:from-[rgba(255,17,0,0.72)]  
+                        hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                        transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                        xxxsm:text-[12px] xxsm:text-[12px] xsm:text-[12px] sm:text-[15px] md:text-[20px] lg:text-[20px] xl:text-[20px]"
+                                onClick={navToGamePage}>Game Hub
+                            </button>
+                        </div>
                     )}
                 </>
             )}

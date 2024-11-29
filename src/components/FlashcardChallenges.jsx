@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import CustomCursor from './CustomCursor';
 // import SparkParticles from './SparkParticles';
 
@@ -63,6 +63,12 @@ const FlashcardChallenges = () => {
     const [correctGuess, setCorrectGuess] = useState("");
     const [streak, setStreak] = useState(0);
     const [longestStreak, setLongestStreak] = useState(0);
+
+    const navigate = useNavigate();
+
+    const navToGamePage = () => {
+        navigate('/games');
+    };
 
     const handleFlip = () => {
         setFlipped(!flipped);
@@ -141,7 +147,7 @@ const FlashcardChallenges = () => {
             xxxsm:h-[125px] xxsm:h-[150px] xsm:h-[175px] sm:h-[200px] md:h-[250px] lg:h-[300px] xl:h-[300px]
             xxxsm:w-[200px] xxsm:w-[250px] xsm:w-[325px] sm:w-[350px] md:w-[400px] lg:w-[500px] xl:w-[500px]">
                 <div
-                    className={`cards ${flipped ? 'flipped' : ''} border-2 border-[rgba(81,233,152,0.16)] rounded-lg
+                    className={`cards ${flipped ? 'flipped' : ''} border-2 border-[rgba(81,233,152,0.34)] rounded-lg
                     xxxsm:text-[12px] xxsm:text-[14px] xsm:text-[16px] sm:text-[20px] md:text-[27px] lg:text-[30px] xl:text-[32px]`}
                     onClick={handleFlip}
                 >
@@ -157,18 +163,19 @@ const FlashcardChallenges = () => {
 
             <div className="type-answer flex items-center align-middle mb-2">
                 <button
-                    className="prev-flashcard bg-[rgba(75,207,137,0.81)] text-white rounded-full hover:bg-[rgb(75,207,115)]
-                    xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]"
+                    className="prev-flashcard bg-[rgba(75,207,137,0.81)] rounded-full hover:bg-[rgb(75,207,115)]
+                    xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]
+                    transform transition duration-75 ease-in-out hover:scale-105 active:scale-95 "
                     onClick={handlePrevious}
                 >
-                    <img className='prev-flashcard' alt='... ...' src='/prev-page.svg' />
+                    <img className='' alt='... ...' src='/prev-page.svg' />
                 </button>
                 <input
                     type="text"
                     placeholder="Enter your guess..."
                     value={guess}
                     onChange={(e) => setGuess(e.target.value)}
-                    className={`type-answer text-white bg-[rgba(36,36,36,0.5)] p-2 mx-2 rounded border border-[rgba(30,255,143,0.4)]
+                    className={`type-answer bg-[rgba(36,36,36,0.5)] p-2 mx-2 rounded border border-[rgba(30,255,143,0.4)]
                         xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[40px] md:h-[45px] lg:h-[45px] xl:h-[45px]
                         xxxsm:w-[150px] xxsm:w-[175px] xsm:w-[200px] sm:w-[225px] md:w-[250px] lg:w-[300px] xl:w-[300px]
                         ${correctGuess === "correct"
@@ -179,11 +186,12 @@ const FlashcardChallenges = () => {
                         }`}
                 />
                 <button
-                    className="next-flashcard bg-[rgba(75,207,137,0.81)] text-white rounded-full hover:bg-[rgb(75,207,115)]
-                            xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]"
+                    className="next-flashcard bg-[rgba(75,207,137,0.81)] rounded-full hover:bg-[rgb(75,207,115)]
+                            xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]
+                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95 "
                     onClick={handleNext}
                 >
-                    <img className='next-flashcard' alt='... ...' src='/next-page.svg' />
+                    <img className='' alt='... ...' src='/next-page.svg' />
                 </button>
             </div>
             <div className="flex justify-center gap-6 mt-0">
@@ -197,8 +205,8 @@ const FlashcardChallenges = () => {
                     <img className='shuffle-button' alt='shuffle' src='/shuffle-icon.svg' />
                 </button>
                 <button
-                    className="check-flash-button mt-0 px-2 py-1 bg-[rgba(52,130,88,0.5)] text-white rounded hover:bg-[rgba(58,163,107,0.71)]
-                    transform transition duration-75 ease-in-out hover:scale-110 active:scale-95
+                    className="check-flash-button mt-0 px-2 py-1 bg-[rgba(76,221,143,0.71)] text-[#000000] rounded hover:bg-[rgba(95,229,157,0.84)]
+                    transform transition duration-75 ease-in-out hover:scale-110 active:scale-95 font-semibold
                     xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[20px]"
                     onClick={checkAnswer}
                 >
@@ -227,21 +235,24 @@ const FlashcardChallenges = () => {
                 </button>
             </div> */}
             {/* Games Button */}
-            <div className="flex flex-col items-center justify-center
+            <button className="game-link-flash-button bg-gradient-to-r from-[rgb(64,212,104)] to-[#149236] 
+               hover:from-[#149236] hover:to-[rgb(64,212,104)] text-[rgb(0,0,0)] mt-[15px]
+               font-semibold focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded 
+                transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                xxxsm:px-[8px] xxsm:px-[10px] xsm:px-[10px] sm:px-[12px] md:px-[12px] lg:px-[15px] xl:px-[15px]
+                xxxsm:py-[2px] xxsm:py-[2px] xsm:py-[2px] sm:py-[2px] md:py-[2px] lg:py-[2px] xl:py-[2px]
+               xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]"
+                onClick={navToGamePage}>Game Hub
+            </button>
+            {/* <div className="flex flex-col items-center justify-center
                             xxxsm:mt-[10px] xxsm:mt-[12px] xsm:mt-[15px] sm:mt-[20px] md:mt-[20px] lg:mt-[15px] xl:mt-[15px]
                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
-                {/* <Link className=""
-                        to="/games">
-                        <img className="xxxsm:w-[30px] xxsm:w-[40px] xsm:w-[50px] sm:w-[60px] md:w-[60px] lg:w-[70px] xl:w-[70px] h-auto mr-1"
-                            alt="Games" src="/games-icon.svg" />
-                    </Link> */}
                 <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
                         hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
                         transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                     to="/games">Game Hub
                 </Link>
-            </div>
-
+            </div> */}
         </div>
     );
 };

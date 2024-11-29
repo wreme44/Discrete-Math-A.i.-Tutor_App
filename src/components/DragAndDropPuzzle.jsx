@@ -20,6 +20,12 @@ const DragAndDropPuzzle = () => {
         3: "Drag subsets into the appropriate zone: Subset of A, Subset of B, or Not a Subset of A or B.",
     };
 
+    const navigate = useNavigate();
+
+    const navToGamePage = () => {
+        navigate('/games');
+    };
+
     useEffect(() => {
         restartGame();
     }, []);
@@ -227,9 +233,9 @@ const DragAndDropPuzzle = () => {
                 e.preventDefault();
             }
         };
-    
+
         document.addEventListener('touchmove', disableTouchScroll, { passive: false });
-    
+
         return () => {
             document.removeEventListener('touchmove', disableTouchScroll);
         };
@@ -291,8 +297,8 @@ const DragAndDropPuzzle = () => {
                             Points: {points}
                         </p>
                         <img className="xxxsm:w-[20px] xxsm:w-[25px] xsm:w-[30px] sm:w-[40px] md:w-[50px] lg:w-[50px] xl:w-[50px]
-                        xxxsm:mr-[5px] xxsm:mr-[5px] xsm:mr-[5px] sm:mr-[5px] md:mr-[5px] lg:mr-[5px] xl:mr-[5px]" 
-                            alt="time" src="./time-drag-icon.svg" 
+                        xxxsm:mr-[5px] xxsm:mr-[5px] xsm:mr-[5px] sm:mr-[5px] md:mr-[5px] lg:mr-[5px] xl:mr-[5px]"
+                            alt="time" src="./time-drag-icon.svg"
                         />
                         <p className="drag-points xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
                             {time}s</p>
@@ -336,30 +342,26 @@ const DragAndDropPuzzle = () => {
                             </div>
                         ))}
                     </div>
-                    <button className="drag-restart-button bg-[rgba(0,0,0,0.71)] hover:bg-[rgba(50,50,50,0.88)]
-                                text-[rgb(255,221,0)] text-lg font-semibold px-1 outline-none focus:outline-none
+                    <div className="space-x-1 ">
+                        <button className="drag-restart-button bg-[rgba(0,0,0,0.71)] hover:bg-[rgba(50,50,50,0.88)]
+                                text-[rgb(255,221,0)] font-semibold outline-none focus:outline-none
                                 border-1 rounded-[5px] transform transition duration-75
                                 ease-in-out hover:scale-105 active:scale-95
-                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[20px]
+                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]
                                 xxxsm:px-[10px] xxsm:px-[12px] xsm:px-[15px] sm:px-[18px] md:px-[20px] lg:px-[20px] xl:px-[20px]
                                 xxxsm:py-[3px] xxsm:py-[5px] xsm:py-[6px] sm:py-[8px] md:py-[10px] lg:py-[10px] xl:py-[10px]"
-                        onClick={restartGame}>
-                        Restart Game
-                    </button>
-                    {/* Games Button */}
-                    <div className="flex flex-col items-center justify-center
-                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
-                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
-                        {/* <Link className=""
-                        to="/games">
-                        <img className="xxxsm:w-[30px] xxsm:w-[40px] xsm:w-[50px] sm:w-[60px] md:w-[60px] lg:w-[70px] xl:w-[70px] h-auto mr-1"
-                            alt="Games" src="/games-icon.svg" />
-                    </Link> */}
-                        <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
-                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
-                        transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
-                            to="/games">Game Hub
-                        </Link>
+                            onClick={restartGame}>
+                            Restart Game
+                        </button>
+                        {/* Games Button */}
+                        <button className="game-link-drag-button bg-[rgba(0,0,0,0.71)] hover:bg-[rgba(50,50,50,0.88)]
+                                text-[rgb(255,221,0)] font-semibold focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded 
+                                transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                xxxsm:px-[10px] xxsm:px-[12px] xsm:px-[15px] sm:px-[18px] md:px-[20px] lg:px-[20px] xl:px-[20px]
+                                xxxsm:py-[3px] xxsm:py-[5px] xsm:py-[6px] sm:py-[8px] md:py-[10px] lg:py-[10px] xl:py-[10px]
+                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]"
+                            onClick={navToGamePage}>Game Hub
+                        </button>
                     </div>
                 </>
             )}
@@ -374,32 +376,30 @@ const DragAndDropPuzzle = () => {
                         <p>
                             Badge: <strong>{badge}</strong>
                         </p>
-                        <button className="drag-restart-button bg-[rgba(0,0,0,0.71)] hover:bg-[rgba(50,50,50,0.88)]
-                                text-[rgb(255,221,0)] text-lg font-semibold px-1 outline-none focus:outline-none
+
+                        <div className="space-x-1 ">
+                            <button className="drag-restart-button bg-[rgba(0,0,0,0.71)] hover:bg-[rgba(50,50,50,0.88)]
+                                text-[rgb(255,221,0)] font-semibold outline-none focus:outline-none
                                 border-1 rounded-[5px] transform transition duration-75
                                 ease-in-out hover:scale-105 active:scale-95
-                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[20px]
+                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]
                                 xxxsm:px-[10px] xxsm:px-[12px] xsm:px-[15px] sm:px-[18px] md:px-[20px] lg:px-[20px] xl:px-[20px]
-                                xxxsm:py-[3px] xxsm:py-[5px] xsm:py-[6px] sm:py-[8px] md:py-[10px] lg:py-[10px] xl:py-[10px]" 
+                                xxxsm:py-[3px] xxsm:py-[5px] xsm:py-[6px] sm:py-[8px] md:py-[10px] lg:py-[10px] xl:py-[10px]"
                                 onClick={restartGame}>
-                            Restart Game
-                        </button>
+                                Restart Game
+                            </button>
+                            {/* Games Button */}
+                            <button className="game-link-drag-button bg-[rgba(0,0,0,0.71)] hover:bg-[rgba(50,50,50,0.88)]
+                                text-[rgb(255,221,0)] font-semibold focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded 
+                                transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                xxxsm:px-[10px] xxsm:px-[12px] xsm:px-[15px] sm:px-[18px] md:px-[20px] lg:px-[20px] xl:px-[20px]
+                                xxxsm:py-[3px] xxsm:py-[5px] xsm:py-[6px] sm:py-[8px] md:py-[10px] lg:py-[10px] xl:py-[10px]
+                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]"
+                                onClick={navToGamePage}>Game Hub
+                            </button>
+                        </div>
                     </div>
-                    {/* Games Button */}
-                    <div className="flex flex-col items-center justify-center
-                            xxxsm:mb-[10px] xxsm:mb-[12px] xsm:mb-[15px] sm:mb-[15px] md:mb-[20px] lg:mb-[20px] xl:mb-[20px]
-                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]">
-                        {/* <Link className=""
-                        to="/games">
-                        <img className="xxxsm:w-[30px] xxsm:w-[40px] xsm:w-[50px] sm:w-[60px] md:w-[60px] lg:w-[70px] xl:w-[70px] h-auto mr-1"
-                            alt="Games" src="/games-icon.svg" />
-                    </Link> */}
-                        <Link className="game-link px-2 mt-5 bg-gradient-to-r from-[rgb(60,217,128)] to-[rgb(44,224,221)] hover:from-[rgba(60,217,128,0.92)]  
-                        hover:to-[rgba(44,224,221,0.9)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
-                        transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
-                            to="/games">Game Hub
-                        </Link>
-                    </div>
+
                 </div>
             )}
         </div>
