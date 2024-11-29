@@ -160,25 +160,27 @@ const Assessment = () => {
 
   return (
     <div className="assessment-page">
-      <div className={`sidebar ${showSidebar ? "open" : ""}`}>
-        <button
-          className="toggle-sidebar-btn"
-          onClick={() => setShowSidebar(!showSidebar)}
-        >
-          {showSidebar ? "Close" : "Review Incorrect"}
-        </button>
-        {showSidebar && (
-          <div className="incorrect-questions">
-            <h2>Review Incorrect Questions</h2>
-            {incorrectQuestions.map((item, idx) => (
-              <div key={idx} className="incorrect-item">
-                <strong>{item.quiz}:</strong> {item.question} <br />
-                <span>Correct Answer: {item.correctAnswer}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
+      {!currentQuiz && (
+        <div className={`sidebar ${showSidebar ? "open" : ""}`}>
+          <button
+            className="toggle-sidebar-btn"
+            onClick={() => setShowSidebar(!showSidebar)}
+          >
+            {showSidebar ? "Close" : "Review Incorrect"}
+          </button>
+          {showSidebar && (
+            <div className="incorrect-questions">
+              <h2>Review Incorrect Questions</h2>
+              {incorrectQuestions.map((item, idx) => (
+                <div key={idx} className="incorrect-item">
+                  <strong>{item.quiz}:</strong> {item.question} <br />
+                  <span>Correct Answer: {item.correctAnswer}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <div className="main-content">
         <h1 className="assessment-header">
@@ -186,30 +188,28 @@ const Assessment = () => {
         </h1>
 
         {!currentQuiz && (
-          <>
-            <div className="quizzes-container">
-              {quizzes.map((quiz, index) => (
-                <button
-                  key={index}
-                  className={`quiz-button ${completedQuizzes.includes(quiz) ? "completed" : ""
-                    }`}
-                  onClick={() =>
-                    quiz === "Final Assessment"
-                      ? fetchFinalQuestions()
-                      : fetchQuestions(quiz)
-                  }
-                  style={{
-                    backgroundColor: completedQuizzes.includes(quiz)
-                      ? "#28a745"
-                      : "#393e46",
-                    color: completedQuizzes.includes(quiz) ? "#ffffff" : "#00adb5",
-                  }}
-                >
-                  {quiz}
-                </button>
-              ))}
-            </div>
-          </>
+          <div className="quizzes-container">
+            {quizzes.map((quiz, index) => (
+              <button
+                key={index}
+                className={`quiz-button ${completedQuizzes.includes(quiz) ? "completed" : ""
+                  }`}
+                onClick={() =>
+                  quiz === "Final Assessment"
+                    ? fetchFinalQuestions()
+                    : fetchQuestions(quiz)
+                }
+                style={{
+                  backgroundColor: completedQuizzes.includes(quiz)
+                    ? "#28a745"
+                    : "#393e46",
+                  color: completedQuizzes.includes(quiz) ? "#ffffff" : "#00adb5",
+                }}
+              >
+                {quiz}
+              </button>
+            ))}
+          </div>
         )}
 
         {questions.length > 0 && (
@@ -231,7 +231,10 @@ const Assessment = () => {
               placeholder="Your answer"
               value={userAnswers[questions[currentQuestionIndex].question_id] || ""}
               onChange={(e) =>
-                handleAnswer(questions[currentQuestionIndex].question_id, e.target.value)
+                handleAnswer(
+                  questions[currentQuestionIndex].question_id,
+                  e.target.value
+                )
               }
             />
             <div className="navigation-buttons">
