@@ -4,57 +4,58 @@ import CustomCursor from './CustomCursor';
 // import SparkParticles from './SparkParticles';
 
 const discreteMathTerms = [
-    { term: "Set", definition: "A collection of distinct objects or elements." },
-    { term: "Graph", definition: "A set of vertices connected by edges." },
-    { term: "Function", definition: "A relation where every input has a unique output." },
-    { term: "Relation", definition: "A subset of the Cartesian product of sets." },
-    { term: "Proposition", definition: "A declarative statement that is either true or false." },
-    { term: "Logical Connective", definition: "Symbols used to connect propositions, e.g., ∧, ∨, ¬." },
-    { term: "Predicate", definition: "A statement that depends on one or more variables." },
-    { term: "Bijective Function", definition: "A function that is both injective (one-to-one) and surjective (onto)." },
-    { term: "Pigeonhole Principle", definition: "If n items are put into m containers and n > m, at least one container holds more than one item." },
-    { term: "Combinatorics", definition: "The study of counting, arrangement, and combination of elements." },
-    { term: "Cardinality", definition: "The number of elements in a set." },
-    { term: "Power Set", definition: "The set of all subsets of a given set." },
-    { term: "Cartesian Product", definition: "The set of all ordered pairs formed by two sets." },
-    { term: "Subset", definition: "A set where every element is also in another set." },
-    { term: "Surjective Function", definition: "A function where every element in the codomain is mapped by an element in the domain." },
-    { term: "Injective Function", definition: "A function where every element in the codomain is mapped by at most one element in the domain." },
-    { term: "Truth Table", definition: "A table showing all possible truth values for a logical expression." },
-    { term: "Tautology", definition: "A proposition that is always true." },
-    { term: "Contradiction", definition: "A proposition that is always false." },
-    { term: "Logical Equivalence", definition: "Two propositions that always have the same truth value." },
-    { term: "Implication", definition: "A logical operation where 'if p then q' is true unless p is true and q is false." },
-    { term: "Contrapositive", definition: "The statement 'if not q then not p,' logically equivalent to 'if p then q'." },
-    { term: "Bipartite Graph", definition: "A graph whose vertices can be divided into two disjoint sets, with edges only between sets." },
-    { term: "Cycle", definition: "A path in a graph that starts and ends at the same vertex." },
-    { term: "Tree", definition: "A connected, acyclic graph." },
-    { term: "Hamiltonian Path", definition: "A path in a graph that visits every vertex exactly once." },
-    { term: "Eulerian Circuit", definition: "A circuit that traverses every edge of a graph exactly once." },
-    { term: "Planar Graph", definition: "A graph that can be drawn in the plane without edges crossing." },
-    { term: "Degree of a Vertex", definition: "The number of edges incident to a vertex." },
-    { term: "Adjacency Matrix", definition: "A square matrix used to represent a graph, indicating connections between vertices." },
-    { term: "Isomorphism", definition: "A mapping between two structures preserving their properties." },
-    { term: "Recurrence Relation", definition: "An equation defining a sequence based on previous terms." },
-    { term: "Generating Function", definition: "A formal power series representing a sequence." },
-    { term: "Big-O Notation", definition: "A mathematical notation describing an algorithm's upper bound of complexity." },
-    { term: "Permutation", definition: "An ordered arrangement of elements." },
-    { term: "Combination", definition: "A selection of elements without regard to order." },
-    { term: "Binomial Coefficient", definition: "The number of ways to choose k elements from n elements, denoted as C(n, k)." },
-    { term: "Boolean Algebra", definition: "A branch of algebra dealing with true and false values." },
-    { term: "Finite Automaton", definition: "A machine with a finite number of states used to model computations." },
-    { term: "Regular Expression", definition: "A sequence of characters defining a search pattern." },
-    { term: "Context-Free Grammar", definition: "A set of production rules for generating strings in a language." },
-    { term: "Knapsack Problem", definition: "An optimization problem involving selection of items with given weights and values." },
-    { term: "Travelling Salesman Problem", definition: "Finding the shortest route visiting all cities and returning to the starting point." },
-    { term: "Cryptography", definition: "The study of secure communication techniques." },
-    { term: "Modulo Operation", definition: "An operation finding the remainder when one integer is divided by another." },
-    { term: "Discrete Probability", definition: "The probability of events in a discrete sample space." },
-    { term: "Expected Value", definition: "The weighted average of all possible outcomes." },
-    { term: "Variance", definition: "A measure of the spread of a probability distribution." },
-    { term: "Induction", definition: "A proof technique using a base case and an inductive step." },
-    { term: "Contradiction Proof", definition: "A proof method where an assumption leads to a contradiction, proving the assumption false." },
+    { term: "A collection of distinct objects or elements.", definition: "Set" },
+    { term: "A set of vertices connected by edges.", definition: "Graph" },
+    { term: "A relation where every input has a unique output.", definition: "Function" },
+    { term: "A subset of the Cartesian product of sets.", definition: "Relation" },
+    { term: "A declarative statement that is either true or false.", definition: "Proposition" },
+    { term: "Symbols used to connect propositions, e.g., ∧, ∨, ¬.", definition: "Logical Connective" },
+    { term: "A statement that depends on one or more variables.", definition: "Predicate" },
+    { term: "A function that is both injective (one-to-one) and surjective (onto).", definition: "Bijective Function" },
+    { term: "If n items are put into m containers and n > m, at least one container holds more than one item.", definition: "Pigeonhole Principle" },
+    { term: "The study of counting, arrangement, and combination of elements.", definition: "Combinatorics" },
+    { term: "The number of elements in a set.", definition: "Cardinality" },
+    { term: "The set of all subsets of a given set.", definition: "Power Set" },
+    { term: "The set of all ordered pairs formed by two sets.", definition: "Cartesian Product" },
+    { term: "A set where every element is also in another set.", definition: "Subset" },
+    { term: "A function where every element in the codomain is mapped by an element in the domain.", definition: "Surjective Function" },
+    { term: "A function where every element in the codomain is mapped by at most one element in the domain.", definition: "Injective Function" },
+    { term: "A table showing all possible truth values for a logical expression.", definition: "Truth Table" },
+    { term: "A proposition that is always true.", definition: "Tautology" },
+    { term: "A proposition that is always false.", definition: "Contradiction" },
+    { term: "Two propositions that always have the same truth value.", definition: "Logical Equivalence" },
+    { term: "A logical operation where 'if p then q' is true unless p is true and q is false.", definition: "Implication" },
+    { term: "The statement 'if not q then not p,' logically equivalent to 'if p then q'.", definition: "Contrapositive" },
+    { term: "A graph whose vertices can be divided into two disjoint sets, with edges only between sets.", definition: "Bipartite Graph" },
+    { term: "A path in a graph that starts and ends at the same vertex.", definition: "Cycle" },
+    { term: "A connected, acyclic graph.", definition: "Tree" },
+    { term: "A path in a graph that visits every vertex exactly once.", definition: "Hamiltonian Path" },
+    { term: "A circuit that traverses every edge of a graph exactly once.", definition: "Eulerian Circuit" },
+    { term: "A graph that can be drawn in the plane without edges crossing.", definition: "Planar Graph" },
+    { term: "The number of edges incident to a vertex.", definition: "Degree of a Vertex" },
+    { term: "A square matrix used to represent a graph, indicating connections between vertices.", definition: "Adjacency Matrix" },
+    { term: "A mapping between two structures preserving their properties.", definition: "Isomorphism" },
+    { term: "An equation defining a sequence based on previous terms.", definition: "Recurrence Relation" },
+    { term: "A formal power series representing a sequence.", definition: "Generating Function" },
+    { term: "A mathematical notation describing an algorithm's upper bound of complexity.", definition: "Big-O Notation" },
+    { term: "An ordered arrangement of elements.", definition: "Permutation" },
+    { term: "A selection of elements without regard to order.", definition: "Combination" },
+    { term: "The number of ways to choose k elements from n elements, denoted as C(n, k).", definition: "Binomial Coefficient" },
+    { term: "A branch of algebra dealing with true and false values.", definition: "Boolean Algebra" },
+    { term: "A machine with a finite number of states used to model computations.", definition: "Finite Automaton" },
+    { term: "A sequence of characters defining a search pattern.", definition: "Regular Expression" },
+    { term: "A set of production rules for generating strings in a language.", definition: "Context-Free Grammar" },
+    { term: "An optimization problem involving selection of items with given weights and values.", definition: "Knapsack Problem" },
+    { term: "Finding the shortest route visiting all cities and returning to the starting point.", definition: "Travelling Salesman Problem" },
+    { term: "The study of secure communication techniques.", definition: "Cryptography" },
+    { term: "An operation finding the remainder when one integer is divided by another.", definition: "Modulo Operation" },
+    { term: "The probability of events in a discrete sample space.", definition: "Discrete Probability" },
+    { term: "The weighted average of all possible outcomes.", definition: "Expected Value" },
+    { term: "A measure of the spread of a probability distribution.", definition: "Variance" },
+    { term: "A proof technique using a base case and an inductive step.", definition: "Induction" },
+    { term: "A proof method where an assumption leads to a contradiction, proving the assumption false.", definition: "Contradiction Proof" },
 ];
+
 
 const FlashcardChallenges = () => {
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -63,6 +64,8 @@ const FlashcardChallenges = () => {
     const [correctGuess, setCorrectGuess] = useState("");
     const [streak, setStreak] = useState(0);
     const [longestStreak, setLongestStreak] = useState(0);
+    const [isCheckDisabled, setIsCheckDisabled] = useState(false);
+    const [flashRed, setFlashRed] = useState(false);
 
     const navigate = useNavigate();
 
@@ -83,6 +86,7 @@ const FlashcardChallenges = () => {
         setFlipped(false);
         setGuess("");
         setCorrectGuess("");
+        setIsCheckDisabled(false); // Reset Check button
     };
 
     const handlePrevious = () => {
@@ -94,6 +98,7 @@ const FlashcardChallenges = () => {
         setFlipped(false);
         setGuess("");
         setCorrectGuess("");
+        setIsCheckDisabled(false); // Reset Check button
     };
 
     const shuffleRandomCard = () => {
@@ -102,6 +107,7 @@ const FlashcardChallenges = () => {
         setFlipped(false);
         setGuess("");
         setCorrectGuess("");
+        setIsCheckDisabled(false); // Reset Check button
     };
 
     const checkAnswer = () => {
@@ -112,9 +118,14 @@ const FlashcardChallenges = () => {
             if (streak + 1 > longestStreak) {
                 setLongestStreak(streak + 1);
             }
+            setIsCheckDisabled(true); // Disable the Check button
         } else {
             setCorrectGuess("wrong");
             setStreak(0);
+
+            // Trigger red flash effect
+            setFlashRed(true);
+            setTimeout(() => setFlashRed(false), 500); // Reset after 500ms
         }
     };
 
@@ -175,14 +186,18 @@ const FlashcardChallenges = () => {
                     placeholder="Enter your guess..."
                     value={guess}
                     onChange={(e) => setGuess(e.target.value)}
-                    className={`type-answer bg-[rgba(36,36,36,0.5)] p-2 mx-2 rounded border border-[rgba(30,255,143,0.4)]
-                        xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[40px] md:h-[45px] lg:h-[45px] xl:h-[45px]
-                        xxxsm:w-[150px] xxsm:w-[175px] xsm:w-[200px] sm:w-[225px] md:w-[250px] lg:w-[300px] xl:w-[300px]
-                        ${correctGuess === "correct"
+                    className={`type-answer p-2 mx-2 rounded border
+        xxxsm:h-[25px] xxsm:h-[30px] xsm:h-[35px] sm:h-[40px] md:h-[45px] lg:h-[45px] xl:h-[45px]
+        xxxsm:w-[150px] xxsm:w-[175px] xsm:w-[200px] sm:w-[225px] md:w-[250px] lg:w-[300px] xl:w-[300px]
+        ${flashRed
+                            ? "bg-[rgba(255,30,30,0.71)] transition duration-500 ease-in-out"
+                            : "bg-[rgba(36,36,36,0.5)]"
+                        }
+        ${correctGuess === "correct"
                             ? "bg-[rgba(38,255,0,0.68)]"
                             : correctGuess === "wrong"
                                 ? "bg-[rgba(255,30,30,0.71)]"
-                                : "bg-[rgba(36,36,36,0.5)]"
+                                : ""
                         }`}
                 />
                 <button
@@ -205,13 +220,16 @@ const FlashcardChallenges = () => {
                     <img className='shuffle-button' alt='shuffle' src='/shuffle-icon.svg' />
                 </button>
                 <button
-                    className="check-flash-button mt-0 px-2 py-1 bg-[rgba(76,221,143,0.71)] text-[#000000] rounded hover:bg-[rgba(95,229,157,0.84)]
-                    transform transition duration-75 ease-in-out hover:scale-110 active:scale-95 font-semibold
-                    xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[20px]"
+                    className={`check-flash-button mt-0 px-2 py-1 bg-[rgba(76,221,143,0.71)] text-[#000000] rounded 
+        hover:bg-[rgba(95,229,157,0.84)] transform transition duration-75 ease-in-out hover:scale-110 active:scale-95 
+        font-semibold xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18px] lg:text-[20px] xl:text-[20px] 
+        ${isCheckDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
                     onClick={checkAnswer}
+                    disabled={isCheckDisabled}
                 >
                     Check
                 </button>
+
             </div>
 
             {/* <div className="navigation-buttons flex justify-center gap-4 mt-0">
