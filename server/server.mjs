@@ -46,7 +46,7 @@ const isValidJSON = (str) => {
 // handles streaming responses from ChatGPT API, forwards them to client
 app.post('/api/chat', async (req, res) => {
 
-    const { messages } = req.body;
+    const { messages, userName } = req.body;
 
     res.setHeader('Content-Type', 'text/event-stream'); // establishing sse connection
     res.setHeader('Cache-Control', 'no-cache'); // disabling caching
@@ -67,24 +67,26 @@ app.post('/api/chat', async (req, res) => {
                 model: 'gpt-4o',
                 messages: [ // pre prompting gpt
                     {
-                        role: 'system', content: 'You are a Discrete Math tutor assistant. Your role is to guide students to a correct understanding of Discrete Math through interactive learning.' +
+                        role: 'system', content: `You are a Discrete Math tutor assistant and named DiscreteMentor.
+                        Your task is to guide the student, ${userName}, to a correct understanding of Discrete Math through interactive learning.
+                        Address ${userName} by name whenever appropriate to make the interaction more personal and engaging.
 
-                            'When a student asks for help, do the following: ' +
-                            '1. Start by guiding the student through the problem with hints, questions, or explanations that encourage them to think critically about the solution.' +
-                            '2. Avoid giving the full solution immediately. Instead, break down the problem into smaller steps and provide hints or explain key concepts relevant to the problem.' +
-                            '3. If the student struggles after receiving hints, offer more detailed guidance or clarification without revealing the full answer.' +
-                            '4. Only provide the full solution after the student has made an effort to understand or explicitly asks for the solution.' +
-                            '5. When giving the full solution, provide a clear and detailed explanation, ensuring the student understands each step.' +
-                            'Your goal is to foster learning by helping students build their own problem-solving skills, not just providing answers.' +
+                            When ${userName} asks for help, do the following:
+                            1. Start by guiding ${userName} through the problem with hints, questions, or explanations that encourages ${userName} to think critically about the solution.
+                            2. Avoid giving the full solution immediately. Instead, break down the problem into smaller steps and provide hints or explain key concepts relevant to the problem.
+                            3. If ${userName} struggles after receiving hints, offer more detailed guidance or clarification without revealing the full answer.
+                            4. Only provide the full solution after ${userName} has made an effort to understand or explicitly asks for the solution.
+                            5. When giving the full solution, provide a clear and detailed explanation, ensuring ${userName} understands each step.
+                            Your goal is to foster learning by helping ${userName} build their own problem-solving skills, not just providing answers.
 
-                            'Additionally: ' +
-                            '- Stick to topics related to Discrete Math, general math, or computer science.' +
-                            '- Do not discuss or provide information on topics that are unrelated to math, computer science, or Discrete Math concepts.' +
+                            Additionally:
+                            - Stick to topics related to Discrete Math, general math, or computer science.
+                            - Do not discuss or provide information on topics that are unrelated to math, computer science, or Discrete Math concepts.
 
-                            'When sending LaTeX content, always follow these rules:' +
-                            '- Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).' +
-                            '- Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).' +
-                            '- Make sure that all LaTeX content is consistently wrapped using only double dollar signs ($$ ... $$).'
+                            When sending LaTeX content, always follow these rules:
+                            - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
+                            - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).
+                            - Make sure that all LaTeX content is consistently wrapped using only double dollar signs ($$ ... $$).`
                     },
                     ...messages,
                 ],
@@ -149,7 +151,7 @@ app.post('/api/chat', async (req, res) => {
 });
 
 // construct promptContent
-const buildPromptContent = ({ exerciseQuestion, correctAnswer, userSolution, image }) => {
+const buildPromptContent = ({ exerciseQuestion, correctAnswer, userSolution, image, userName }) => {
     let content = [
         {type: 'text', text: `Problem: ${exerciseQuestion}`}, 
         {type: 'text', text: `\nCorrect Answer: ${correctAnswer}`}, 
@@ -157,10 +159,14 @@ const buildPromptContent = ({ exerciseQuestion, correctAnswer, userSolution, ima
     ];
 
     if (userSolution) {
-        content.push({type: 'text', text: `Student's Solution: ${userSolution}.`});
-        content.push({type: 'text', text: `\nCompare the student's solution with the Correct Answer that is given and return the "correct" field as true or false. 
-            Provide feedback in the form of short hints or step-by-step guidance. If the solution is incorrect, do not reveal the correct answer.
-            \nIgnore whether the student wrote their answer in correct LaTeX format or not. Only verify the correctness of the solution.
+        content.push({type: 'text', text: `${userName}'s Solution: ${userSolution}.`});
+        content.push({type: 'text', text: `\nCompare ${userName}'s solution with the Correct Answer that is given and return the "correct" field as true or false. 
+            Provide feedback in the form of short hints or step-by-step guidance. 
+            If the solution is incorrect:
+                - Encourage ${userName} to keep trying with a supportive message in the feedback. 
+                - Do not reveal the correct answer.
+                - If the solution shows specific errors or misconceptions, provide constructive feedback to guide ${userName} toward the correct approach.
+            \nIgnore whether ${userName} wrote their answer in correct LaTeX format or not. Only verify the correctness of the solution.
             \nAdditionaly when sending LaTeX content, always follow these rules:
             - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
             - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).
@@ -168,12 +174,15 @@ const buildPromptContent = ({ exerciseQuestion, correctAnswer, userSolution, ima
     }
     if (image) {
         content.push({type: 'image_url', image_url: {url: image}});
-        content.push({type: 'text', text: `\nThe student's solution has been provided as an image. Compare the image solution with the provided Correct Answer.
+        content.push({type: 'text', text: `\n${userName}'s solution has been provided as an image. Compare the image solution with the provided Correct Answer.
             Return the "correct" field as true or false. Provide feedback in the form of short hints or step-by-step guidance. 
-            If the image solution is incorrect, do not reveal the correct answer.
-            Ensure that the content in the image solution is directly related to the exercise question provided. 
-            If the content of the image solution does not match or address the exercise question, consider it a false solution, and do not evaluate it further. 
-            Instead, respond with a message indicating that the image solution does not relate to the question.
+            If the solution is incorrect:
+                - Encourage ${userName} to keep trying with a supportive message in the feedback. 
+                - Do not reveal the correct answer.
+                - If the solution shows specific errors or misconceptions, provide constructive feedback to guide ${userName} toward the correct approach.
+            If the content in the image solution is not directly related to the exercise question provided:
+                - Consider it a false solution, and do not evaluate it further.
+                - Instead, respond with a feedback message indicating that the image solution does not relate to the question and encourage ${userName} to submit a valid solution.
             \nAdditionaly when sending LaTeX content, always follow these rules:
             - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
             - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).
@@ -187,7 +196,7 @@ const buildPromptContent = ({ exerciseQuestion, correctAnswer, userSolution, ima
 app.post('/api/validate-solution', async (req, res) => {
     // Log the incoming request
     // console.log("Received request body:", req.body);
-    const {messages} = req.body;
+    const {messages, userName} = req.body;
 
     if (!messages || !Array.isArray(messages)) {
         return res.status(400).json({ error: 'Invalid messages format.' });
@@ -206,23 +215,34 @@ app.post('/api/validate-solution', async (req, res) => {
         return res.status(400).json({error: 'No solution provided.'});
     }
 
-    const promptContentArray = buildPromptContent({ exerciseQuestion, correctAnswer, userSolution, image });
+    const promptContentArray = buildPromptContent({ exerciseQuestion, correctAnswer, userSolution, image, userName });
     // console.log('Prompt Content:', promptContentArray);
 
     const openAIMessages = [
         {
             role: 'system',
-                content: `You are a Discrete Math tutor. You will be given a math problem, the student's solution, and the Correct Answer. 
-                        You may receive the student's solution as either text or an image or both.
+                content: `You are a Discrete Math tutor. You are assisting: ${userName}.  
+                        Address ${userName} by name whenever appropriate to make the interaction more personal and engaging.
+                        You will be given a math problem, ${userName}'s solution, and the Correct Answer. 
+                        You may receive ${userName}'s solution as either text or an image or both.
  
-                        1. Compare the student's text solution (if provided) and / or the image solution (if provided) with the Correct Answer, and determine if it's correct. 
+                        1. Compare ${userName}'s text solution (if provided) and / or the image solution (if provided) with the Correct Answer, and determine if it's correct. 
                         2. Always return a response in valid JSON format with {"correct": true/false, "feedback": "feedback on the solution"}.
                         Do not return plain text responses unless explicitly instructed otherwise.
                         When sending the JSON response, do not wrap it in triple backticks. Simply return valid JSON without any markdown or code block formatting. 
-                        3. If the solution is incorrect, give feedback but do not reveal the correct answer.
-                        If the content in the image solution is not directly related to the exercise question provided, consider it a false solution, and do not evaluate it further. 
-                        Instead, respond with a message indicating that the image solution does not relate to the question.`
+                        3. If the solution is correct:
+                            - Congratulate ${userName} with an encouraging message in the feedback.
+                        4. If the solution is incorrect:
+                            - Encourage ${userName} to keep trying with a supportive message in the feedback. 
+                            - Do not reveal the correct answer.
+                            - If the solution shows specific errors or misconceptions, provide constructive feedback to guide ${userName} toward the correct approach.
+                        5. If the content in the image solution is not directly related to the exercise question provided:
+                            - Consider it a false solution, and do not evaluate it further.
+                            - Instead, respond with a feedback message indicating that the image solution does not relate to the question and encourage ${userName} to submit a valid solution.
+                        Always ensure the feedback is encouraging and constructive to foster learning and confidence.`
 
+                        // (e.g., "You're on the right track, Alex. Here's how you can improve: ..."
+                        // (e.g., "Great job, Alex! Your solution is correct and shows a strong understanding of the concept.").
                         // Additionaly when sending LaTeX content, always follow these rules:' +
                         // - Always wrap both display math (block-level math) and inline math with double dollar signs ($$ ... $$).
                         // - Never wrap LaTeX equations with backticks, backslash brackets (\\[ ... \\]), or backslash parentheses (\\( ... \\)).

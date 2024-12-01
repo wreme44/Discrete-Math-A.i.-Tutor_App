@@ -77,6 +77,8 @@ const ChatBox = ({ messages = [], setMessages, username }) => {
         setUserInput('');
         setIsTyping(true);
 
+        const userName = name;
+
         const saveUserMessage = async () => {
             const userId = JSON.parse(sessionStorage.getItem('userId'));
             if (!userId) return;
@@ -113,7 +115,7 @@ const ChatBox = ({ messages = [], setMessages, username }) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ messages: updatedMessages }),
+                body: JSON.stringify({ messages: updatedMessages, userName }),
             });
             // error handling
             if (!response.ok) {
@@ -359,10 +361,10 @@ const ChatBox = ({ messages = [], setMessages, username }) => {
     }, [])
 
     return (
-        <div className='bg-gray-800 border-[2px] border-amber-500 border-opacity-50 py-4 rounded h-full flex flex-col'>
+        <div className='bg-gray-800 border-[2px] border-amber-500 border-opacity-50 py-2 rounded h-full flex flex-col'>
             <div className='chatbox-content flex-1 overflow-y-auto mb-4 overflow-x-hidden'>
-                <div className='flex justify-center'>
-                    <h3 className='d-mentor-title'>DiscreteMentor</h3>
+                <div className='flex justify-center mb-[30px]'>
+                    <h3 className='d-mentor-title md:fixed z-20 bg-[rgba(187,121,35,0.19)]'>DiscreteMentor</h3>
                 </div>
                 {/* <button
                     className="fixed mt-0 px-0 py-0 z-50
@@ -379,11 +381,12 @@ const ChatBox = ({ messages = [], setMessages, username }) => {
                         break-words max-w-full whitespace-normal`}>
                             {msg.role === 'assistant' ? (
                                 <>
-                                    <div className='flex items-start'>
-                                        <img className="w-[28px] h-auto mr-2 b-[rgba(255,208,0,0.51)] rounded border-[1px] border-[rgba(255,170,0,0.43)]" alt="Tutor Icon" src="/D.Mentor1.png" />
+                                    <div className='flex items-start flex-col '>
+                                        <img className="w-[40px] h-auto mr-0 b-[rgba(255,208,0,0.51)] rounded border-[1px] border-[rgba(255,170,0,0.43)]" 
+                                        alt="Tutor" src="/D.Mentor1.png" />
                                         {/* {console.log(msg.content)} */}
                                         {/* {console.log(cleanLatexResponse(msg.content))} */}
-                                        <div className='bg-[rgba(69,41,96,0.16)] rounded-[10px]'>
+                                        <div className='bg-[rgba(69,41,96,0.16)] rounded-[10px] p-[2px]'>
                                             <LatexRenderer content={msg.content} />
                                         </div>
                                     </div>
@@ -391,7 +394,7 @@ const ChatBox = ({ messages = [], setMessages, username }) => {
                                 </>
                             ) : (
                                 <>
-                                    <div className='flex items-start space-x-1'>
+                                    <div className='flex flex-col items-start space-y-1'>
                                         <span className='font-semibold px-2 bg-gradient-to-r from-[rgb(75,143,211)] to-[rgb(12,103,152)] hover:from-[rgb(12,103,152)]  
                                                 hover:to-[rgb(75,143,211)] text-[10px] text-[rgb(0,0,0)]
                                                 focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded'>
@@ -400,7 +403,7 @@ const ChatBox = ({ messages = [], setMessages, username }) => {
                                         {/* <img className="w-6 h-auto mr-2" alt="Tutor Icon" src="/logo.png" /> */}
                                         {/* {console.log(msg.content)} */}
                                         {/* {console.log(cleanLatexResponse(msg.content))} */}
-                                        <div className='bg-[rgba(65,86,129,0.23)] rounded-[10px]'>
+                                        <div className='bg-[rgba(65,86,129,0.23)] rounded-[10px] p-[2px]'>
                                             <LatexRenderer content={msg.content} />
                                         </div>
 
@@ -413,7 +416,7 @@ const ChatBox = ({ messages = [], setMessages, username }) => {
                 ))) : (
                     <div className='d-mentor-box 
                             xxxsm:mt-[80px] xxsm:mt-[80px] xsm:mt-[50px] sm:mt-[40px] md:mt-[70px] lg:mt-[50px] xl:mt-[50px]'> {/* xxxsm:gap-12 xxsm:gap-10 xsm:gap-10 sm:gap-10 md:gap-28 lg:gap-24 xl:gap-28 */}
-                        {/* <h3 className=''>A</h3> */}
+                        {/* <h3 className='d-mentor-title'>DiscreteMentor</h3> */}
                         <img className="d-mentor xxxsm:w-[250px] xxsm:w-[275px] xsm:w-[350px] sm:w-[400px] md:w-[255px] lg:w-[322px] xl:w-[333px]
                                         xxxsm:h-[250px] xxsm:h-[275px] xsm:h-[350px] sm:h-[400px] md:h-[266px] lg:h-[333px] xl:h-[333px]"
                             src='/D.Mentor1.png' />

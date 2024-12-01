@@ -273,7 +273,7 @@ const LessonsColumn = ({
             <div ref={scrollableContainerRef} className="IMGs-lessons flex-1 overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentLesson && <>{renderContent(currentLesson.content)}</>}
             </div>
-            <div className="modal" id="imageModal">
+            <div className="modalZoomIMGs" id="imageModal">
                 <img alt="Zoomed view" />
             </div>
             <div className="flex justify-between items-end -mb-1">

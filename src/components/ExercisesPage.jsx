@@ -42,7 +42,7 @@ const MathLiveInput = ({ value, onChange, onFocus }) => {
 
 const ExercisesPage = ({
     onExerciseCompletion, userId, exercisesData,
-    groupedExercises, lessonsData, toggleViewWithScroll }) => {
+    groupedExercises, lessonsData, toggleViewWithScroll, username }) => {
 
     const navigate = useNavigate();
 
@@ -51,6 +51,7 @@ const ExercisesPage = ({
     // State to hold exercises data fetched from the database
     // const [exercisesData, setExercisesData] = useState([]);
     // const [groupedExercises, setGroupedExercises] = useState({});
+    const [name, setName] = useState('');
     const [showGames, setShowGames] = useState(false);
     const [shouldScroll, setShouldScroll] = useState(false);
     // pre determined correct answers
@@ -323,8 +324,9 @@ const ExercisesPage = ({
         //         })
         //     }
         // }
-
-        const payload = { messages }
+        const userName = name
+        const payload = { messages, userName }
+        
         // console.log("Sending payload:", payload);
         // store users submitted solution
         setSubmittedSolutions((prev) => ({
@@ -801,6 +803,15 @@ const ExercisesPage = ({
 
     }, [excalidrawData])
 
+    useEffect(() => {
+        const savedName = sessionStorage.getItem('name')
+        if (savedName){
+            const fullName = JSON.parse(savedName);
+            const firstName = fullName.split(' ')[0];
+            setName(firstName)
+        }
+    }, [username])
+
 
     // handling navigation buttons
     const handlePrevious = () => {
@@ -902,9 +913,9 @@ const ExercisesPage = ({
                                             type="button"
                                             onClick={() => displayExcalidraw(exercise.exercise_id)}
                                             className="relative flex items-center ml-2 focus:outline-none
-                                        outline-none border-none rounded-full transform transition
-                                        duration-75 ease-in-out hover:scale-105 active:scale-95
-                                        xxxsm:w-[14px] xxsm:w-[16px] xsm:w-[24px] sm:w-[28px] md:w-[28px] lg:w-[32px] xl:w-[32px]"
+                                                outline-none border-none rounded-full transform transition
+                                                duration-75 ease-in-out hover:scale-105 active:scale-95
+                                                xxxsm:w-[14px] xxsm:w-[16px] xsm:w-[24px] sm:w-[28px] md:w-[28px] lg:w-[32px] xl:w-[32px]"
                                         >
                                             <img className='drawing-icon' alt='drawing tool' src='/drawing-icon.svg' />
                                             {/* <img className='drawing-icon' alt='drawing tool' src='/drawing-icon2.svg' /> */}
@@ -1063,39 +1074,48 @@ const ExercisesPage = ({
                                         {/* <span className="excalidraw-title xxxsm:text-[10px] xxsm:text-[13px] xsm:text-[16px] sm:text-[18px] md:text-[20px] lg:text-[20px] xl:text-[24px]">
                                     Solution Canvas
                                 </span> */}
-                                        <div className="mb-2">
+                                        <div className="mb-2 flex justify-between">
                                             <div className="relative inline-block group align-middle">
                                                 <button
                                                     type="button"
                                                     onClick={() => handleExcalidrawSubmit(exercise.exercise_id)}
-                                                    className="relative flex items-center align-middle ml-0 border-1 
-                                            bg-gradient-to-r from-cyan-700 to-cyan-500 hover:from-cyan-500 hover:to-cyan-700
-                                            focus:outline-none outline-none border-none rounded-full transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
-                                            xxsm:ml-[1px] xsm:ml-[3px] sm:ml-[4px] md:ml-[5px] lg:ml-[5px] xl:ml-[5px]
-                                            xxxsm:w-[80px] xxsm:w-[100px] xsm:w-[115px] sm:w-[130px] md:w-[140px] lg:w-[160px] xl:w-[160px]
-                                            xxxsm:h-[13px] xxsm:h-[17px] xsm:h-[20px] sm:h-[22px] md:h-[25px] lg:h-[30px] xl:h-[30px]"
+                                                    className="relative flex items-center align-middle ml-0 border-1  px-1
+                                                        bg-gradient-to-r from-cyan-700 to-cyan-500 hover:from-cyan-500 hover:to-cyan-700
+                                                        focus:outline-none outline-none border-none rounded-full transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                                                        xxsm:ml-[1px] xsm:ml-[3px] sm:ml-[4px] md:ml-[5px] lg:ml-[5px] xl:ml-[5px]
+                                                        xxxsm:h-[13px] xxsm:h-[17px] xsm:h-[20px] sm:h-[22px] md:h-[25px] lg:h-[30px] xl:h-[30px]"
                                                 >
                                                     <div className="flex items-center">
-                                                        <span className="text-slate-900 font-semibold ml-1
-                                                xxsm:mr-[2px] xsm:mr-[4px] sm:mr-[6px] md:mr-[7px] lg:mr-[8px] xl:mr-[8px]
-                                                xxxsm:text-[8px] xxsm:text-[10px] xsm:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[14px]">
-                                                            Review & Display
+                                                        <span className="text-slate-900 font-semibold
+                                                        xxsm:mr-[2px] xsm:mr-[4px] sm:mr-[6px] md:mr-[7px] lg:mr-[8px] xl:mr-[8px]
+                                                        xxxsm:text-[8px] xxsm:text-[10px] xsm:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[14px]">
+                                                            Review
                                                         </span>
-                                                        <img className='pre-drawing xxxsm:w-[12px] xxsm:w-[14px] xsm:w-[16px] sm:w-[20px] md:w-[24px] lg:w-[28px] xl:w-[28px]'
+                                                        <img className='pre-drawing xxxsm:hidden xxsm:block xxsm:w-[14px] xsm:w-[16px] sm:w-[20px] md:w-[24px] lg:w-[28px] xl:w-[28px]'
                                                             alt='drawing tool' src='/prep-drawing.svg' />
                                                     </div>
                                                 </button>
-                                                <div className="absolute bottom-[99.9%]  
-                                        left-[50%] transform -translate-x-1/2 mb-2 bg-teal-600 text-white
-                                        text-xs rounded-lg py-1 pl-1 pr-0 w-40 opacity-0 group-hover:opacity-100 
-                                        transition-opacity duration-500 z-10">
+                                                <div className="absolute bottom-[99.9%]
+                                                        left-[80%] transform -translate-x-1/2 mb-2 bg-teal-600 text-white
+                                                        text-xs rounded-lg py-1 pl-1 pr-0 w-40 opacity-0 group-hover:opacity-100 
+                                                        transition-opacity duration-500 z-10">
                                                     Load and Display Drawing for Review and Submission
-                                                    <div className="absolute left-[50%] transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
+                                                    <div className="absolute left-[36%] transform -translate-x-1/2 w-0 h-0 border-t-8 border-t-teal-600 border-x-8 border-x-transparent top-full"></div>
                                                 </div>
                                             </div>
                                             <span className="excalidraw-title xxxsm:text-[10px] xxsm:text-[13px] xsm:text-[16px] sm:text-[18px] md:text-[20px] lg:text-[20px] xl:text-[24px]">
                                                 Solution Canvas
                                             </span>
+                                            <button
+                                                type="button"
+                                                onClick={() => displayExcalidraw(exercise.exercise_id)}
+                                                className=" align-middle ml-2 focus:outline-none
+                                                outline-none border-none rounded-full transform transition
+                                                duration-75 ease-in-out hover:scale-105 active:scale-95
+                                                xxxsm:w-[14px] xxsm:w-[16px] xsm:w-[24px] sm:w-[28px] md:w-[28px] lg:w-[32px] xl:w-[32px]"
+                                            >
+                                                <XMarkIcon className="xxxsm:w-[10px] xxsm:w-[10px] xsm:w-[12px] sm:w-[14px] md:w-[14px] lg:w-[16px] xl:w-[16px] mr-1" />
+                                            </button>
                                         </div>
                                         <div className="excalidraw-container canvas mt-0
                                 w-full xxxsm:h-[400px] xxsm:h-[475px] xsm:h-[500px] sm:h-[550px] md:h-[600px] lg:h-[650px] xl:h-[700px]">

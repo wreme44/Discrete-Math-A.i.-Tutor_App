@@ -311,6 +311,7 @@ const MainPage = () => {
                             groupedExercises={groupedExercises}
                             lessonsData={lessonsData}
                             toggleViewWithScroll={toggleViewWithScroll}
+                            username={username}
                         // loading={loading}
                         // error={error}
                         />

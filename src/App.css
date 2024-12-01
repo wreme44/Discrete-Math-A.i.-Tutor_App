@@ -1296,22 +1296,20 @@ pre {
     /* height: 100%; */
 }
 
-.d-mentor-box h3 {
+/* .d-mentor-box h3 {
     font-size: larger;
-    /* font-weight: lighter; */
     font-family: Georgia, 'Times New Roman', Times, serif;
     animation: fadeIn 3s ease-in-out;
-    /* animation: backgroundMove 5s linear infinite; */
     background: linear-gradient(90deg, #fdb530, #ffc559, #fdcd74);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     opacity: 0.9;
-}
+} */
 
 .d-mentor-title {
     font-size: larger;
-    /* font-weight: lighter; */
+    /* font-weight: 500; */
     font-family: Georgia, 'Times New Roman', Times, serif;
     animation: fadeIn 3s ease-in-out;
     /* animation: backgroundMove 5s linear infinite; */
@@ -1422,7 +1420,7 @@ math-field:hover {
 }
 
 .excalidraw-title {
-    margin-left: 21%;
+    /* margin-left: 21%; */
     /* margin-top: 55px;
     margin-bottom: 115px; */
     /* font-size: large; */
@@ -1457,7 +1455,7 @@ math-field:hover {
     transform: scale(1.02);
 }
 
-.modal {
+.modalZoomIMGs {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -1470,14 +1468,14 @@ math-field:hover {
     align-items: center;
 }
 
-.modal img {
+.modalZoomIMGs img {
     min-width: 45%;
     min-height: 45%;
     max-width: 90%;
     max-height: 90%;
 }
 
-.modal.active {
+.modalZoomIMGs.active {
     display: flex;
 }
 
