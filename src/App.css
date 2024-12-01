@@ -812,13 +812,11 @@ body.profileBody {
     border-radius: 4px;
     border: 1px solid #ccc;
     /* margin-bottom: 15px; */
-    color: #000000;
+    color: #ffffff;
     /* font-size: 18px; */
     font-weight: 500;
-    background-color: #ffffff;
+    background-color: #0d75a956;
 }
-
-
 
 .update-profile-button {
     /* margin-top: 20px; */
@@ -1311,6 +1309,19 @@ pre {
     opacity: 0.9;
 }
 
+.d-mentor-title {
+    font-size: larger;
+    /* font-weight: lighter; */
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    animation: fadeIn 3s ease-in-out;
+    /* animation: backgroundMove 5s linear infinite; */
+    background: linear-gradient(90deg, #fdb530, #ffc559, #fdcd74);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    opacity: 0.9;
+}
+
 .d-mentor {
     /* width: 333px;
     height: 333px; */
@@ -1541,7 +1552,7 @@ body.myAccountBody {
         }
     }
 
-    background: radial-gradient(circle, #002425, #163232, #02292a, #032c2d);
+    background: radial-gradient(circle, #0c1c30, #1d2733, #1d2733, #1d2733);
     background-size: 150% 150%;
     animation: gradientShift 10s ease infinite;
     overflow: hidden;
@@ -1693,8 +1704,8 @@ body.myAccountBody {
     position: absolute;
     width: 150px;
     height: 150px;
-    background: rgb(0, 255, 255);
-    filter: blur(90px);
+    background: rgba(0, 255, 149, 0.542);
+    filter: blur(60px);
     border-radius: 50%;
     animation: pulse 6s infinite ease-in-out alternate;
     pointer-events: none;
@@ -1703,12 +1714,12 @@ body.myAccountBody {
 @keyframes pulse {
     0% {
         transform: scale(1);
-        opacity: 0.5;
+        opacity: 0.1;
     }
 
     100% {
         transform: scale(1.5);
-        opacity: 1;
+        opacity: 0.5;
     }
 }
 

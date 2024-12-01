@@ -39,7 +39,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
     );
 };
 
-const ChatBox = ({messages = [], setMessages}) => {
+const ChatBox = ({ messages = [], setMessages }) => {
 
     // console.log("Messages in ChatBox:", messages);
     const [userInput, setUserInput] = useState('');
@@ -48,8 +48,9 @@ const ChatBox = ({messages = [], setMessages}) => {
     //     const savedHistory = sessionStorage.getItem('messages');
     //     return savedHistory ? JSON.parse(savedHistory) : [];
     // })
+    const [name, setName] = useState('')
     const [isTyping, setIsTyping] = useState(false);
-    const [hasNewMessages, setHasNewMessages] = useState(false); // tracking new messages
+    // const [hasNewMessages, setHasNewMessages] = useState(false); // tracking new messages
     const [isModalOpen, setIsModalOpen] = useState(false)
     // const [isUserScrolling, setIsUserScrolling] = useState(false);
 
@@ -171,9 +172,9 @@ const ChatBox = ({messages = [], setMessages}) => {
                             // updating state with latest assistant message
                             setMessages(prevMessages => {
                                 const lastMessage = prevMessages[prevMessages.length - 1];
-                            
+
                                 let updatedMessages;
-                            
+
                                 if (lastMessage && lastMessage.role === 'assistant') {
                                     updatedMessages = [
                                         ...prevMessages.slice(0, -1),
@@ -186,7 +187,7 @@ const ChatBox = ({messages = [], setMessages}) => {
                                     ];
                                 }
                                 sessionStorage.setItem('messages', JSON.stringify(updatedMessages));
-                            
+
                                 return updatedMessages;
                             });
                         } catch (error) { // error handling while parsing streaming data
@@ -237,6 +238,15 @@ const ChatBox = ({messages = [], setMessages}) => {
         setIsModalOpen(false);
     };
 
+    useEffect(() => {
+        const savedName = sessionStorage.getItem('name')
+        if (savedName){
+            const fullName = JSON.parse(savedName);
+            const firstName = fullName.split(' ')[0];
+            setName(firstName)
+        }
+    }, [])
+
     // user text input box height adjustment in case of larger prompts 
     const adjustTextareaHeight = useCallback(() => {
 
@@ -274,33 +284,33 @@ const ChatBox = ({messages = [], setMessages}) => {
 
     // }, [messages])
 
-            // const savedChatHistory = async () => {
-        //     const userId = JSON.parse(sessionStorage.getItem('userId'))
-        //     if (!userId) return;
+    // const savedChatHistory = async () => {
+    //     const userId = JSON.parse(sessionStorage.getItem('userId'))
+    //     if (!userId) return;
 
-        //     const chatHistory = messages.map((message, index) => ({
-        //         user_id: userId,
-        //         content: message.content,
-        //         role: message.role,
-        //         created_at: new Date(new Date().getTime() + index).toISOString(),
-        //     }))
+    //     const chatHistory = messages.map((message, index) => ({
+    //         user_id: userId,
+    //         content: message.content,
+    //         role: message.role,
+    //         created_at: new Date(new Date().getTime() + index).toISOString(),
+    //     }))
 
-        //     try {
-        //         const { error } = await supabase
-        //             .from('chat_history')
-        //             .insert(chatHistory);
+    //     try {
+    //         const { error } = await supabase
+    //             .from('chat_history')
+    //             .insert(chatHistory);
 
-        //         if (error) {
-        //             console.error('Error saving chat history:', error.message);
-        //         }
+    //         if (error) {
+    //             console.error('Error saving chat history:', error.message);
+    //         }
 
-        //     } catch (err) {
-        //         console.error('Unexpected error saving chat history:', err);
-        //     }
+    //     } catch (err) {
+    //         console.error('Unexpected error saving chat history:', err);
+    //     }
 
 
-        // }
-        // savedChatHistory();
+    // }
+    // savedChatHistory();
 
     // removing message history in case tab / browser closes or reloads  
     // useEffect(() => {
@@ -349,8 +359,11 @@ const ChatBox = ({messages = [], setMessages}) => {
     }, [])
 
     return (
-        <div className='bg-gray-800 border-[2px] border-amber-500 border-opacity-50 p-4 rounded h-full flex flex-col'>
+        <div className='bg-gray-800 border-[2px] border-amber-500 border-opacity-50 py-4 rounded h-full flex flex-col'>
             <div className='chatbox-content flex-1 overflow-y-auto mb-4 overflow-x-hidden'>
+                <div className='flex justify-center'>
+                    <h3 className='d-mentor-title'>DiscreteMentor</h3>
+                </div>
                 {/* <button
                     className="fixed mt-0 px-0 py-0 z-50
                                 transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
@@ -360,22 +373,40 @@ const ChatBox = ({messages = [], setMessages}) => {
                         alt='delete' src='./clear-chat-history.svg' />
                 </button> */}
                 {messages.length > 0 ? (messages.map((msg, index) => (
-                    <div key={index} className={`mb-2 mt-4 ${msg.role === 'user' ? 'text-left' : 'text-left'}`}>
+                    <div key={index} className={`mb-2 mt-2 ${msg.role === 'user' ? 'text-left' : 'text-left'}`}>
                         <span className={`latex-container inline-block p-2 rounded ${msg.role === 'user' ?
-                            'bg-[rgba(65,86,129,0.43)] text-white' : 'bg-[rgba(53,57,66,0)] text-white'} 
+                            '' : 'bg-[rgba(53,57,66,0)] text-white'} 
                         break-words max-w-full whitespace-normal`}>
                             {msg.role === 'assistant' ? (
                                 <>
                                     <div className='flex items-start'>
-                                        <img className="w-6 h-auto mr-2" alt="Tutor Icon" src="/logo.png" />
+                                        <img className="w-[28px] h-auto mr-2 b-[rgba(255,208,0,0.51)] rounded border-[1px] border-[rgba(255,170,0,0.43)]" alt="Tutor Icon" src="/D.Mentor1.png" />
                                         {/* {console.log(msg.content)} */}
                                         {/* {console.log(cleanLatexResponse(msg.content))} */}
-                                        <LatexRenderer content={msg.content} />
+                                        <div className='bg-[rgba(69,41,96,0.16)] rounded-[10px]'>
+                                            <LatexRenderer content={msg.content} />
+                                        </div>
                                     </div>
 
                                 </>
                             ) : (
-                                <LatexRenderer content={msg.content} />
+                                <>
+                                    <div className='flex items-start space-x-1'>
+                                        <span className='font-semibold px-2 bg-gradient-to-r from-[rgb(75,143,211)] to-[rgb(12,103,152)] hover:from-[rgb(12,103,152)]  
+                                                hover:to-[rgb(75,143,211)] text-[10px] text-[rgb(0,0,0)]
+                                                focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded'>
+                                            {name}
+                                        </span>
+                                        {/* <img className="w-6 h-auto mr-2" alt="Tutor Icon" src="/logo.png" /> */}
+                                        {/* {console.log(msg.content)} */}
+                                        {/* {console.log(cleanLatexResponse(msg.content))} */}
+                                        <div className='bg-[rgba(65,86,129,0.23)] rounded-[10px]'>
+                                            <LatexRenderer content={msg.content} />
+                                        </div>
+
+                                    </div>
+
+                                </>
                             )}
                         </span>
                     </div>
@@ -397,26 +428,32 @@ const ChatBox = ({messages = [], setMessages}) => {
                 {/* <div ref={messagesEndRef}/> */}
             </div>
             <div className='flex'>
-                <div className='flex items-end flex-grow'>
-                    <textarea
-                        placeholder='Message Tutor'
-                        ref={textareaRef}
-                        className="flex-1 p-2 rounded-2xl bg-gray-700 focus:outline-none 
+                {/* <div className='flex items-end flex-grow'> */}
+                    <div className='flex items-end justify-center space-x-1 flex-grow'>
+                        <button
+                            className=" mb-[8px] px-0 py-0 
+                                transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+                            onClick={() => setIsModalOpen(true)}
+                        >
+                            <img className='xxxsm:w-[18px] xxsm:w-[18px] xsm:w-[18px] sm:w-[18px] md:w-[18px] lg:w-[18px] xl:w-[18px]'
+                                alt='delete' src='./clear-chat-history.svg' />
+                        </button>
+                        <textarea
+                            placeholder='Message Tutor'
+                            ref={textareaRef}
+                            className="flex-1 p-2 rounded-2xl bg-gray-700 focus:outline-none 
                                  focus:ring-1 focus:ring-amber-500 resize-none overflow-y-auto break-words"
-                        value={userInput}
-                        onChange={(e) => setUserInput(e.target.value)}
-                        onKeyDown={(e) => {
-                            if (e.key === 'Enter' && !e.shiftKey) {
-                                e.preventDefault();
-                                handleSend();
-                            }
-                        }}
-                        rows={1}
-                        style={{ maxHeight: '400px' }}
-                    />
-                    <div className='flex items-center justify-center space-x-1'>
-
-
+                            value={userInput}
+                            onChange={(e) => setUserInput(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    handleSend();
+                                }
+                            }}
+                            rows={1}
+                            style={{ maxHeight: '400px' }}
+                        />
                         <button
                             className="ml-1 px-0 py-0 outline-none 
                         focus:outline-none border-2 border-yellow-600 hover:border-yellow-600 rounded-full transform  
@@ -431,24 +468,45 @@ const ChatBox = ({messages = [], setMessages}) => {
                             <img className="w-10 h-auto xxxsm:w-[30px] xxsm:w-[33px] xsm:w-[35px] sm:w-[37px] md:w-[37px] lg:w-[40px] xl:w-[40px] mr-0"
                                 alt="Submit" src="/submit2.svg" />
                         </button>
-                        <button
-                            className=" mt-0 px-0 py-0 
-                                transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
-                            onClick={() => setIsModalOpen(true)}
-                        >
-                            <img className='xxxsm:w-[18px] xxsm:w-[18px] xsm:w-[18px] sm:w-[18px] md:w-[18px] lg:w-[18px] xl:w-[18px]'
-                                alt='delete' src='./clear-chat-history.svg' />
-                        </button>
                     </div>
+
                     <ConfirmationModal
                         isOpen={isModalOpen}
                         onClose={handleCloseModal}
                         onConfirm={handleConfirmDelete}
                     />
-                </div>
+                {/* </div> */}
             </div>
         </div>
     );
 };
 
 export default ChatBox;
+
+
+{/* <div className='flex items-center justify-center space-x-1'>
+
+
+<button
+    className="ml-1 px-0 py-0 outline-none 
+focus:outline-none border-2 border-yellow-600 hover:border-yellow-600 rounded-full transform  
+transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+    // className="ml-2 p-2 bg-blue-400 focus:outline-none 
+    //          focus:ring-1 focus:ring-amber-500 rounded-2xl flex-shrink-0" 
+    // style={{width: '50px', height: '40px'}} 
+    onClick={handleSend}
+    disabled={isTyping}
+>
+  
+    <img className="w-10 h-auto xxxsm:w-[30px] xxsm:w-[33px] xsm:w-[35px] sm:w-[37px] md:w-[37px] lg:w-[40px] xl:w-[40px] mr-0"
+        alt="Submit" src="/submit2.svg" />
+</button>
+<button
+    className=" mt-0 px-0 py-0 
+        transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
+    onClick={() => setIsModalOpen(true)}
+>
+    <img className='xxxsm:w-[18px] xxsm:w-[18px] xsm:w-[18px] sm:w-[18px] md:w-[18px] lg:w-[18px] xl:w-[18px]'
+        alt='delete' src='./clear-chat-history.svg' />
+</button>
+</div> */}
