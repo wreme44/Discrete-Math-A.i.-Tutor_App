@@ -14,6 +14,11 @@ const MainPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [user, setUser] = useState(null);
     // session storage:
+    const [messages, setMessages] = useState([])
+    // const [messages, setMessages] = useState(() => {
+    //     const savedHistory = sessionStorage.getItem('messages');
+    //     return savedHistory ? JSON.parse(savedHistory) : [];
+    // });
     const [userId, setUserId] = useState(() => {
         const savedUserId = sessionStorage.getItem('userId');
         return savedUserId ? JSON.parse(savedUserId) : (null);
@@ -167,6 +172,31 @@ const MainPage = () => {
                     setDataFetched(true);
                     sessionStorage.setItem('hasFetchedData', 'true');
                 }
+
+                // fetch chat history
+                const { data: chatHistory, error: chatError } = await supabase
+                    .from("chat_history")
+                    .select("*")
+                    .eq("user_id", userId)
+                    .order("created_at", { ascending: true })
+                if (chatError) {
+                    console.error("error fetching chat history:", chatError.message)
+                    setMessages([]);
+                } else {
+                    // console.log("Fetched chat history:", chatHistory);
+                    
+                    if (Array.isArray(chatHistory)) {
+                        const simplifiedChatHistory = chatHistory.map(({ role, content }) => ({ role, content }));
+                        // console.log("Simplified chat history:", simplifiedChatHistory);
+                        sessionStorage.setItem('messages', JSON.stringify(simplifiedChatHistory));
+                        // console.log("SessionStorage messages after fetch:", sessionStorage.getItem('messages'));
+                        setMessages(simplifiedChatHistory);
+                    } else {
+                        console.error("Fetched chat history is not an array:", chatHistory);
+                        setMessages([]);
+                    }
+                }
+
             } catch (error) {
                 console.error("Error during data fetching:", error)
             } finally {
@@ -177,6 +207,25 @@ const MainPage = () => {
         }
         fetchData();
     }, [userId]);
+
+    useEffect(() => {
+        const savedMessages = sessionStorage.getItem('messages');
+        if (savedMessages) {
+            try {
+                const parsedMessages = JSON.parse(savedMessages);
+                if (Array.isArray(parsedMessages)) {
+                    setMessages(parsedMessages);
+                    // console.log("Restored messages from sessionStorage:", parsedMessages);
+                }
+            } catch (error) {
+                console.error("Error parsing messages from sessionStorage:", error);
+            }
+        }
+    }, []);
+
+    // useEffect(() => {
+    //     console.log("Updated messages in MainPage:", messages);
+    // }, [messages]);
 
     // tutor chat interface 
     useEffect(() => {
@@ -225,9 +274,9 @@ const MainPage = () => {
                              shadow-lg hover:border-[rgba(0,0,0,0.1)] hover:from-[rgba(0,0,0,0.81)] hover:to-[rgba(0,0,0,0.21)] focus:outline-none 
                              focus:ring-0 transition duration-300 ease-in-out"
                         >
-                            {isRowView 
-                            ? <img className="w-[35px] h-auto" alt="Column" src="/column-view-icon.svg" /> 
-                            : <img className="w-[35px] h-auto" alt="Row" src="/row-view-icon.svg" />}
+                            {isRowView
+                                ? <img className="w-[35px] h-auto" alt="Column" src="/column-view-icon.svg" />
+                                : <img className="w-[35px] h-auto" alt="Row" src="/row-view-icon.svg" />}
                         </button>
                         {/* TUTOR button */}
                         <button className={`fixed hidden md:inline-flex top-16 right-5 items-center bg-gradient-to-r
@@ -251,7 +300,7 @@ const MainPage = () => {
                         // loading={loading}
                         // error={error}
                         />
-                         <div ref={bottomRef}></div>
+                        <div ref={bottomRef}></div>
                     </div>
                     <div className={`rounded overflow-y-auto 
                         ${isSmallScreen
@@ -262,7 +311,10 @@ const MainPage = () => {
                             style: { height: '81%', marginTop: '95px', pointerEvents: isChatVisible ? 'auto' : 'none' }
                         })}
                     >
-                        <ChatBox />
+                        <ChatBox
+                            messages={messages}
+                            setMessages={setMessages}
+                        />
                     </div>
                 </div>
             ) : (

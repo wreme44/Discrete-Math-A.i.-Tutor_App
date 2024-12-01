@@ -336,15 +336,16 @@ body.profileBody {
     justify-content: center;
     align-items: center;
     /* min-height: 100vh; */
-    height: auto;
+    /* height: auto; */
     /* height: calc(100vh - 40px); */
-    background-color: #1d2733;
+    /* background-color: #1d2733;
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/accountPage.gif');
     background-repeat: no-repeat;
-    background-size: 100vw 100vh;
+    background-size: 100vw 100vh; */
     /* background-attachment: fixed; */
-    background-position: center 20px;
-    padding-top: 60px;
+    /* background-position: center 20px; */
+    padding-top: 70px;
+    margin-bottom: 25px;
     /* overflow-y: auto; */
 
     /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('DM 12.png');
@@ -1243,6 +1244,7 @@ body.profileBody {
     position: relative;
     max-width: 100%;
     overflow-x: hidden;
+    /* color: #000000 !important; */
     /* Make sure LaTeX content stays inside */
 }
 
@@ -1291,6 +1293,7 @@ pre {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    position: relative;
     /* gap: 110px; */
     /* height: 100%; */
 }
@@ -1299,13 +1302,13 @@ pre {
     font-size: larger;
     /* font-weight: lighter; */
     font-family: Georgia, 'Times New Roman', Times, serif;
-    animation: fadeIn 15s ease-in-out;
+    animation: fadeIn 3s ease-in-out;
     /* animation: backgroundMove 5s linear infinite; */
     background: linear-gradient(90deg, #fdb530, #ffc559, #fdcd74);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    opacity: 0.8;
+    opacity: 0.9;
 }
 
 .d-mentor {
@@ -2355,7 +2358,7 @@ body.hangmanBody {
 }
 
 .hangman-drawing{
-    background-color: #60000074;
+    background-color: #83000090;
     box-shadow: 0px 2px 18px rgb(255, 0, 0);
     cursor: url('/wand-cursor-hangman.svg'), auto;
 

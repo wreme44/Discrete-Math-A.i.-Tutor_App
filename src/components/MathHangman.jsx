@@ -358,7 +358,7 @@ const MathHangman = () => {
             {selectedWord && (
                 <>
                     <h1 className="hangman-game-title xxxsm:text-[16px] xxsm:text-[20px] xsm:text-[25px] sm:text-[30px] md:text-[39px] lg:text-[45px] xl:text-[45px]">
-                        Hanged MathMan</h1>
+                        The Hanged MathMan</h1>
                     <div className="hangman-drawing flex items-center justify-center
                         xxxsm:h-[50px] xxsm:h-[60px] xsm:h-[90px] sm:h-[100px] md:h-[125px] lg:h-[150px] xl:h-[150px]
                         xxxsm:w-[100px] xxsm:w-[100px] xsm:w-[125px] sm:w-[150px] md:w-[175px] lg:w-[200px] xl:w-[200px]">
