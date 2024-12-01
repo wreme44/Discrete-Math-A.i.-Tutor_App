@@ -11,6 +11,7 @@ const DragAndDropPuzzle = () => {
     const [time, setTime] = useState(0);
     const [showInstructions, setShowInstructions] = useState(true);
     const [highlightWrong, setHighlightWrong] = useState(null);
+    const [highlightCorrect, setHighlightCorrect] = useState(null);
     const [gameCompleted, setGameCompleted] = useState(false);
     const [badge, setBadge] = useState(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -109,20 +110,29 @@ const DragAndDropPuzzle = () => {
     const handleDrop = (zone) => {
         if (draggedSubset) {
             if (draggedSubset.belongsTo === zone) {
+                // Correct placement
                 setPoints((prev) => prev + 10);
-                setSubsets((prev) => prev.filter((s) => s !== draggedSubset)); // Remove correctly placed subset
+                setSubsets((prev) => prev.filter((s) => s !== draggedSubset)); // Remove subset from list
+                setHighlightCorrect(zone); // Highlight correct zone
+                setTimeout(() => setHighlightCorrect(null), 500); // Remove highlight after 500ms
+
+                // Check if game is completed
                 if (subsets.length === 1) {
                     setGameCompleted(true);
-                    calculateBadge();
+                    calculateBadge(); // Calculate the badge (Gold, Silver, Bronze)
                 }
             } else {
-                setPoints((prev) => prev - 5); // Penalty for wrong placement
-                setHighlightWrong(zone); // Temporarily highlight wrong zone
-                setTimeout(() => setHighlightWrong(null), 500);
+                // Incorrect placement
+                setPoints((prev) => prev - 5); // Deduct points
+                setHighlightWrong(zone); // Highlight wrong zone
+                setTimeout(() => setHighlightWrong(null), 500); // Remove highlight after 500ms
             }
+
+            // Reset draggedSubset after drop
             setDraggedSubset(null);
         }
     };
+
 
     const calculateBadge = () => {
         if (points >= 90 && time <= 30) {
@@ -307,11 +317,30 @@ const DragAndDropPuzzle = () => {
                         {activeZones.map((zone) => (
                             <div
                                 key={zone}
-                                className={`drag-category ${highlightWrong === zone ? "wrong" : ""}
-                                transform transition duration-75 ease-in-out hover:scale-[1.01]
-                                xxxsm:h-[70px] xxsm:h-[80px] xsm:h-[90px] sm:h-[100px] md:h-[125px] lg:h-[150px] xl:h-[150px]
-                                xxxsm:w-[70px] xxsm:w-[90px] xsm:w-[125px] sm:w-[150px] md:w-[175px] lg:w-[200px] xl:w-[200px]
-                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]`}
+                                style={{
+                                    backgroundColor:
+                                        highlightCorrect === zone
+                                            ? "#4caf50" // Solid green for correct
+                                            : highlightWrong === zone
+                                                ? "#f44336" // Solid red for wrong
+                                                : "rgba(255, 193, 7, 0.5)", // Semi-transparent yellow as default
+                                    border:
+                                        highlightCorrect === zone
+                                            ? "2px solid #4caf50" // Solid green border for correct
+                                            : highlightWrong === zone
+                                                ? "2px solid #f44336" // Solid red border for wrong
+                                                : "2px dashed #FFC107", // Dashed yellow border as default
+                                    borderRadius: "5px", // Rounded corners
+                                    color: "black", // Text color
+                                    textAlign: "center", // Center text
+                                    padding: "10px", // Padding inside the boxes
+                                    transition: "background-color 0.3s ease, border 0.3s ease", // Smooth transition for highlighting
+                                }}
+                                className={`drag-category 
+                                        transform transition duration-75 ease-in-out hover:scale-[1.01]
+                                        xxxsm:h-[70px] xxsm:h-[80px] xsm:h-[90px] sm:h-[100px] md:h-[125px] lg:h-[150px] xl:h-[150px]
+                                        xxxsm:w-[70px] xxsm:w-[90px] xsm:w-[125px] sm:w-[150px] md:w-[175px] lg:w-[200px] xl:w-[200px]
+                                        xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]`}
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={() => handleDrop(zone)}
                             >
