@@ -15,6 +15,7 @@ const MainPage = () => {
     const [user, setUser] = useState(null);
     // session storage:
     const [messages, setMessages] = useState([])
+    const [username, setUsername] = useState('')
     // const [messages, setMessages] = useState(() => {
     //     const savedHistory = sessionStorage.getItem('messages');
     //     return savedHistory ? JSON.parse(savedHistory) : [];
@@ -196,11 +197,24 @@ const MainPage = () => {
                         setMessages([]);
                     }
                 }
+                // fetching username
+                const { data, error: nameError } = await supabase
+                    .from('users')
+                    .select('name')
+                    .eq('user_id', user.id)
+                    .single();
+
+                if (nameError) {
+                    console.error("error fetching username:", nameError.message)
+                } else {
+                    setUsername(data.name);
+                    sessionStorage.setItem('name', JSON.stringify(data.name));
+                }
 
             } catch (error) {
                 console.error("Error during data fetching:", error)
             } finally {
-                // setDataFetched(true);
+            // setDataFetched(true);
                 setIsLoading(false);
                 // console.log("true or false(has to be true, if not then it really is never set): ", dataFetched)
             }
@@ -314,6 +328,7 @@ const MainPage = () => {
                         <ChatBox
                             messages={messages}
                             setMessages={setMessages}
+                            username={username}
                         />
                     </div>
                 </div>

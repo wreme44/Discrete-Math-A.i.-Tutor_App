@@ -39,7 +39,7 @@ const ConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
     );
 };
 
-const ChatBox = ({ messages = [], setMessages }) => {
+const ChatBox = ({ messages = [], setMessages, username }) => {
 
     // console.log("Messages in ChatBox:", messages);
     const [userInput, setUserInput] = useState('');
@@ -245,7 +245,7 @@ const ChatBox = ({ messages = [], setMessages }) => {
             const firstName = fullName.split(' ')[0];
             setName(firstName)
         }
-    }, [])
+    }, [username])
 
     // user text input box height adjustment in case of larger prompts 
     const adjustTextareaHeight = useCallback(() => {
@@ -411,10 +411,11 @@ const ChatBox = ({ messages = [], setMessages }) => {
                         </span>
                     </div>
                 ))) : (
-                    <div className='d-mentor-box xxxsm:gap-12 xxsm:gap-10 xsm:gap-10 sm:gap-10 md:gap-28 lg:gap-24 xl:gap-28'>
-                        <h3 className=''>DiscreteMentor</h3>
-                        <img className="d-mentor xxxsm:w-[200px] xxsm:w-[266px] xsm:w-[266px] sm:w-[300px] md:w-[266px] lg:w-[333px] xl:w-[333px]
-                                        xxxsm:h-[200px] xxsm:h-[266px] xsm:h-[266px] sm:h-[300px] md:h-[266px] lg:h-[333px] xl:h-[333px]"
+                    <div className='d-mentor-box 
+                            xxxsm:mt-[80px] xxsm:mt-[80px] xsm:mt-[50px] sm:mt-[40px] md:mt-[70px] lg:mt-[50px] xl:mt-[50px]'> {/* xxxsm:gap-12 xxsm:gap-10 xsm:gap-10 sm:gap-10 md:gap-28 lg:gap-24 xl:gap-28 */}
+                        {/* <h3 className=''>A</h3> */}
+                        <img className="d-mentor xxxsm:w-[250px] xxsm:w-[275px] xsm:w-[350px] sm:w-[400px] md:w-[255px] lg:w-[322px] xl:w-[333px]
+                                        xxxsm:h-[250px] xxsm:h-[275px] xsm:h-[350px] sm:h-[400px] md:h-[266px] lg:h-[333px] xl:h-[333px]"
                             src='/D.Mentor1.png' />
                     </div>
                 )}
@@ -431,7 +432,7 @@ const ChatBox = ({ messages = [], setMessages }) => {
                 {/* <div className='flex items-end flex-grow'> */}
                     <div className='flex items-end justify-center space-x-1 flex-grow'>
                         <button
-                            className=" mb-[8px] px-0 py-0 
+                            className=" mb-[8px] px-0 py-0 outline-none focus:outline-none
                                 transform transition duration-75 ease-in-out hover:scale-105 active:scale-95"
                             onClick={() => setIsModalOpen(true)}
                         >
