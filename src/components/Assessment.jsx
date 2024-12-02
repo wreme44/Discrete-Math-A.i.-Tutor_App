@@ -85,7 +85,6 @@ const Assessment = () => {
         setScore(0);
     };
 
-
     const fetchFinalQuestions = async () => {
         const { data, error } = await supabase
             .from("assessment")
@@ -107,6 +106,12 @@ const Assessment = () => {
 
     const handleAnswer = (questionId, answer) => {
         setUserAnswers((prevAnswers) => ({ ...prevAnswers, [questionId]: answer }));
+    };
+
+    // Define progressPercentage outside of submitQuiz
+    const progressPercentage = () => {
+        if (questions.length === 0) return 0;
+        return ((currentQuestionIndex + 1) / questions.length) * 100;
     };
 
     const submitQuiz = async () => {
@@ -169,140 +174,138 @@ const Assessment = () => {
 
             setQuestions([]);
             setCurrentQuiz(null);
-        };
+        }
 
-        const progressPercentage = () => {
-            return ((currentQuestionIndex + 1) / questions.length) * 100;
-        };
+        // Removed progressPercentage definition here
+    };
 
-        return (
-            <div className="assessment-page">
-                {!currentQuiz && (
-                    <div className={`sidebar ${showSidebar ? "open" : ""}`}>
-                        <button
-                            className="toggle-sidebar-btn"
-                            onClick={() => setShowSidebar(!showSidebar)}
-                        >
-                            {showSidebar ? "Close" : "Review Incorrect"}
-                        </button>
-                        {showSidebar && (
-                            <div className="incorrect-questions">
-                                <h2>Review Incorrect Questions</h2>
-                                {incorrectQuestions.map((item, idx) => (
-                                    <div key={idx} className="incorrect-item">
-                                        <strong>{item.quiz}:</strong> {item.question} <br />
-                                        <span>Correct Answer: {item.correctAnswer}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                )}
-
-                <div className="main-content">
-                    <h1 className="assessment-header">
-                        {currentQuiz ? `Challenge Center - ${currentQuiz}` : "Challenge Center"}
-                    </h1>
-
-                    {!currentQuiz && (
-                        <div className="quizzes-container">
-                            {quizzes.map((quiz, index) => (
-                                <button
-                                    key={index}
-                                    className={`quiz-button ${completedQuizzes.includes(quiz) ? "completed" : ""
-                                        }`}
-                                    onClick={() =>
-                                        quiz === "Final Assessment"
-                                            ? fetchFinalQuestions()
-                                            : fetchQuestions(quiz)
-                                    }
-                                    style={{
-                                        backgroundColor: completedQuizzes.includes(quiz)
-                                            ? "#28a745"
-                                            : "#393e46",
-                                        color: completedQuizzes.includes(quiz) ? "#ffffff" : "#00adb5",
-                                    }}
-                                >
-                                    {quiz}
-                                </button>
+    return (
+        <div className="assessment-page">
+            {!currentQuiz && (
+                <div className={`sidebar ${showSidebar ? "open" : ""}`}>
+                    <button
+                        className="toggle-sidebar-btn"
+                        onClick={() => setShowSidebar(!showSidebar)}
+                    >
+                        {showSidebar ? "Close" : "Review Incorrect"}
+                    </button>
+                    {showSidebar && (
+                        <div className="incorrect-questions">
+                            <h2>Review Incorrect Questions</h2>
+                            {incorrectQuestions.map((item, idx) => (
+                                <div key={idx} className="incorrect-item">
+                                    <strong>{item.quiz}:</strong> {item.question} <br />
+                                    <span>Correct Answer: {item.correctAnswer}</span>
+                                </div>
                             ))}
                         </div>
                     )}
+                </div>
+            )}
 
-                    {questions.length > 0 && (
-                        <div className="quiz-container">
-                            <h2>
-                                Question {currentQuestionIndex + 1} of{" "}
-                                {currentQuiz === "Final Assessment" ? 12 : 6}
-                            </h2>
-                            <div className="progress-bar">
-                                <div
-                                    className="progress-bar-fill"
-                                    style={{ width: `${progressPercentage()}%` }}
-                                ></div>
-                            </div>
-                            <p>{questions[currentQuestionIndex].question}</p>
-                            <input
-                                type="text"
-                                className="answer-input"
-                                placeholder="Your answer"
-                                value={userAnswers[questions[currentQuestionIndex].question_id] || ""}
-                                onChange={(e) =>
-                                    handleAnswer(
-                                        questions[currentQuestionIndex].question_id,
-                                        e.target.value
-                                    )
-                                }
-                            />
-                            <div className="navigation-buttons">
-                                <button
-                                    className="prev-button"
-                                    onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
-                                    disabled={currentQuestionIndex === 0}
-                                >
-                                    Previous
-                                </button>
-                                <button
-                                    className="next-button"
-                                    onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
-                                    disabled={currentQuestionIndex === questions.length - 1}
-                                >
-                                    Next
-                                </button>
-                            </div>
-                            {currentQuestionIndex === questions.length - 1 && (
-                                <button className="submit-button" onClick={submitQuiz}>
-                                    Submit Quiz
-                                </button>
-                            )}
+            <div className="main-content">
+                <h1 className="assessment-header">
+                    {currentQuiz ? `Challenge Center - ${currentQuiz}` : "Challenge Center"}
+                </h1>
+
+                {!currentQuiz && (
+                    <div className="quizzes-container">
+                        {quizzes.map((quiz, index) => (
                             <button
-                                className="quit-button"
-                                onClick={() => {
-                                    setQuestions([]);
-                                    setCurrentQuiz(null);
+                                key={index}
+                                className={`quiz-button ${completedQuizzes.includes(quiz) ? "completed" : ""
+                                    }`}
+                                onClick={() =>
+                                    quiz === "Final Assessment"
+                                        ? fetchFinalQuestions()
+                                        : fetchQuestions(quiz)
+                                }
+                                style={{
+                                    backgroundColor: completedQuizzes.includes(quiz)
+                                        ? "#28a745"
+                                        : "#393e46",
+                                    color: completedQuizzes.includes(quiz) ? "#ffffff" : "#00adb5",
                                 }}
                             >
-                                Quit Quiz
+                                {quiz}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
+                {questions.length > 0 && (
+                    <div className="quiz-container">
+                        <h2>
+                            Question {currentQuestionIndex + 1} of{" "}
+                            {currentQuiz === "Final Assessment" ? 12 : 6}
+                        </h2>
+                        <div className="progress-bar">
+                            <div
+                                className="progress-bar-fill"
+                                style={{ width: `${progressPercentage()}%` }}
+                            ></div>
+                        </div>
+                        <p>{questions[currentQuestionIndex].question}</p>
+                        <input
+                            type="text"
+                            className="answer-input"
+                            placeholder="Your answer"
+                            value={userAnswers[questions[currentQuestionIndex].question_id] || ""}
+                            onChange={(e) =>
+                                handleAnswer(
+                                    questions[currentQuestionIndex].question_id,
+                                    e.target.value
+                                )
+                            }
+                        />
+                        <div className="navigation-buttons">
+                            <button
+                                className="prev-button"
+                                onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
+                                disabled={currentQuestionIndex === 0}
+                            >
+                                Previous
+                            </button>
+                            <button
+                                className="next-button"
+                                onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
+                                disabled={currentQuestionIndex === questions.length - 1}
+                            >
+                                Next
                             </button>
                         </div>
-                    )}
+                        {currentQuestionIndex === questions.length - 1 && (
+                            <button className="submit-button" onClick={submitQuiz}>
+                                Submit Quiz
+                            </button>
+                        )}
+                        <button
+                            className="quit-button"
+                            onClick={() => {
+                                setQuestions([]);
+                                setCurrentQuiz(null);
+                            }}
+                        >
+                            Quit Quiz
+                        </button>
+                    </div>
+                )}
 
-                    <CustomModal
-                        isOpen={showCongratulatoryModal}
-                        onClose={() => setShowCongratulatoryModal(false)}
-                    >
-                        <h2>Congratulations!</h2>
-                        <p>You passed the quiz! 🎉</p>
-                        <p>
-                            Your Score: {score}/
-                            {currentQuiz === "Final Assessment" ? 12 : 6}
-                        </p>
-                        <button onClick={() => setShowCongratulatoryModal(false)}>Close</button>
-                    </CustomModal>
-                </div>
+                <CustomModal
+                    isOpen={showCongratulatoryModal}
+                    onClose={() => setShowCongratulatoryModal(false)}
+                >
+                    <h2>Congratulations!</h2>
+                    <p>You passed the quiz! 🎉</p>
+                    <p>
+                        Your Score: {score}/
+                        {currentQuiz === "Final Assessment" ? 12 : 6}
+                    </p>
+                    <button onClick={() => setShowCongratulatoryModal(false)}>Close</button>
+                </CustomModal>
             </div>
-        );
-    };
+        </div>
+    );
 };
-export default Assessment;
 
+export default Assessment;
