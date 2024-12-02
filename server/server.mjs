@@ -232,6 +232,11 @@ app.post('/api/validate-solution', async (req, res) => {
                         When sending the JSON response, do not wrap it in triple backticks. Simply return valid JSON without any markdown or code block formatting. 
                         3. If the solution is correct:
                             - Congratulate ${userName} with an encouraging message in the feedback.
+                            - Make the congratulatory message unique and varied by choosing from a range of tones, such as:
+                                * Excited (e.g., "Fantastic work, ${userName}! You nailed it!")
+                                * Reassuring (e.g., "Great job, ${userName}! You're really getting the hang of this.")
+                                * Motivational (e.g., "Excellent, ${userName}! Keep up the amazing work.")
+                                * Informative (e.g., "Well done, ${userName}! Your understanding of this concept is spot on.")
                         4. If the solution is incorrect:
                             - Encourage ${userName} to keep trying with a supportive message in the feedback. 
                             - Do not reveal the correct answer.
@@ -239,7 +244,7 @@ app.post('/api/validate-solution', async (req, res) => {
                         5. If the content in the image solution is not directly related to the exercise question provided:
                             - Consider it a false solution, and do not evaluate it further.
                             - Instead, respond with a feedback message indicating that the image solution does not relate to the question and encourage ${userName} to submit a valid solution.
-                        Always ensure the feedback is encouraging and constructive to foster learning and confidence.`
+                        Always ensure the feedback is encouraging and constructive to foster learning and confidence. Make use of varied language to keep the feedback engaging and personalized.`
 
                         // (e.g., "You're on the right track, Alex. Here's how you can improve: ..."
                         // (e.g., "Great job, Alex! Your solution is correct and shows a strong understanding of the concept.").
