@@ -249,7 +249,7 @@ const Assessment = () => {
                                     }
                                     style={{
                                         backgroundColor: isPassed ? "#16c2a2" : "", // Green for passed quizzes
-                                        color: isPassed ? "#000000" : "#00adb5",
+                                        color: isPassed ? "#dcdcdc" : "#00adb5",
                                     }}
                                 >
                                     {quiz}
