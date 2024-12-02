@@ -326,7 +326,7 @@ const ExercisesPage = ({
         // }
         const userName = name
         const payload = { messages, userName }
-        
+
         // console.log("Sending payload:", payload);
         // store users submitted solution
         setSubmittedSolutions((prev) => ({
@@ -805,7 +805,7 @@ const ExercisesPage = ({
 
     useEffect(() => {
         const savedName = sessionStorage.getItem('name')
-        if (savedName){
+        if (savedName) {
             const fullName = JSON.parse(savedName);
             const firstName = fullName.split(' ')[0];
             setName(firstName)
@@ -858,7 +858,9 @@ const ExercisesPage = ({
             {!showGames ? (
                 <div className="flex flex-col h-full -mt-2">
                     {currentLessonId && (
-                        <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[18px] lg:text-[20px] xl:text-[20px] font-bold mb-1">Exercise {currentLessonIndex + 1}</h2>
+                        <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[18px] lg:text-[20px] xl:text-[20px] font-bold mb-1">
+                            Exercise {currentExerciseIndex + 1}: {lessonsData[currentLessonIndex]?.title.replace(/^Lesson \d+:\s*/, '')}
+                        </h2>
                     )}
                     <div ref={scrollableContainerRef} className="flex-1 overflow-y-auto pl-1 pb-1 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                         {currentExercises.map((exercise) => (

@@ -12,7 +12,7 @@ const UserProgress = () => {
     const [lessonsData, setLessonsData] = useState([]);
     const [totalExercises, setTotalExercises] = useState(0);
     const [completedExercises, setCompletedExercises] = useState(0);
-    const [totalLessons, setTotalLessons] = useState(10);
+    const [totalLessons, setTotalLessons] = useState(13);
     const [completedLessons, setCompletedLessons] = useState(0);
     const [lessonProgress, setLessonProgress] = useState([]);
     const [scriptLoaded, setScriptLoaded] = useState(false);
@@ -290,14 +290,14 @@ const UserProgress = () => {
                     xxxsm:mb-[10px] xxsm:mb-[20px] xsm:mb-[25px] sm:mb-[25px] md:mb-[20px] lg:mb-[20px] xl:mb-[10px]
                     xxxsm:mt-[35px] xxsm:mt-[30px] xsm:mt-[25px] sm:mt-[20px] md:mt-[10px] lg:mt-[0px] xl:mt-[0px] 
                     font-semibold text-white flex justify-center">
-                        Progress Status
+                    Progress Status
                 </h3>
                 {/* <img className="w-6 ml-3" alt="status" src="/progress-icon.svg" /> */}
             </div>
             {/* Progress Bar */}
             <div className="progress-container 
-            xxxsm:mb-[50px] xxsm:mb-[55px] xsm:mb-[55px] sm:mb-[60px] md:mb-[50px] lg:mb-[40px] xl:mb-[20px]" 
-            style={{ position: "relative", width: "auto", height: "auto" }}>
+            xxxsm:mb-[50px] xxsm:mb-[55px] xsm:mb-[55px] sm:mb-[60px] md:mb-[50px] lg:mb-[40px] xl:mb-[20px]"
+                style={{ position: "relative", width: "auto", height: "auto" }}>
                 <div className="text-white font-semibold mr-2
                 xxxsm:text-[8px] xxsm:text-[10px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[18px] xl:text-[20px]
                 xxxsm:mr-[0px] xxsm:mr-[0px] xsm:mr-[0px] sm:mr-[5px] md:mr-[8px] lg:mr-[8px] xl:mr-[8px]">
@@ -310,7 +310,7 @@ const UserProgress = () => {
                     // data-preset="bubble"
                     // data-fill-background="#ba21829c"
                     data-fill="data:ldbar/res,bubble(#ffbb00,#00336a,30,5)"
-                    data-fill-background="#2c62d780" 
+                    data-fill-background="#2c62d780"
                     // data-path="M10 10L90 10L90 90L10 90Z"
                     data-type="fill"
                     data-img="/cupcake.svg"
@@ -347,7 +347,7 @@ const UserProgress = () => {
                     // data-stroke="data:ldbar/res,gradient(0,1,#ff9,#fc9)"
                     // data-fill="data:ldbar/res,gradient(0,1, rgba(100, 10, 100, 0.7), rgba(150, 50, 150, 0.5))"
                     data-fill="data:ldbar/res,bubble(#ff00a6,#00336a,50,1)"
-                    data-fill-background="#0d214b" 
+                    data-fill-background="#0d214b"
                     // data-type="fill"
                     // data-img="/cupcake.svg"
                     // data-path="M50 10 C20 10, 0 40, 50 70 C100 40, 80 10, 50 10 Z"
@@ -357,9 +357,9 @@ const UserProgress = () => {
                     data-stroke-width="10"
                     data-duration="6"
                     data-pattern-size="33"
-                    // data-label="false"
-                    // data-value={completionPercentage}
-                    // data-unit="%"
+                // data-label="false"
+                // data-value={completionPercentage}
+                // data-unit="%"
                 ></div>
                 {/* <div className="progress-label">
                         {completionPercentage}
@@ -441,14 +441,14 @@ const UserProgress = () => {
                                             data-stroke="data:ldbar/res,gradient(0,3,#9df,#9fd,#df9,#fd9)"
                                             data-preset="rainbow"
                                             data-duration="15"
-                                            // data-preset="energy"
-                                            // data-preset="text"
-                                            // data-stroke="data:ldbar/res,gradient(0,1,#ff00a6,#00336a)"
-                                            // data-fill="data:ldbar/res,gradient(90,1,#2151bac2,#ba21829c)"
-                                            // data-fill="data:ldbar/res,stripe(#f00,#0f0,0.5)"
-                                            // stroke="red"
-                                            // data-path="M10 20Q20 15 30 20Q40 25 50 20Q60 15 70 20Q80 25 90 20"
-                                            // data-label="false"
+                                        // data-preset="energy"
+                                        // data-preset="text"
+                                        // data-stroke="data:ldbar/res,gradient(0,1,#ff00a6,#00336a)"
+                                        // data-fill="data:ldbar/res,gradient(90,1,#2151bac2,#ba21829c)"
+                                        // data-fill="data:ldbar/res,stripe(#f00,#0f0,0.5)"
+                                        // stroke="red"
+                                        // data-path="M10 20Q20 15 30 20Q40 25 50 20Q60 15 70 20Q80 25 90 20"
+                                        // data-label="false"
                                         ></div>
                                         <div className="flex justify-center
                                         xxxsm:text-[9px] xxsm:text-[10px] xsm:text-[11px] sm:text-[12px] md:text-[13px] lg:text-[14px] xl:text-[14px]">
