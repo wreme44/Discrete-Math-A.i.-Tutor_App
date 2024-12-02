@@ -210,26 +210,27 @@ const Assessment = () => {
 
                 {!currentQuiz && (
                     <div className="quizzes-container">
-                        {quizzes.map((quiz, index) => (
-                            <button
-                                key={index}
-                                className={`quiz-button ${completedQuizzes.includes(quiz) ? "completed" : ""
-                                    }`}
-                                onClick={() =>
-                                    quiz === "Final Assessment"
-                                        ? fetchFinalQuestions()
-                                        : fetchQuestions(quiz)
-                                }
-                                style={{
-                                    backgroundColor: completedQuizzes.includes(quiz)
-                                        ? "#28a745"
-                                        : "#393e46",
-                                    color: completedQuizzes.includes(quiz) ? "#ffffff" : "#00adb5",
-                                }}
-                            >
-                                {quiz}
-                            </button>
-                        ))}
+                        {quizzes.map((quiz, index) => {
+                            const isPassed = completedQuizzes.includes(quiz); // Check if the quiz is completed (passed)
+                            return (
+                                <button
+                                    key={index}
+                                    className={`quiz-button ${isPassed ? "completed" : ""}`}
+                                    onClick={() =>
+                                        quiz === "Final Assessment"
+                                            ? fetchFinalQuestions()
+                                            : fetchQuestions(quiz)
+                                    }
+                                    style={{
+                                        backgroundColor: isPassed ? "#28a745" : "#393e46", // Green for passed quizzes
+                                        color: isPassed ? "#ffffff" : "#00adb5",
+                                    }}
+                                >
+                                    {quiz}
+                                </button>
+                            );
+                        })}
+
                     </div>
                 )}
 
