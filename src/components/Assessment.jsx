@@ -26,6 +26,16 @@ const Assessment = () => {
         return savedUserId ? JSON.parse(savedUserId) : null;
     });
 
+    useEffect(() => {
+        // Add class to body
+        document.body.classList.add('assessmentBody');
+
+        return () => {
+            // Remove class when leaving the page
+            document.body.classList.remove('assessmentBody');
+        };
+    }, []);
+
     // Fetch completed quizzes on load
     useEffect(() => {
         const fetchCompletedQuizzes = async () => {
@@ -179,21 +189,32 @@ const Assessment = () => {
         // Removed progressPercentage definition here
     };
 
+
+
     return (
-        <div className="assessment-page">
+        <div className="assessment-page
+        xxxsm:pt-[60px] xxsm:pt-[60px] xsm:pt-[60px] sm:pt-[60px] md:pt-[60px] lg:pt-[60px] xl:pt-[60px]
+        xxxsm:px-[10px] xxsm:px-[12px] xsm:px-[15px] sm:px-[32px] md:px-[20px] lg:px-[20px] xl:px-[32px]">
             {!currentQuiz && (
-                <div className={`sidebar ${showSidebar ? "open" : ""}`}>
+                <div className={`sidebar ${showSidebar ? "open" : ""}
+                xxxsm:text-[9px] xxsm:text-[10px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]
+                xxxsm:w-[125px] xxsm:w-[150px] xsm:w-[175px] sm:w-[200px] md:w-[250px] lg:w-[300px] xl:w-[300px]`}>
                     <button
-                        className="toggle-sidebar-btn"
+                        className="toggle-sidebar-btn
+                        xxxsm:right-[135px] xxsm:right-[160px] xsm:right-[185px] sm:right-[210px] md:right-[260px] lg:right-[310px] xl:right-[310px]"
                         onClick={() => setShowSidebar(!showSidebar)}
                     >
                         {showSidebar ? "Close" : "Review Incorrect"}
                     </button>
                     {showSidebar && (
                         <div className="incorrect-questions">
-                            <h2>Review Incorrect Questions</h2>
+                            <h2 className="
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] xl:text-[24px]">
+                                Review Incorrect Questions
+                            </h2>
                             {incorrectQuestions.map((item, idx) => (
-                                <div key={idx} className="incorrect-item">
+                                <div key={idx} className="incorrect-item
+                                xxxsm:text-[10px] xxsm:text-[10px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[17px] xl:text-[18px]">
                                     <strong>{item.quiz}:</strong> {item.question} <br />
                                     <span>Correct Answer: {item.correctAnswer}</span>
                                 </div>
@@ -204,26 +225,31 @@ const Assessment = () => {
             )}
 
             <div className="main-content">
-                <h1 className="assessment-header">
+                <h1 className="assessment-header font-semibold
+                xxxsm:mb-[30px] xxsm:mb-[40px] xsm:mb-[50px] sm:mb-[60px] md:mb-[70px] lg:mb-[80px] xl:mb-[90px]
+                xxxsm:text-[18px] xxsm:text-[20px] xsm:text-[26px] sm:text-[32px] md:text-[36px] lg:text-[39px] xl:text-[45px]">
                     {currentQuiz ? `Challenge Center - ${currentQuiz}` : "Challenge Center"}
                 </h1>
 
                 {!currentQuiz && (
-                    <div className="quizzes-container">
+                    <div className="quizzes-container xxxsm:flex-col xsm:flex-row items-center p-[10px]">
                         {quizzes.map((quiz, index) => {
                             const isPassed = completedQuizzes.includes(quiz); // Check if the quiz is completed (passed)
                             return (
                                 <button
                                     key={index}
-                                    className={`quiz-button ${isPassed ? "completed" : ""}`}
+                                    className={`quiz-button ${isPassed ? "completed" : ""}
+                                    bg-gradient-to-r from-[#414854] to-[#393e46] hover:from-[#393e46]  
+                            hover:to-[#414854] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] text-[#00adb5] hover:text-[#FFFFFF]
+                            font-[500] xxxsm:text-[12px] xxsm:text-[14px] xsm:text-[18px] sm:text-[20px] md:text-[25px] lg:text-[28px] xl:text-[28px]`}
                                     onClick={() =>
                                         quiz === "Final Assessment"
                                             ? fetchFinalQuestions()
                                             : fetchQuestions(quiz)
                                     }
                                     style={{
-                                        backgroundColor: isPassed ? "#28a745" : "#393e46", // Green for passed quizzes
-                                        color: isPassed ? "#ffffff" : "#00adb5",
+                                        backgroundColor: isPassed ? "#16c2a2" : "", // Green for passed quizzes
+                                        color: isPassed ? "#000000" : "#00adb5",
                                     }}
                                 >
                                     {quiz}
@@ -236,20 +262,23 @@ const Assessment = () => {
 
                 {questions.length > 0 && (
                     <div className="quiz-container">
-                        <h2>
+                        <h2 className="font-[500] xxxsm:text-[12px] xxsm:text-[14px] xsm:text-[18px] sm:text-[20px] md:text-[22px] lg:text-[26px] xl:text-[28px]">
                             Question {currentQuestionIndex + 1} of{" "}
                             {currentQuiz === "Final Assessment" ? 12 : 6}
                         </h2>
-                        <div className="progress-bar">
+                        <div className="progress-bar
+                        xxxsm:h-[12px] xxsm:h-[14px] xsm:h-[16px] sm:h-[18px] md:h-[19px] lg:h-[20px] xl:h-[20px]">
                             <div
                                 className="progress-bar-fill"
                                 style={{ width: `${progressPercentage()}%` }}
                             ></div>
                         </div>
-                        <p>{questions[currentQuestionIndex].question}</p>
+                        <p className="font-[500] xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[16px] md:text-[18x] lg:text-[19px] xl:text-[20px]">
+                            {questions[currentQuestionIndex].question}</p>
                         <input
                             type="text"
-                            className="answer-input"
+                            className="answer-input
+                            font-[500] xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[15px] md:text-[16x] lg:text-[16px] xl:text-[18px]"
                             placeholder="Your answer"
                             value={userAnswers[questions[currentQuestionIndex].question_id] || ""}
                             onChange={(e) =>
@@ -261,27 +290,42 @@ const Assessment = () => {
                         />
                         <div className="navigation-buttons">
                             <button
-                                className="prev-button"
+                                className="prev-button
+                                bg-[#00adb5] rounded-full hover:bg-[#00eaf6]
+                            xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]
+                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                            focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)]"
                                 onClick={() => setCurrentQuestionIndex(currentQuestionIndex - 1)}
                                 disabled={currentQuestionIndex === 0}
                             >
-                                Previous
+                                <img className='' alt='... ...' src='/prev-page.svg' />
                             </button>
                             <button
-                                className="next-button"
+                                className="next-button
+                                bg-[#00adb5] rounded-full hover:bg-[#00eaf6]
+                            xxxsm:w-[27px] xxsm:w-[32px] xsm:w-[32px] sm:w-[35px] md:w-[40px] lg:w-[42px] xl:w-[42px]
+                            transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
+                            focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)]"
                                 onClick={() => setCurrentQuestionIndex(currentQuestionIndex + 1)}
                                 disabled={currentQuestionIndex === questions.length - 1}
                             >
-                                Next
+                               <img className='' alt='... ...' src='/next-page.svg' />
                             </button>
                         </div>
                         {currentQuestionIndex === questions.length - 1 && (
-                            <button className="submit-button" onClick={submitQuiz}>
-                                Submit Quiz
+                            <button className="submit-button mr-2 font-[500]
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[15px] md:text-[16x] lg:text-[16px] xl:text-[18px]
+                            bg-gradient-to-r from-[#00adb5] to-[#00dbe6] hover:from-[#12e9f5]  
+                            hover:to-[#45d7df] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)]" 
+                            onClick={submitQuiz}>
+                                Submit
                             </button>
                         )}
                         <button
-                            className="quit-button"
+                            className="quit-button
+                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[14px] sm:text-[15px] md:text-[16x] lg:text-[16px] xl:text-[18px]
+                            bg-gradient-to-r from-[rgb(0,0,0)] to-[rgba(28,15,15,0.72)] hover:from-[rgba(255,17,0,0.72)]  
+                            hover:to-[rgb(255,0,0)] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)]"
                             onClick={() => {
                                 setQuestions([]);
                                 setCurrentQuiz(null);
