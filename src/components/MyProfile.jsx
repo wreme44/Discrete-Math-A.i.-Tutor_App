@@ -259,7 +259,7 @@ const MyProfile = () => {
                                             xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleMainPageNav}>
                                     <div className="relative flex items-center justify-center">
-                                        <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/learn-icon.svg" />
+                                        <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/learn-icon-black.svg" />
                                         <span className="ml-0 mr-0">Lessons & Exercises</span>
                                     </div>
                                 </button>
@@ -268,7 +268,7 @@ const MyProfile = () => {
                                             xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleCheckStatus}>
                                     <div className="relative flex items-center justify-center">
-                                        <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/check-status.svg" />
+                                        <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/check-status-black.svg" />
                                         <span className="ml-0 mr-0">Check Your Progress</span>
                                     </div>
                                 </button>
@@ -280,7 +280,7 @@ const MyProfile = () => {
                                     onClick={handleAssessmentNavigation}
                                 >
                                     <div className="relative flex items-center justify-center">
-                                        <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/exam-icon.svg" />
+                                        <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/exam-icon-black.svg" />
                                         <span className="ml-0 mr-0">Challenge Center</span>
                                     </div>
                                 </button>
@@ -291,7 +291,7 @@ const MyProfile = () => {
                                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
                                     onClick={handleGamesNavigation}>
                                     <div className="relative flex items-center justify-center">
-                                        <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Games" src="/games-profile.svg" />
+                                        <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Games" src="/games-profile-black.svg" />
                                         <span className="">Game Hub</span> {/* absolute left-1/2 transform -translate-x-1/2 mx-auto*/}
                                     </div>
                                 </button>
@@ -301,12 +301,12 @@ const MyProfile = () => {
                                             xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleEditProfile}>
                                     {isEditing ? (
                                         <div className="relative flex items-center justify-center"> {/* justify-center */}
-                                            <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/cancel-edit.svg" />
+                                            <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/cancel-edit-black.svg" />
                                             <span className="">Cancel Edit</span>
                                         </div>
                                     ) : (
                                         <div className="relative flex items-center justify-center">
-                                            <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/edit-profile.svg" />
+                                            <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/edit-profile-black.svg" />
                                             <span className="">Edit Username</span>
                                         </div>
                                     )}
@@ -350,7 +350,10 @@ const MyProfile = () => {
                                 {/* Delete profile button */}
                                 <button className="delete-account-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[80%] md:w-[70%] lg:w-[70%] xl:w-[70%]
                                             xxxsm:mt-[15px] xxsm:mt-[20px] xsm:mt-[20px] sm:mt-[30px] md:mt-[30px] lg:mt-[40px] xl:mt-[40px]
-                                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]" onClick={handleDeleteProfile}>
+                                            xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[14px] md:text-[16px] lg:text-[16px] xl:text-[16px]
+                                            bg-gradient-to-r from-[#162936] to-[rgb(0,28,54)] hover:from-[rgb(255,47,47)]  
+                                                hover:to-[rgb(194,0,0)] text-[#ff0000] hover:text-[#ffffff]" 
+                                            onClick={handleDeleteProfile}>
                                     <div className="relative flex items-center justify-center">
                                         <img className="del-profile-icon absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-4 sm:w-4 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/delete-user.svg" />
                                         <span className="">Delete Profile</span>
@@ -444,25 +447,34 @@ const MyProfile = () => {
                                         {/* Lessons & Exercises button (MainPage) */}
                                         <button className="main-page-nav-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[70%] sm:w-[70%] md:w-[58%] lg:w-[70%] xl:w-[70%]
                                                 xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
-                                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleMainPageNav}>
+                                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]
+                                                bg-gradient-to-r from-[rgb(91,165,240)] to-[rgb(7,116,174)] hover:from-[rgb(7,116,174)]  
+                                                hover:to-[rgb(91,165,240)] text-black font-[700]" 
+                                                onClick={handleMainPageNav}>
                                             <div className="relative flex items-center justify-center">
-                                                <img className="absolute left-[-8px] xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/learn-icon.svg" />
+                                                <img className="absolute left-[-8px] xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/learn-icon-black.svg" />
                                                 <span className="ml-0 mr-0">Lessons & Exercises</span>
                                             </div>
                                         </button>
                                         {/* Check Progress Status */}
                                         <button className="check-status-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[70%] sm:w-[70%] md:w-[58%] lg:w-[70%] xl:w-[70%]
                                                 xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
-                                                xxxsm:text-[20px] xxsm:text-[11px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={handleCheckStatus}>
+                                                xxxsm:text-[20px] xxsm:text-[11px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]
+                                                bg-gradient-to-r from-[rgb(91,165,240)] to-[rgb(7,116,174)] hover:from-[rgb(7,116,174)]  
+                                                hover:to-[rgb(91,165,240)] text-black font-[700]" 
+                                                onClick={handleCheckStatus}>
                                             <div className="relative flex items-center justify-center">
-                                                <img className="absolute left-[-8px] xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/check-status.svg" />
+                                                <img className="absolute left-[-8px] xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/check-status-black.svg" />
                                                 <span className="ml-0 mr-0">Check Your Progress</span>
                                             </div>
                                         </button>
                                         {/* EDIT - Toggle the update name form */}
                                         <button className="edit-profile-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[70%] sm:w-[70%] md:w-[58%] lg:w-[70%] xl:w-[70%]
                                                 xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
-                                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]" onClick={() => setIsEditModalOpen(true)}>
+                                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]
+                                                bg-gradient-to-r from-[rgb(91,165,240)] to-[rgb(7,116,174)] hover:from-[rgb(7,116,174)]  
+                                                hover:to-[rgb(91,165,240)] text-black font-[700]" 
+                                                onClick={() => setIsEditModalOpen(true)}>
                                             {isEditing ? (
                                                 <div className="relative flex items-center justify-center"> {/* justify-center */}
                                                     <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/cancel-edit.svg" />
@@ -470,7 +482,7 @@ const MyProfile = () => {
                                                 </div>
                                             ) : (
                                                 <div className="relative flex items-center justify-center">
-                                                    <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/edit-profile.svg" />
+                                                    <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto mr-2" alt="Submit" src="/edit-profile-black.svg" />
                                                     <span className="">Edit Username</span>
                                                 </div>
                                             )}
@@ -522,11 +534,13 @@ const MyProfile = () => {
                                         <button
                                             className="challenges-button-row xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[85%] md:w-[72%] lg:w-[85%] xl:w-[85%]
                                                 xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
-                                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]"
+                                                xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]
+                                                bg-gradient-to-r from-[rgb(91,165,240)] to-[rgb(7,116,174)] hover:from-[rgb(7,116,174)]  
+                                                hover:to-[rgb(91,165,240)] text-black font-[700]"
                                             onClick={handleAssessmentNavigation}
                                         >
                                             <div className="relative flex items-center justify-center">
-                                                <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/exam-icon.svg" />
+                                                <img className="absolute left-[-5px] xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/exam-icon-black.svg" />
                                                     <span className="ml-0 mr-0">Challenge Center</span>
                                                 </div>
                                             </button>
@@ -535,12 +549,12 @@ const MyProfile = () => {
                                                 className="games-button-profile-row xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[85%] md:w-[72%] lg:w-[85%] xl:w-[85%]
                                                 xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                                 xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]
-                                               
-                                                
-                                                xxxsm:mb-[2px] xxsm:mb-[2px] xsm:mb-[3px] sm:mb-[5px] md:mb-[12px] lg:mb-[15px] xl:mb-[15px]"
+                                                xxxsm:mb-[2px] xxsm:mb-[2px] xsm:mb-[3px] sm:mb-[5px] md:mb-[12px] lg:mb-[15px] xl:mb-[15px]
+                                                bg-gradient-to-r from-[rgb(91,165,240)] to-[rgb(7,116,174)] hover:from-[rgb(7,116,174)]  
+                                                hover:to-[rgb(91,165,240)] text-black font-[700]"
                                                 onClick={handleGamesNavigation}>
                                                 <div className="relative flex items-center justify-center">
-                                                    <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto mr-2" alt="Games" src="/games-profile.svg" />
+                                                    <img className="absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto mr-2" alt="Games" src="/games-profile-black.svg" />
                                                     <span className="">Game Hub</span> {/* absolute left-1/2 transform -translate-x-1/2 mx-auto*/}
                                                 </div>
                                             </button>
@@ -548,7 +562,8 @@ const MyProfile = () => {
                                         <button className="delete-account-button xxxsm:w-[80%] xxsm:w-[80%] xsm:w-[80%] sm:w-[85%] md:w-[72%] lg:w-[85%] xl:w-[85%]
                                                 xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[2px] sm:my-[4px] md:my-[8px] lg:my-[10px] xl:my-[10px]
                                                 xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]
-                                                 bg-[#153068] text-[#ff0000] hover:text-[#000000] hover:bg-[#ff0000]" onClick={handleDeleteProfile}>
+                                                bg-gradient-to-r from-[#162936] to-[rgb(0,28,54)] hover:from-[rgb(255,47,47)]  
+                                                hover:to-[rgb(194,0,0)] text-[#ff0000] hover:text-[#ffffff]" onClick={handleDeleteProfile}>
                                             <div className="relative flex items-center justify-center">
                                                 <img className="del-profile-icon absolute left-0 xxxsm:w-3 xxsm:w-4 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/delete-user.svg" />
                                                 <span className="">Delete Profile</span>
@@ -560,10 +575,11 @@ const MyProfile = () => {
                                     <button className="signout-button xxxsm:w-[30%] xxsm:w-[30%] xsm:w-[30%] sm:w-[27%] md:w-[25%] lg:w-[30%] xl:w-[35%]
                                                 xxxsm:my-[2px] xxsm:my-[2px] xsm:my-[3px] sm:my-[5px] md:my-[12px] lg:my-[15px] xl:my-[15px]
                                                 xxxsm:text-[10px] xxsm:text-[12px] xsm:text-[12px] sm:text-[13px] md:text-[14px] lg:text-[16px] xl:text-[16px]
-                                                bg-gradient-to-r from-[#10506c] to-[rgb(12,103,152)] hover:from-[rgb(12,103,152)]  
-                                    hover:to-[rgb(75,143,211)]" onClick={handleSignOut}>
+                                                bg-gradient-to-r from-[rgb(179,196,212)] to-[rgb(136,140,144)] hover:from-[rgb(232,232,233)]  
+                                    hover:to-[rgb(188,188,188)] text-[#000000] hover:text-[#000000]" 
+                                    onClick={handleSignOut}>
                                             <div className="relative flex items-center justify-center">
-                                                <img className="absolute left-0 xxxsm:w-2 xxsm:w-2 xsm:w-3 sm:w-3 md:w-5 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/log-out.svg" />
+                                                <img className="absolute left-0 xxxsm:w-2 xxsm:w-2 xsm:w-3 sm:w-3 md:w-4 lg:w-5 xl:w-5 h-auto" alt="Submit" src="/log-out-black.svg" />
                                                 <span className="">Sign Out</span>
                                             </div>
                                         </button>
@@ -597,7 +613,7 @@ const MyProfile = () => {
                                     <div className="flex items-end justify-end">
                                     <button
                                         className="bg-gradient-to-r from-[rgb(75,143,211)] to-[rgb(12,103,152)] hover:from-[rgb(12,103,152)]  
-                                    hover:to-[rgb(75,143,211)] text-black focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
+                                    hover:to-[rgb(75,143,211)] text-black  hover:text-[#ffffff] focus:outline-none focus:ring-2 focus:ring-[rgba(0,0,0,0)] rounded
                                     transform transition duration-75 ease-in-out hover:scale-105 active:scale-95
                                     xxxsm:px-[8px] xxsm:px-[10px] xsm:px-[10px] sm:px-[12px] md:px-[12px] lg:px-[15px] xl:px-[15px]
                                     xxxsm:py-[2px] xxsm:py-[2px] xsm:py-[2px] sm:py-[2px] md:py-[2px] lg:py-[2px] xl:py-[2px]

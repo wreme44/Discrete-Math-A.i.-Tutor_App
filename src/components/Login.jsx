@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import Modal from 'react-modal';
 
@@ -12,6 +12,7 @@ const Login = () => {
     const [resetEmail, setResetEmail] = useState('');
     const [resetNotification, setResetNotification] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogin = async (email, password) => {
         setNotification('');
@@ -29,6 +30,9 @@ const Login = () => {
             console.error(error);
         } else if (data) {
             navigate('/myProfile');
+            setTimeout(() => {
+                window.location.reload();
+            }, 200); 
         }
     }
 
@@ -62,7 +66,7 @@ const Login = () => {
     }, []);
 
     return (
-        <div className="body-login mb-[60px]
+        <div className="body-login mb-[150px]
         xxxsm:mt-[100px] xxsm:mt-[125px] xsm:mt-[150px] sm:mt-[175px] md:mt-[200px] lg:mt-[200px] xl:mt-[200px]">
             <div className="login-page">
                 <div className="login-container w-full xxxsm:w-[180px] xxsm:w-[220px] xsm:w-[300px] sm:w-[350px] md:w-[350px] lg:w-[400px] xl:w-[400px] 
