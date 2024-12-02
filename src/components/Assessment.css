@@ -53,7 +53,18 @@
 /* Incorrect Questions Section */
 .incorrect-questions {
   padding: 1rem;
+  overflow-y: auto;
+  /* Enables vertical scrolling */
+  max-height: 600px;
+  /* Limits the height of the container */
+  border: 1px solid #393e46;
+  /* Optional: Adds a border for better visibility */
+  background-color: #222831;
+  /* Keeps the background consistent */
+  border-radius: 5px;
+  /* Rounds the corners */
 }
+
 
 .incorrect-questions h2 {
   color: #00adb5;
