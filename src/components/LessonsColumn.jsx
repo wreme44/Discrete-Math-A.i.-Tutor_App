@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { ChevronDownIcon, XMarkIcon } from '@heroicons/react/24/solid'
 import { marked } from "marked";
 import DOMPurify from "dompurify";
-import LatexRenderer from "./LatexRenderer";
+import LatexRendererLessons from "./LatexRendererLessons";
 import {motion, AnimatePresence} from "framer-motion";
 // import ReactMarkdown from 'react-markdown'
 // import remarkHtml from 'remark-html';
@@ -90,7 +90,7 @@ const LessonsColumn = ({
 
         if (hasLatex) {
             // If LaTeX is detected, use LatexRenderer for LaTeX content
-            return <LatexRenderer content={content} />;
+            return <LatexRendererLessons content={content} />;
         } else {
            
             // return <LatexRenderer content={content} />;
@@ -105,6 +105,7 @@ const LessonsColumn = ({
             // Render non-LaTeX content as plain HTML
             return (
                 <div
+                    className="lessons-container"
                     dangerouslySetInnerHTML={{
                         __html: DOMPurify.sanitize(marked(content)),
                     }}
@@ -270,7 +271,7 @@ const LessonsColumn = ({
                     </AnimatePresence>
                 </div>
             )} {/* ref={lessonContainerRef} */}
-            <div ref={scrollableContainerRef} className="IMGs-lessons flex-1 overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+            <div ref={scrollableContainerRef} className="IMGs-lessons flex-1 text-center overflow-y-auto pl-2 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                 {currentLesson && <>{renderContent(currentLesson.content)}</>}
             </div>
             <div className="modalZoomIMGs" id="imageModal">

@@ -344,7 +344,7 @@ body.profileBody {
     background-size: 100vw 100vh; */
     /* background-attachment: fixed; */
     /* background-position: center 20px; */
-    padding-top: 70px;
+    /* padding-top: 90px; */
     margin-bottom: 25px;
     /* overflow-y: auto; */
 
@@ -390,7 +390,7 @@ body.profileBody {
 }
 
 .profile-container-left {
-    background-color: #4a91e245;
+    /* background-color: #4a91e245; */
     /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('D.Mentor5.png'); */
     /* background-repeat: no-repeat;
   background-size: 80% 80%;
@@ -399,9 +399,9 @@ body.profileBody {
     /* backdrop-filter: blur(5px); */
     /* padding: 20px; */
     /* border: 2px solid rgba(48, 122, 183, 0.768); */
-    border-radius: 20px;
+    /* border-radius: 20px; */
     text-align: center;
-    box-shadow: 0px 0px 30px 1px rgba(0, 157, 255, 0.777);
+    /* box-shadow: 0px 0px 30px 1px rgba(0, 157, 255, 0.777); */
     /* horizontal pos, vertical pos, blur radius, spread radius*/
     /* width: 350px; */
     /* height: 350px; */
@@ -409,7 +409,7 @@ body.profileBody {
 }
 
 .profile-container-right {
-    background-color: #4a91e245;
+    /* background-color: #4a91e245; */
     /* background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0)), url('D.Mentor5.png'); */
     /* background-repeat: no-repeat;
   background-size: 80% 80%;
@@ -418,9 +418,9 @@ body.profileBody {
     /* backdrop-filter: blur(5px); */
     /* padding: 20px; */
     /* border: 2px solid rgba(48, 122, 183, 0.768); */
-    border-radius: 20px;
+    /* border-radius: 20px; */
     text-align: center;
-    box-shadow: 0px 0px 30px 1px rgba(0, 157, 255, 0.777);
+    /* box-shadow: 0px 0px 30px 1px rgba(0, 157, 255, 0.777); */
     /* horizontal pos, vertical pos, blur radius, spread radius*/
     /* width: 350px; */
     /* height: 350px; */
@@ -598,7 +598,7 @@ body.profileBody {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    width: 80%;
+    /* width: 80%; */
     /* border: 1px solid transparent; */
     transition: border-color 0.25s;
     /* border-radius: 8px; */
@@ -671,7 +671,7 @@ body.profileBody {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 500;
+    font-weight: 700;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
@@ -714,7 +714,7 @@ body.profileBody {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 500;
+    font-weight: 700;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
@@ -722,7 +722,7 @@ body.profileBody {
 }
 
 .check-status-button:hover {
-    background-color: #fbfbfb;
+    background-color: #ffffff;
 }
 
 .games-button-profile-row {
@@ -750,7 +750,7 @@ body.profileBody {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 500;
+    font-weight: 700;
     border-radius: 8px;
     /* width: 70%; */
 }
@@ -767,7 +767,7 @@ body.profileBody {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 500;
+    font-weight: 700;
     border-radius: 8px;
     /* width: 70%; */
 }
@@ -784,7 +784,7 @@ body.profileBody {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 500;
+    font-weight: 700;
     border-radius: 8px;
     /* width: 70%; */
 }
@@ -828,7 +828,7 @@ body.profileBody {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 500;
+    font-weight: 700;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
@@ -838,6 +838,60 @@ body.profileBody {
 .update-profile-button:hover {
     background-color: rgb(139, 204, 242);
 }
+
+
+
+/* -------------------------------------------------------------------- */
+
+/* modal wide screen open edit window */
+
+
+.update-profile-horizontal {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px; /* Adjust the gap between elements as needed */
+}
+
+.input-label-horizontal {
+    font-weight: 600;
+    color: #e6f8ff;
+    margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.input-field-horizontal {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    color: #ffffff;
+    font-weight: 500;
+    background-color: #0000005f;
+    margin-right: 10px; /* Adjust the margin as needed */
+}
+
+.update-profile-button-horizontal {
+    /* margin-top: 20px; */
+    background-color: rgb(109,183,226);
+    color: rgb(0, 0, 0);
+    border: 1px solid transparent;
+    /* padding: 0.4em 1.2em; */
+    padding: 10px 15px;
+    /* margin: 10px 0; */
+    cursor: pointer;
+    /* font-size: 16px; */
+    font-weight: 700;
+    font-family: inherit;
+    transition: border-color 0.25s;
+    border-radius: 8px;
+    /* width: 70%; */
+}
+
+.update-profile-button-horizontal:hover {
+    background-color: rgb(139, 204, 242);
+}
+
+/* ------------------------------------------------------------------ */
 
 /* .delete-profile-div {
     margin-top: 40px;
@@ -853,7 +907,7 @@ body.profileBody {
     /* margin: 10px 0; */
     cursor: pointer;
     /* font-size: 16px; */
-    font-weight: 500;
+    font-weight: 700;
     font-family: inherit;
     transition: border-color 0.25s;
     border-radius: 8px;
@@ -861,7 +915,7 @@ body.profileBody {
 }
 
 .delete-account-button:hover {
-    background-color: #dd1717;
+    background-color: #ff0000;
 }
 
 .del-profile-text {
@@ -873,7 +927,7 @@ body.profileBody {
 
 .del-profile-button {
     /* margin-top: 40px; */
-    background-color: #cd1212;
+    background-color: #c61717;
     color: white;
     border: 1px solid transparent;
     /* padding: 0.4em 1.2em; */
@@ -889,13 +943,13 @@ body.profileBody {
 }
 
 .del-profile-button:hover {
-    background-color: rgb(233, 41, 41)
+    background-color: rgb(138, 100, 100)
 }
 
 .cancel-del-button {
     /* margin-top: 40px; */
     background-color: rgb(233, 233, 233);
-    color: rgb(0, 0, 0);
+    color: rgb(127, 42, 42);
     border: 1px solid transparent;
     /* padding: 0.4em 1.2em; */
     padding: 10px 10px;
@@ -1337,6 +1391,18 @@ pre {
 
 /*  Lessons page */
 
+/* .latex-container {
+    white-space: normal;
+    overflow-wrap: break-word !important; 
+    word-wrap: break-word !important;
+    overflow: hidden; 
+} */
+
+.lessons-container img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 /* --------------------------------------------------------------------- */
 

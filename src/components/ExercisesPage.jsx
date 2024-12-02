@@ -547,7 +547,7 @@ const ExercisesPage = ({
         // regex to detect latex code between $...$ or $$...$$
         const latexRegex = /\$\$(.*?)\$\$|\$(.*?)\$/g;
         // detect raw latex without wrappings
-        const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|neg|land|lor|to|times|infty|leq|geq|neq|approx|forall|exists|subseteq|supseteq|cup|cap|nabla|partial|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|not|[A-Za-z]+)\b/g;
+        const rawLatexRegex = /\\(frac|sum|int|left|right|cdots|dots|binom|sqrt|text|over|begin|end|matrix|neg|land|lor|to|times|infty|leq|geq|neq|approx|forall|exists|subseteq|supseteq|cup|cap|nabla|partial|alpha|beta|gamma|delta|epsilon|zeta|eta|theta|iota|kappa|lambda|mu|nu|xi|pi|rho|sigma|tau|upsilon|phi|chi|psi|omega|Gamma|Delta|Theta|Lambda|Xi|Pi|Sigma|Phi|Psi|Omega|not|mathbb|[A-Za-z]+)\b/g;
         // regex to find other LaTeX wrappings such as \(...\) or \[...\]
         const unwantedLatexWrappings = /\\\(|\\\)|\\\[|\\\]/g;
 
@@ -864,7 +864,7 @@ const ExercisesPage = ({
                     )}
                     <div ref={scrollableContainerRef} className="flex-1 overflow-y-auto pl-1 pb-1 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
                         {currentExercises.map((exercise) => (
-                            <div key={exercise.exercise_id} className="mb-20 pl-4 pb-4 bg-gray-900 rounded prose prose-sm sm:prose lg:prose-lg text-white w-full override-max-width">
+                            <div key={exercise.exercise_id} className="mb-20 pl-4 pb-4 bg-gray-900 rounded  text-white w-full override-max-width">
                                 {renderExerciseQuestion(exercise.question)}
                                 {/* MathLiveInput for the exercise */}
                                 <div className="relative mt-2 flex items-center "> {/* space-x-1 */}
