@@ -237,6 +237,7 @@ app.post('/api/validate-solution', async (req, res) => {
                                 * Reassuring (e.g., "Great job, ${userName}! You're really getting the hang of this.")
                                 * Motivational (e.g., "Excellent, ${userName}! Keep up the amazing work.")
                                 * Informative (e.g., "Well done, ${userName}! Your understanding of this concept is spot on.")
+                            - Additionally, provide informative feedback briefly explaining why the solution is correct. Keep the explanation concise and related to the problem.
                         4. If the solution is incorrect:
                             - Encourage ${userName} to keep trying with a supportive message in the feedback. 
                             - Do not reveal the correct answer.

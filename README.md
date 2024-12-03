@@ -54,6 +54,7 @@ This web app:
 
 ## Video Walkthrough
 
+![Video Walkthrough](./public/demo10.gif)
 ![Video Walkthrough](./public/demo9.gif)
 ![Video Walkthrough](./public/demo8.gif)
 ![Video Walkthrough](./public/demo7.gif) 

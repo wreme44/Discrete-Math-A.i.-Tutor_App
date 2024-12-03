@@ -32,7 +32,7 @@ const Login = () => {
             navigate('/myProfile');
             setTimeout(() => {
                 window.location.reload();
-            }, 200); 
+            }, 300); 
         }
     }
 

@@ -858,7 +858,7 @@ const ExercisesPage = ({
             {!showGames ? (
                 <div className="flex flex-col h-full -mt-2">
                     {currentLessonId && (
-                        <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[18px] lg:text-[20px] xl:text-[20px] font-bold mb-1">
+                        <h2 className="xsm:text-[18px] sm:text-[20px] md:text-[16px] lg:text-[18px] xl:text-[18px] font-bold mb-1 ">
                             Exercise {currentExerciseIndex + 1}: {lessonsData[currentLessonIndex]?.title.replace(/^Lesson \d+:\s*/, '')}
                         </h2>
                     )}
